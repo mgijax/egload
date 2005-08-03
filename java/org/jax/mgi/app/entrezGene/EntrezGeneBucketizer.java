@@ -4,34 +4,25 @@ import java.util.*;
 import java.io.File;
 
 
-import org.jax.mgi.dbs.mgd.lookup.entrezGene.ProblemClonesLookup;
-import org.jax.mgi.dbs.mgd.lookup.entrezGene.NCBIGeneModelLookup;
-import org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory;
-import org.jax.mgi.dbs.rdr.query.entrezGene.EntrezGeneQuery;
-import org.jax.mgi.dbs.rdr.query.entrezGene.EntrezGeneQuery.EntrezGene;
-import org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery;
-import org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery.MGIMarker;
-import org.jax.mgi.dbs.mgd.MarkerAssociation;
+import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
+import org.jax.mgi.dbs.mgd.lookup.NCBIGeneModelLookup;
+import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
+import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
+import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
 import org.jax.mgi.shr.bucketizer.AbstractBucketizer;
 import org.jax.mgi.shr.bucketizer.BucketItem;
 import org.jax.mgi.shr.bucketizer.BucketItem.Association;
-import org.jax.mgi.shr.bucketizer.Decider;
 import org.jax.mgi.shr.bucketizer.Bucketizable;
 import org.jax.mgi.shr.sva.SVASet;
 import org.jax.mgi.shr.exception.MGIException;
-import org.jax.mgi.shr.ioutils.OutputDataFile;
-import org.jax.mgi.shr.ioutils.OutputFormatter;
 import org.jax.mgi.shr.ioutils.OutputManager;
 import org.jax.mgi.shr.dbutils.DataIterator;
 import org.jax.mgi.shr.dbutils.dao.SQLStream;
-import org.jax.mgi.shr.ioutils.OutputDataFile;
 import org.jax.mgi.shr.stringutil.Sprintf;
 import org.jax.mgi.shr.stringutil.StringLib;
-import org.jax.mgi.shr.timing.Stopwatch;
 import org.jax.mgi.dbs.mgd.AccessionLib;
 import org.jax.mgi.dbs.mgd.LogicalDBConstants;
 import org.jax.mgi.shr.config.EntrezGeneCfg;
-import org.jax.mgi.app.entrezGene.SequenceAccession;
 
 
 /**
@@ -83,9 +74,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // between EntrezGenes and MGIMarkers
     private EntrezGeneHistory history = null;
 
-    // the refs key for the EntrezGene load
-    private static final int EGLOAD_REFSKEY = 64047;
-
     // A Runtime instance for obtaining runtime memory usage
     private Runtime rtime = Runtime.getRuntime();
 
@@ -121,7 +109,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     /**
      * runs the reporting for excluded sequences which was derived through
      * the bucketization algorithm
-     * @assumes the bucketizder algorithm has been run
+     * @assumes the bucketizer algorithm has been run
      * @effects will create a excluded sequences repport
      * @throws MGIException thrown to represent any error
      */
@@ -252,7 +240,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         AccessionLib.createMarkerAssociation(
             new Integer(LogicalDBConstants.ENTREZ_GENE),
             entrezGene.getId(), mgiMarker.key,
-            new Integer(EGLOAD_REFSKEY), this.loadStream);
+            new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
 
 
         /**
@@ -337,7 +325,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                AccessionLib.createMarkerAssociation(
                    new Integer(LogicalDBConstants.NCBI_GENE),
                    entrezGene.getId(), mgiMarker.key,
-                   new Integer(EGLOAD_REFSKEY), this.loadStream);
+                   new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
            }
        }
     }
@@ -390,7 +378,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         {
             AccessionLib.createMarkerAssociation(
                new Integer(logicaldb),
-               accid, mgiMarker.key, new Integer(EGLOAD_REFSKEY),
+               accid, mgiMarker.key, new Integer(Constants.EGLOAD_REFSKEY),
                this.loadStream);
         }
 
@@ -432,7 +420,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
             String output = null;
 
-            if (!egCfg.getOkToPreventHistory().booleanValue())
+            if (egCfg.getOkToPerformHistory().booleanValue())
             {
                 String oldEGID =
                     this.history.lookupEGeneID(marker.mgiID);
@@ -478,7 +466,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                            marker.chromosome);
                 fields.add(marker.svaString());
                 fields.add(marker.type);
-                if (!this.egCfg.getOkToPreventHistory().booleanValue())
+                if (this.egCfg.getOkToPerformHistory().booleanValue())
                 {
                     String oldEGID =
                         this.history.lookupEGeneID(marker.mgiID);
@@ -498,7 +486,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                 fields.add(egene.getChromosome() == null ? "" :
                            egene.getChromosome());
                 fields.add(egene.svaString());
-                if (!this.egCfg.getOkToPreventHistory().booleanValue())
+                if (this.egCfg.getOkToPerformHistory().booleanValue())
                 {
                     String oldMGIID =
                         this.history.lookupEGeneID(egene.getId());
