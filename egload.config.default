@@ -1,0 +1,221 @@
+#format: sh
+#
+#  config.default
+#
+#  This file sets up environment variables that are needed for the
+#  Entrez Gene Load
+#
+###########################################################################
+
+###########################################################################
+#
+#  GENERAL SETTINGS
+#
+###########################################################################
+
+#  Installation directory for the GenBank sequence load
+INSTALLDIR=${USRLOCALMGI}/dataload/egload
+
+export INSTALLDIR
+
+###########################################################################
+#
+#  DATABASE SETTINGS BY DATABASE
+#
+###########################################################################
+
+# MGD Connection parameters 
+MGD_DBSERVER=PROD_MGI
+
+MGD_DBURL=shire.informatics.jax.org:4100
+
+MGD_DBNAME=mgd
+
+MGD_DBUSER=mgd_dbo
+MGD_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
+
+MGD_DBSCHEMADIR=${MGDDBSCHEMADIR}
+
+export MGD_DBSERVER MGD_DBURL MGD_DBNAME
+export MGD_DBUSER MGD_DBPASSWORDFILE MGD_DBSCHEMADIR
+
+# RADAR Connection parameters 
+RADAR_DBSERVER=DEV_MGI
+
+RADAR_DBURL=shire.informatics.jax.org:4100
+
+RADAR_DBNAME=radar
+
+RADAR_DBUSER=mgd_dbo
+RADAR_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
+
+RADAR_DBSCHEMADIR=${RADARDBSCHEMADIR}
+
+export RADAR_DBSERVER RADAR_DBURL RADAR_DBNAME RADAR_DBUSER 
+export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR 
+
+###########################################################################
+#
+#  SOFTWARE SETTINGS
+#
+###########################################################################
+
+JAVARUNTIMEOPTS="-Xms1000m -Xmx1000m"
+
+JAVA_LIB=${JAVAPATH}/lib_java_dla/dla.jar:${JAVAPATH}/lib_java_core/core.jar:${JAVAPATH}/lib_java_dbsmgd/dbsmgd.jar:${JAVAPATH}/lib_java_dbsrdr/dbsrdr.jar
+
+CLASSPATH=.:${INSTALLDIR}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
+
+export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
+
+###########################################################################
+#
+#  LOAD SPECIFIC SETTINGS
+#
+###########################################################################
+
+DLA_FORMAT_REPORTS_ONLY=false
+
+# this load's MGI_User login value for DB tables CreatedBy and ModifiedBy column
+JOBSTREAM=entrezgene_load
+
+#  Java applications
+DLA_LOADER=org.jax.mgi.app.entrezGene.EntrezGeneLoader
+DLA_START=org.jax.mgi.shr.dla.loader.DLAStart
+
+# SQL STREAM
+# this overrides the default BCP_Inline_Stream
+DLA_DB_PREFIX=MGD
+DLA_LOAD_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
+DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
+
+# QC report script
+APP_QCRPT=${QCRPTDIR}/egload/egloadRpt.csh
+
+export DLA_LOADER DLA_START DLA_LOAD_STREAM 
+export APP_QCRPT
+
+# Full path the the logs, reports, and archive directories
+FILEDIR=/data/loads/entrezgene/egload
+LOGDIR=${FILEDIR}/logs
+RPTDIR=${FILEDIR}/reports
+ARCHIVEDIR=${FILEDIR}/archive
+OUTPUTDIR=${FILEDIR}/output
+
+export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
+
+# full path to input file directory when APP_RADAR_INPUT=false
+# currently not used by mouse which instead uses DP tables in RADAR
+#INPUTDIR=/data/downloads/ftp.ncbi.nih.gov/genbank/gb_daily-nc
+
+#export INPUTDIR
+
+#  Complete path name of the log files
+LOG_PROC=${LOGDIR}/entrezgene.proc.log
+LOG_DIAG=${LOGDIR}/entrezgene.diag.log
+LOG_CUR=${LOGDIR}/entrezgene.cur.log
+LOG_VAL=${LOGDIR}/entrezgene.val.log
+
+# Send debug messages to the diagnostic log
+LOG_DEBUG=false
+DBDEBUG=false
+CACHE_DEBUG=false
+
+# logger factory class - allows classes to get their own loggers
+LOG_FACTORY=org.jax.mgi.shr.dla.log.DLALoggerFactory
+
+export LOG_PROC LOG_DIAG LOG_CUR LOG_VAL LOG_DEBUG 
+export CACHE_DEBUG LOG_FACTORY
+
+###########################################################################
+#
+#  OUTPUT DATA FILES
+#
+###########################################################################
+
+# web url for creating hypertext links
+FMT_WEB_SERVER_URL=rohan.informatics.jax.org/~mbw/EntrezGene
+
+BUCKET_ONE_TO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_one_to_one.txt
+BUCKET_ONE_TO_ONE_OUTFILE_SORT_DEF="-k8,8 -k1.5n,1.0n"
+
+BUCKET_ONE_TO_MANY_OUTFILE_NAME=${RPTDIR}/bucket_one_to_many.txt
+BUCKET_ONE_TO_MANY_OUTFILE_SORT_DEF="-k8,8 -k1.5n,1.0n"
+BUCKET_ONE_TO_MANY_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
+
+BUCKET_MANY_TO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_many_to_one.txt
+BUCKET_MANY_TO_ONE_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
+
+BUCKET_MANY_TO_MANY_OUTFILE_NAME=${RPTDIR}/bucket_many_to_many.txt
+BUCKET_MANY_TO_MANY_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
+
+BUCKET_ONE_TO_ZERO_OUTFILE_NAME=${RPTDIR}/bucket_one_to_zero.txt
+BUCKET_ONE_TO_ZERO_OUTFILE_SORT_DEF="-k5,5 -k1.5n,1.0n"
+BUCKET_ONE_TO_ZERO_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_mgiBucket
+
+BUCKET_ZERO_TO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one.txt
+BUCKET_ZERO_TO_ONE_OUTFILE_SORT_DEF="-k1n"
+BUCKET_ZERO_TO_ONE_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_egBucket
+
+CHROMOSOME_MISMATCH_OUTFILE_NAME=${RPTDIR}/bucket_mismatched_chr.txt
+CHROMOSOME_MISMATCH_OUTFILE_SORT_DEF="-k8,8 -k1.5n,1.0n"
+CHROMOSOME_MISMATCH_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
+
+EXCLUDED_SEQUENCES_OUTFILE_NAME=${RPTDIR}/excludedSequences.txt
+EXCLUDED_SEQUENCES_OUTFILE_SORT_DEF="-k2,2 -k1,1"
+EXCLUDED_SEQUENCES_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_excludedSeqs
+
+MISSING_MGI_OUTFILE_NAME=${RPTDIR}/missingMGIIDs.txt
+MISSING_MGI_OUTFILE_SORT_DEF="-k8,8 -k1.5n,1.0n"
+MISSING_MGI_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
+
+ONE_TO_N_SEQUENCES_OUTFILE_NAME=${RPTDIR}/oneToNSequences.txt
+ONE_TO_N_SEQUENCES_OUTFILE_SORT_DEF="-k2,2 -k1,1"
+ONE_TO_N_SEQUENCES_OUTFILE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_excludedSeqs
+
+###########################################################################
+#
+#  BCP MANAGER SETTINGS BY DATABASE
+#
+###########################################################################
+
+#  Settings used to create a BCP manager for the MGD database
+MGD_BCP_PATH=${OUTPUTDIR}
+MGD_BCP_PREVENT_EXECUTE=false
+MGD_BCP_TRUNCATE_LOG=true
+MGD_BCP_DROP_INDEXES=false
+MGD_BCP_RECORD_STAMPING=false
+MGD_BCP_AUTO_FLUSH=false
+MGD_BCP_OK_TO_OVERWRITE=false
+
+export MGD_BCP_PATH MGD_BCP_PREVENT_EXECUTE MGD_BCP_TRUNCATE_LOG
+export MGD_BCP_DROP_INDEXES MGD_BCP_RECORD_STAMPING MGD_BCP_AUTO_FLUSH
+export MGD_BCP_OK_TO_OVERWRITE
+
+#  Settings used to create a BCP manager for the RADAR database
+RADAR_BCP_PATH=${OUTPUTDIR}
+RADAR_BCP_PREVENT_EXECUTE=false
+RADAR_BCP_TRUNCATE_LOG=true
+RADAR_BCP_DROP_INDEXES=false
+RADAR_BCP_RECORD_STAMPING=false
+RADAR_BCP_AUTO_FLUSH=false
+RADAR_BCP_OK_TO_OVERWRITE=false
+
+export RADAR_BCP_PATH RADAR_BCP_PREVENT_EXECUTE RADAR_BCP_TRUNCATE_LOG
+export RADAR_BCP_DROP_INDEXES RADAR_BCP_RECORD_STAMPING RADAR_BCP_AUTO_FLUSH
+export RADAR_BCP_OK_TO_OVERWRITE
+
+###########################################################################
+#
+#  MISCELLANEOUS SETTINGS
+#
+###########################################################################
+#  The name of the load for the subject of an email notification
+MAIL_LOADNAME="EntrezGene Load"
+
+#  Recipient list for mailing the log files (comma-separated)
+MAIL_LOG_PROC="mbw"
+MAIL_LOG_CUR="mbw"
+
+export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
+
