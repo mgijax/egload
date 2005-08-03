@@ -5,16 +5,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.jax.mgi.shr.dla.loader.DLALoader;
-import org.jax.mgi.shr.dla.loader.DLALoaderException;
 import org.jax.mgi.shr.dbutils.DataIterator;
 import org.jax.mgi.shr.dbutils.BatchProcessor;
 import org.jax.mgi.shr.exception.MGIException;
-import org.jax.mgi.shr.ioutils.OutputDataFile;
 import org.jax.mgi.shr.timing.Stopwatch;
-import org.jax.mgi.app.entrezGene.Constants;
-import org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery;
-import org.jax.mgi.dbs.rdr.query.entrezGene.EntrezGeneQuery;
-import org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory;
+import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery;
+import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery;
+import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
 import org.jax.mgi.shr.config.EntrezGeneCfg;
 
 /**
@@ -79,21 +76,6 @@ public class EntrezGeneLoader
      */
     private long freememStart = rtime.freeMemory();
 
-    /**
-     * name of the file used for deleting the results of the previous runs
-     * of the Entrez Gene load
-     */
-    private String sqlFile = "sql/MGDdelete.sql";
-
-    /**
-     * constructor
-     * @throws DLALoaderException
-     */
-    public EntrezGeneLoader()
-        throws DLALoaderException
-    {
-        super();
-    }
 
     /**
      * runs the Entrez Gene query and the MGI marker query and initializes the
@@ -110,7 +92,7 @@ public class EntrezGeneLoader
 
         this.egCfg = new EntrezGeneCfg();
 
-        if (!this.egCfg.getOkToPreventHistory().booleanValue())
+        if (this.egCfg.getOkToPerformHistory().booleanValue())
         {
             // obtain current entrez gene/ mgi associations
             this.entrezGeneHistory = new EntrezGeneHistory();
@@ -122,7 +104,7 @@ public class EntrezGeneLoader
         if (!this.egCfg.getOkToPreventDelete().booleanValue())
         {
             BatchProcessor batch = super.loadDBMgr.getBatchProcessor();
-            batch.addScriptBatch(this.sqlFile);
+            batch.addScriptBatch(Constants.DELETE_SCRIPT);
             batch.executeBatch();
         }
 
