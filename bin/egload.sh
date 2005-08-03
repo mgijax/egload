@@ -101,7 +101,7 @@ else
 fi
 
 #
-#  Source the RPCI Load configuration file.
+#  Source the load configuration file.
 #
 . ${CONFIG}
 
@@ -111,13 +111,13 @@ fi
 preload
 
 #
-#  Run the RPCI Load application.
+#  Run the load application.
 #
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load application" >> ${LOG_PROC}
 ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${COMMON_CONFIG},${CONFIG} \
-        -DJOBKEY=${JOBKEY} ${DLA_START}
+        -DJOBKEY=${JOBKEY} -DOUTFILE_PREVENT_FORMATTING=true ${DLA_START}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -127,7 +127,24 @@ then
 fi
 
 #
-# run seqload qc reports
+# post format reports
+#
+echo "\n`date`" >> ${LOG_PROC}
+echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
+${JAVA} -classpath ${CLASSPATH} \
+        -DCONFIG=${COMMON_CONFIG},${CONFIG} \
+        -DJOBKEY=${JOBKEY} -DDLA_FORMAT_REPORTS_ONLY=true ${DLA_START}
+STAT=$?
+if [ ${STAT} -ne 0 ]
+then
+    echo "Entrez Gene Load output formatting failed.    Return status: ${STAT}" >> ${LOG_PROC}
+    postload
+    exit 1
+fi
+
+
+#
+# run qc reports
 #
 ${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
 STAT=$?
