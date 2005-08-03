@@ -19,9 +19,9 @@ select r._Accession_key
 into #toDeleteSP
 from ACC_AccessionReference r, ACC_Accession a
 where r._Refs_key = 53672
-and a._accession_key = r._accession_key
-and a._logicaldb_key = 9
-and a._mgitype_key = 2
+and a._Accession_key = r._Accession_key
+and a._LogicalDB_key = 9
+and a._MGIType_key = 2
 
 create index idx1 on #toDeleteSP(_Accession_key)
 
