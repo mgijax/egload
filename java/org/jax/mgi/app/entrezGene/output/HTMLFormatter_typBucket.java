@@ -1,13 +1,10 @@
 package org.jax.mgi.app.entrezGene.output;
 
-import org.jax.mgi.shr.ioutils.OutputFormatter;
 import org.jax.mgi.shr.ioutils.OutputDataFile;
-import org.jax.mgi.shr.ioutils.InputDataFile;
-import org.jax.mgi.shr.ioutils.RecordDataIterator;
-import org.jax.mgi.shr.config.EntrezGeneCfg;
 import org.jax.mgi.shr.config.ConfigException;
-import org.jax.mgi.shr.exception.MGIException;
 import org.jax.mgi.shr.dla.output.HTMLFormatter;
+import org.jax.mgi.shr.config.EntrezGeneCfg;
+
 
 /**
  * is a class which extends HTMLFormatter from the lib_java_dla product and

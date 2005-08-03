@@ -1,10 +1,8 @@
 package org.jax.mgi.app.entrezGene;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.Set;
 
 import org.jax.mgi.shr.bucketizer.SimpleBucketizable;
-import org.jax.mgi.shr.config.EntrezGeneCfg;
 
 
 

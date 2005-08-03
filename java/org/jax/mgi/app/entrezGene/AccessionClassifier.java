@@ -1,6 +1,7 @@
 package org.jax.mgi.app.entrezGene;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * is a class that can identify types of accession numbers by their
