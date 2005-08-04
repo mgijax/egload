@@ -40,7 +40,7 @@ export MGD_DBSERVER MGD_DBURL MGD_DBNAME
 export MGD_DBUSER MGD_DBPASSWORDFILE MGD_DBSCHEMADIR
 
 # RADAR Connection parameters 
-RADAR_DBSERVER=DEV_MGI
+RADAR_DBSERVER=PROD_MGI
 
 RADAR_DBURL=shire.informatics.jax.org:4100
 
@@ -134,7 +134,7 @@ export CACHE_DEBUG LOG_FACTORY
 ###########################################################################
 
 # web url for creating hypertext links
-FMT_WEB_SERVER_URL=rohan.informatics.jax.org/~mbw/EntrezGene
+FMT_WEB_SERVER_URL=www.informatics.jax.org
 
 BUCKET_ONE_TO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_one_to_one.txt
 BUCKET_ONE_TO_ONE_OUTFILE_SORT_DEF="-k8,8 -k1.5n,1.0n"
