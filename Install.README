@@ -1,7 +1,9 @@
+Copy the egload.config.defaults to egload.config and edit to suit.
+
 Run the DLAInstall script and pass it the full path name of the
 common config file and the config file for this load.
 
-   e.g.  DLAInstall /usr/local/mgi/live/etc/common.config.sh
+   e.g.  cd /usr/local/mgi/live/dbutils/dlautils
+         DLAInstall /usr/local/mgi/live/etc/common.config.sh
                     /usr/local/mgi/live/dataload/rpciload/config
 
-copy the egload.config.defaults to egload.config and edit to suit.
