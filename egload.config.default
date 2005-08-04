@@ -74,7 +74,11 @@ export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
 #
 ###########################################################################
 
+# this will control whether or not to run only report formatting 
 DLA_FORMAT_REPORTS_ONLY=false
+
+# this will report on previous associations between eg and mgi
+EGLOAD_PERFORM_HISTORY=false
 
 # this load's MGI_User login value for DB tables CreatedBy and ModifiedBy column
 JOBSTREAM=entrezgene_load
