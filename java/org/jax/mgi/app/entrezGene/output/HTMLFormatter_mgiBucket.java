@@ -9,7 +9,7 @@ import org.jax.mgi.shr.dla.output.HTMLFormatter;
  * is a class which extends HTMLFormatter from the lib_java_dla product and
  * provides functionally for rendering EntrezGene buckets in HTML
  * specific to those reports which contain only contain MGI markers
- * (i.e. one to zero buckets)
+ * (for example one to zero buckets).
  * @has nothing
  * @does formats output in HTML
  * @company The Jackson Laboratory

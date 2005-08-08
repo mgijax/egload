@@ -46,7 +46,7 @@ public class EntrezGeneCfg extends Configurator {
    * data consisting of the previous Entrez gene to MGI marker associations.
    * The parameter name read from the configuration file or system properties
    * is EGLOAD_PREVENT_DELETE. The default value is false.
-   * @return
+   * @return a boolean indicating whether or not it is ok to prevent delete
    * @throws ConfigException thrown if there is an error accessing the
    * configuration
    */
@@ -60,7 +60,7 @@ public class EntrezGeneCfg extends Configurator {
    * of external sql files.
    * The parameter name read from the configuration file or system properties
    * is SQLDIR. The default value is './sql'.
-   * @return
+   * @return the name of the sql directory
    * @throws ConfigException thrown if there is an error accessing the
    * configuration
    */
