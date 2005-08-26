@@ -251,10 +251,13 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         {
             SequenceAccession acc = (SequenceAccession)i.next();
             String accid = acc.getAccid();
-            Set seqAssociations =
-                (Set)super.index.lookup(Constants.GENBANK, acc);
-            makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+            if (acc.getType() == SequenceAccession.RNA)
+            {
+                Set seqAssociations =
+                    (Set)super.index.lookup(Constants.GENBANK, acc);
+                makeAssociationToMarker(accid, mgiMarker, seqAssociations,
                                     LogicalDBConstants.SEQUENCE);
+            }
         }
 
        /**
