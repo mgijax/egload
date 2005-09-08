@@ -1,3 +1,9 @@
+TAG: egload-1-0-6
+DATE: 08/25/05
+STAFF: mbw
+RELEASE: PROD
+CHANGES: patch to fix bug causing nonmouse records to be deleted
+
 TAG: egload-1-0-5
 DATE: 08/25/05
 STAFF: mbw
