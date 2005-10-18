@@ -6,12 +6,23 @@ Entrez Gene Mouse Load: Data, Logs and QC Reports
 
 <H4>QC Reports</H4>
 <UL>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_one.txt">Bucket one to one</A></a></LI>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_many.txt">Bucket one to many</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_many.html"><font size="-1">(html formatted)</font></a></LI>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_one.txt">Bucket many to one</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_one.html"><font size="-1">(html formatted)</font></a></LI>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_many.txt">Bucket many to many</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_many.html"><font size="-1">(html formatted)</font></a></LI>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero.txt">Bucket one to zero</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero.html"><font size="-1">(html formatted)</font></a></LI>
-<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one.txt">Bucket zero to one</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one.html"><font size="-1">(html formatted)</font></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_one.txt">Bucket one to one ... Corresponding MGI and EG records meet loading critera. Good to load.</A></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_many.txt">Bucket one to many ... MGI has one marker record - EG has multiple corresponding records. Potential EG Merges.</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_many.html"><font size="-1">(html formatted)</font></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_one.txt">Bucket many to one ... MGI has multiple marker records corresponding to one EG marker record. Potential MGI merges.</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_one.html"><font size="-1">(html formatted)</font></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_many.txt">Bucket many to many ... MGI has multiple records corresponding to multiple EG records. Needs Curator Review.</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_many_to_many.html"><font size="-1">(html formatted)</font></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero.txt">Bucket one to zero ... MGI has a Marker record - EG has none. FYI EntrezGene.</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero.html"><font size="-1">(html formatted)</font></a></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one.txt">Bucket zero to one ... MGI has no marker record - EG has a marker record  (Former Buckets 10, 11, 12). Needs Curator Review.</A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one.html"><font size="-1">(html formatted)</font></a></LI>
+<BR>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero_custom.txt">Bucket one to zero Customized </A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_one_to_zero_custom.html"><font size="-1">(html formatted)</font></a>
+<UL>
+<LI>Genes and Pseudogenes only.</LI>
+</UL></LI>
+<LI><A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one_custom.txt">Bucket zero to one Customized </A>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_zero_to_one_custom.html"><font size="-1">(html formatted)</font></a>
+<UL>
+<LI>Filtered out records with no sequence associations or only sequences associated to 'problem clones'.</LI>
+<LI>Sorted by sequence association class: DNA only, DNA and mRNA, mRNA only.</LI>
+</UL></LI>
+<BR>
 <LI><a href="/data/loads/entrezgene/egload/reports/bucket_mismatched_chr.txt">One to one matches which were rejected due to mismatched chromosomes</a>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/bucket_mismatched_chr.html"><font size="-1">(html formatted)</font></a></LI>
 <LI><a href="/data/loads/entrezgene/egload/reports/excludedSequences.txt">Sequences which were not considered by the matching algorithm due to having associations with multiple genes</a>&nbsp;&nbsp;&nbsp;<A HREF="/data/loads/entrezgene/egload/reports/excludedSequences.html"><font size="-1">(html formatted)</font></a></LI>
 <LI><a href="/data/loads/entrezgene/egload/reports/missingMGIIDs.txt">Matched Entrez Gene genes that have an MGIID not in MGD</a></LI>
