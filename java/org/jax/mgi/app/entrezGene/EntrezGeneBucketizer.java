@@ -17,8 +17,10 @@ import org.jax.mgi.shr.sva.SVASet;
 import org.jax.mgi.shr.exception.MGIException;
 import org.jax.mgi.shr.ioutils.OutputManager;
 import org.jax.mgi.shr.dbutils.DataIterator;
+import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.dao.SQLStream;
 import org.jax.mgi.shr.stringutil.Sprintf;
+import org.jax.mgi.shr.cache.CacheException;
 import org.jax.mgi.shr.stringutil.StringLib;
 import org.jax.mgi.dbs.mgd.AccessionLib;
 import org.jax.mgi.dbs.mgd.LogicalDBConstants;
@@ -57,6 +59,15 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     public static String EXCLUDED_SEQUENCES = "EXCLUDED_SEQUENCES";
     public static String MISSING_MGI = "MISSING_MGI";
     public static String ONE_TO_N_SEQUENCES = "ONE_TO_N_SEQUENCES";
+    public static String BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY =
+        "BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY";
+    public static String BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA =
+        "BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA";
+
+    public static final String TYPE_DNA_ONLY = "Type 1 (DNA Only)";
+    public static final String TYPE_DNA_AND_RNA = "Type 2 (DNA and RNA)";
+    public static final String TYPE_RNA_ONLY = "Type 3 (RNA only)";
+    public static final String TYPE_NO_DNA_OR_RNA = "Type 4 (no DNA nor RNA)";
 
     // a Configurator for configuring runtime aspects of the load
     private EntrezGeneCfg egCfg = null;
@@ -142,6 +153,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         throws MGIException
     {
         this.reportUnConnectedComponents(bucketItem, BUCKET_ZERO_TO_ONE);
+        this.reportCustomZeroToOne(bucketItem);
     }
 
     /**
@@ -504,6 +516,78 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         }
     }
 
+    /**
+     * create an entry in one of the buckets reporting a customized output
+     * for deb reed which includes separating entries with dna associations
+     * only from the rest and sorting on association classes (i.e., dna only,
+     * dna and rna, and rna only)
+     * @assumes nothing
+     * @effects a new report entry will be made to the customized zero to
+     * one report
+     * @param item the BucketItem representing the association
+     * @param reportAlias the report alias to write to
+     * @throws MGIException thrown to represent any error
+     */
+    private void reportCustomZeroToOne(BucketItem item)
+    throws MGIException
+    {
+        Vector fields = new Vector();
+        String seqAssocType = null;
+        for (Iterator i = item.membersIterator(); i.hasNext();)
+        {
+            Bucketizable b = (Bucketizable)i.next();
+            String output = null;
+            if (b.getProvider().equals(Constants.PROVIDER_MGI))
+            {
+                throw new MGIException("reporting on a One to Zero but " +
+                                       "received a MGI Marker from the " +
+                                       "bucket. This is an internal error");
+            }
+            else
+            {
+                EntrezGene egene = (EntrezGene)b;
+                HashSet sequences = egene.getAllSequences();
+
+                // the sequence association types effects sort order
+                // type can be of the following (in order of sort) :
+                // dna associations only
+                // dna and rna
+                // rna only
+                // none
+                seqAssocType = getSeqAssocType(sequences);
+                if (seqAssocType.equals(this.TYPE_NO_DNA_OR_RNA))
+                    return; // do not report these
+                fields.add(egene.getId() == null ? "" : egene.getId());
+                fields.add(egene.getSymbol() == null ? "" :
+                           egene.getSymbol());
+                fields.add(egene.getChromosome() == null ? "" :
+                           egene.getChromosome());
+                fields.add(egene.svaString());
+                fields.add(seqAssocType);
+                if (this.egCfg.getOkToPerformHistory().booleanValue())
+                {
+                    String oldMGIID =
+                        this.history.lookupEGeneID(egene.getId());
+                    fields.add(oldMGIID == null ? "None" : oldMGIID);
+                    output = Sprintf.sprintf("%s\t%s\t%s\t%s\t%s\t%s", fields);
+                }
+                else
+                    output = Sprintf.sprintf("%s\t%s\t%s\t%s\t%s", fields);
+            }
+            if (output == null)
+            {
+                String s = null;
+            }
+            if (seqAssocType.equals(this.TYPE_DNA_ONLY))
+                OutputManager.writeln(BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY,
+                                      output);
+            else
+                OutputManager.writeln(BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA,
+                                      output);
+        }
+    }
+
+
 
     /**
      * iterate through the sequence to gene assoctions derived by the
@@ -591,8 +675,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                             (String)mgiMarkerIds.iterator().next();
 
                     // create a report entry for this special case where
-                    // there are only one sequence associated to the MGIMarker
-                    // yet there were many associated to the EntrezGene
+                    // there is only one MGIMarker associated to the sequence
+                    // yet there were many EntrezGenes associated
                     if (mgiMarkerIds.size() == 1 && entrezGeneIds.size() > 1)
                         OutputManager.writeln(ONE_TO_N_SEQUENCES,
                                               Sprintf.sprintf(
@@ -611,6 +695,55 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
             }
         }
 
+    }
+
+    /**
+     * get the type of sequence associations which could be dna only,
+     * dna and rna, rna only, or none
+     * @param sequences a HashSet of SequenceAccession objects to evaluate
+     * @return the type represented by a String
+     * @throws DBException thrown if there is an error accessing the database
+     * @throws CacheException thrown if there is an error accessing the cache
+     */
+    private String getSeqAssocType(HashSet sequences)
+    throws DBException, CacheException
+    {
+        String type = this.TYPE_NO_DNA_OR_RNA;
+        for (Iterator i = sequences.iterator(); i.hasNext();)
+        {
+            SequenceAccession acc = (SequenceAccession)i.next();
+            if (acc.getType() == SequenceAccession.UNDEFINED)
+                continue;
+            else if (acc.getType() == SequenceAccession.MGI)
+                continue;
+            else if (acc.getType() == SequenceAccession.PROTEIN)
+                continue;
+            else if (acc.getType() == SequenceAccession.DNA)
+            {
+                // ignore if associated with problem clone
+                if (!this.problemClones.lookup(acc.getAccid()))
+                {
+                    if (type.equals(this.TYPE_NO_DNA_OR_RNA))
+                        type = this.TYPE_DNA_ONLY;
+                    else if (type.equals(this.TYPE_RNA_ONLY))
+                        type = this.TYPE_DNA_AND_RNA;
+                }
+            }
+            else if (acc.getType() == SequenceAccession.RNA)
+            {
+                // ignore if associated with problem clone or if
+                // experimental RNA
+               if (!this.problemClones.lookup(acc.getAccid()) &&
+                   !acc.getAccid().startsWith("XM"))
+               {
+                   if (type.equals(this.TYPE_NO_DNA_OR_RNA))
+                       type = this.TYPE_RNA_ONLY;
+                   else if (type.equals(this.TYPE_DNA_ONLY))
+                       type = this.TYPE_DNA_AND_RNA;
+               }
+            }
+        }
+        return type;
     }
 
 
