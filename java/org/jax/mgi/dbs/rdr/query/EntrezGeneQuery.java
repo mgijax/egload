@@ -302,16 +302,30 @@ public class EntrezGeneQuery extends ObjectQuery
                 return super.getGenBankSequences();
         }
 
+        public HashSet getAllRefSeqSequences()
+        {
+            HashSet refseqSeqs = new HashSet();
+            refseqSeqs.addAll(nmSeqs);
+            refseqSeqs.addAll(nrSeqs);
+            refseqSeqs.addAll(npSeqs);
+            refseqSeqs.addAll(xmSeqs);
+            refseqSeqs.addAll(xrSeqs);
+            refseqSeqs.addAll(xpSeqs);
+            return refseqSeqs;
+        }
+
+        public HashSet getAllSequences()
+        {
+            HashSet allSeqs = new HashSet();
+            allSeqs.addAll(genbank);
+            allSeqs.addAll(getAllRefSeqSequences());
+            return allSeqs;
+        }
+
 
         public String toString()
         {
-            HashSet refseqs = new HashSet();
-            refseqs.addAll(nmSeqs);
-            refseqs.addAll(nrSeqs);
-            refseqs.addAll(npSeqs);
-            refseqs.addAll(xmSeqs);
-            refseqs.addAll(xrSeqs);
-            refseqs.addAll(xpSeqs);
+            HashSet refseqs = getAllRefSeqSequences();
 
             return id + " : " + chromosome + " | " + Constants.MGIID +
                 " = " + mgiID.toString() + " | " +
