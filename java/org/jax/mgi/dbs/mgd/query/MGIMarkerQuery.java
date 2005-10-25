@@ -217,11 +217,11 @@ public class MGIMarkerQuery extends ObjectQuery
         public String chromosome = null;
         public String mgiID = null;
         public String type = null;
-        public Vector assocSeqs = null;
 
         private String[] sequenceGroups =
             {Constants.GENBANK, Constants.XM, Constants.XR, Constants.MGIID};
 
+        // all HashSets defined here contain instances of SequenceAccession
         public HashSet genbankSeqs = new HashSet();
 
         public HashSet nmSeqs = new HashSet();
@@ -240,7 +240,7 @@ public class MGIMarkerQuery extends ObjectQuery
             super(id, Constants.PROVIDER_MGI);
         }
 
-        public String toString()
+        public HashSet getAllRefSeqSequences()
         {
             HashSet refseqSeqs = new HashSet();
             refseqSeqs.addAll(nmSeqs);
@@ -249,6 +249,20 @@ public class MGIMarkerQuery extends ObjectQuery
             refseqSeqs.addAll(xmSeqs);
             refseqSeqs.addAll(xrSeqs);
             refseqSeqs.addAll(xpSeqs);
+            return refseqSeqs;
+        }
+
+        public HashSet getAllSequences()
+        {
+            HashSet allSeqs = new HashSet();
+            allSeqs.addAll(genbankSeqs);
+            allSeqs.addAll(getAllRefSeqSequences());
+            return allSeqs;
+        }
+
+        public String toString()
+        {
+            HashSet refseqSeqs = getAllRefSeqSequences();
 
             return mgiID + " : " + name + " | " + symbol + " | " + chromosome +
                 " | " + Constants.MGIID + " = " + mgiIDs.toString() +
