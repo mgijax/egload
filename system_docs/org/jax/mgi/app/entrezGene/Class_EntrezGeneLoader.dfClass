@@ -1,0 +1,78 @@
+package id3f8a6eb27l6xfeb2a51qi;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneLoader:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference17 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference18 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.shr.config.EntrezGeneCfg:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference19 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference20 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.rdr.query.entrezGene.EntrezGeneQuery:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference21 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.AssocAccidLookup:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference22 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.g.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.jax.mgi.dbs.rdr.query.entrezGene.EntrezGeneQuery:oiref>=30,20,370,181,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneLoader:oiref>=390,10,240,165,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer:oiref>=120,250,400,470,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneLoader#entrezGeneHistory:oiref>=545,455,545,510:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.shr.config.EntrezGeneCfg:oiref>=20,10,300,199,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneLoader#bucketizer:oiref>=455,175,455,250:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery:oiref>=460,20,380,165,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.dbs.mgd.query.entrezGene.MGIMarkerQuery#sequenceLookup:oiref>=755,185,755,250:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneLoader#entrezGeneQuery:oiref>=366,290,366,201:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#egCfg:oiref>=220,250,220,209:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneLoader#egCfg:oiref>=390,92,320,92:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#history:oiref>=446,639,500,639:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.AssocAccidLookup:oiref>=670,250,400,149,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneLoader#markerQuery:oiref>=525,290,525,185:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory:oiref>=500,510,416,229,0:oigroup>
+*/
+class __positions {
+}

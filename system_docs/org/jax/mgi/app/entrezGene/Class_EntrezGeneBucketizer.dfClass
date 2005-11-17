@@ -1,0 +1,60 @@
+package id1hi5reb27l6xfeb27ttua;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.shr.config.EntrezGeneCfg:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference4 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference5 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.NCBIGeneModelLookup:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference6 {
+}/**
+@__ref <oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.ProblemClonesLookup:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference7 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.g.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer:oiref>=10,240,370,547,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.shr.config.EntrezGeneCfg:oiref>=20,10,340,165,0:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.ProblemClonesLookup:oiref>=550,490,470,133,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#egCfg:oiref>=190,240,190,175:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.NCBIGeneModelLookup:oiref>=530,680,470,133,0:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#history:oiref>=430,372,530,372:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#problemClones:oiref>=430,556,550,556:oigroup>
+<oigroup:MemberLink#<oiref:java#Member#org.jax.mgi.app.entrezGene.EntrezGeneBucketizer#ncbiGeneModelLookup:oiref>=430,746,530,746:oigroup>
+<oigroup:<oiref:java#Class#org.jax.mgi.dbs.mgd.lookup.entrezGene.EntrezGeneHistory:oiref>=530,200,410,245,0:oigroup>
+*/
+class __positions {
+}
