@@ -57,8 +57,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     public static String BUCKET_ZERO_TO_ONE = "BUCKET_ZERO_TO_ONE";
     public static String CHROMOSOME_MISMATCH = "CHROMOSOME_MISMATCH";
     public static String EXCLUDED_SEQUENCES = "EXCLUDED_SEQUENCES";
-    public static String MISSING_MGI = "MISSING_MGI";
-    public static String ONE_TO_N_SEQUENCES = "ONE_TO_N_SEQUENCES";
     public static String BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY =
         "BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY";
     public static String BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA =
@@ -214,18 +212,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
             (MGIMarker) assoc.getMember(Constants.PROVIDER_MGI);
         EntrezGene entrezGene =
             (EntrezGene)assoc.getMember(Constants.PROVIDER_ENTREZGENE);
-
-        SVASet commonSequences = (SVASet)assoc.getLabel();
-        // if we matched on sequences only (without MGIID), but entrezgene
-        // has an MGIID, then report this case
-        if (commonSequences.getSVA(Constants.MGIID) == null ||
-            commonSequences.getSVA(Constants.MGIID).size() == 0)
-        {
-            if (entrezGene.getMGIID() != null &&
-                !entrezGene.getMGIID().equals("-"))
-                this.reportConnectedComponents(bucketItem,
-                    MISSING_MGI);
-        }
 
 
         // have to match on chromosomes unless one is undetermined.
@@ -674,16 +660,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                         associatedMGIs =
                             (String)mgiMarkerIds.iterator().next();
 
-                    // create a report entry for this special case where
-                    // there is only one MGIMarker associated to the sequence
-                    // yet there were many EntrezGenes associated
-                    if (mgiMarkerIds.size() == 1 && entrezGeneIds.size() > 1)
-                        OutputManager.writeln(ONE_TO_N_SEQUENCES,
-                                              Sprintf.sprintf(
-                            "%s\t%s\t%s\t%s", acc,
-                            acc.getTypeAsString(),
-                            associatedMGIs,
-                            associatedEntrezGenes));
                     // write to the excluded sequences report
                     OutputManager.writeln(EXCLUDED_SEQUENCES,
                                           Sprintf.sprintf("%s\t%s\t%s\t%s",
