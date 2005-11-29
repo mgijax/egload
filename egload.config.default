@@ -110,7 +110,7 @@ export FILEDIR LOGDIR RPTDIR ARCHIVEDIR OUTPUTDIR
 
 # full path to input file directory when APP_RADAR_INPUT=false
 # currently not used by mouse which instead uses DP tables in RADAR
-#INPUTDIR=/net/orodruin-g/vol/hobbiton/data/downloads/ftp.ncbi.nih.gov/genbank/gb_daily-nc
+#INPUTDIR=/data/downloads/ftp.ncbi.nih.gov/genbank/gb_daily-nc
 
 #export INPUTDIR
 
