@@ -218,7 +218,7 @@ export RADAR_BCP_OK_TO_OVERWRITE
 MAIL_LOADNAME="EntrezGene Load"
 
 #  Recipient list for mailing the log files (comma-separated)
-MAIL_LOG_PROC="lec,sc,mbw"
+MAIL_LOG_PROC="lec,sc,dbm"
 
 export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
 
