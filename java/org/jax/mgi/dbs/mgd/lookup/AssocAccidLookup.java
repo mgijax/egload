@@ -67,26 +67,26 @@ public class AssocAccidLookup extends FullCachedLookup
     {
 
         String sql =
-            "select a._object_key, a.accid, t.abbreviation " +
-            "from acc_accession a, acc_accession a2, " +
-            "     seq_sequence s, voc_term t  " +
-            "where a._mgitype_key = 2 " +
-            // refseqs and genbank accids
-            "and a._logicaldb_key in (9, 27) " +
-            "and a.accid = a2.accid " +
-            "and a2._mgitype_key = 19 " +
-            "and a2._logicaldb_key = a._logicaldb_key " +
-            "and s._sequence_key = a2._object_key " +
-            "and s._sequenceType_key = t._term_key " +
+            "select a._Object_key, a.accID, t.abbreviation " +
+            "from ACC_Accession a, ACC_Accession a2, " +
+            "     SEQ_Sequence s, VOC_Term t  " +
+            "where a._MGIType_key = 2 " +
+            // refseqs and genbank accIDs
+            "and a._LogicalDB_key in (9, 27) " +
+            "and a.accID = a2.accID " +
+            "and a2._MGIType_key = 19 " +
+            "and a2._LogicalDB_key = a._LogicalDB_key " +
+            "and s._Sequence_key = a2._Object_key " +
+            "and s._SequenceType_key = t._Term_key " +
             "union " +
             // MGI secondary sequences
-            "select a._object_key, a.accid, 'M' " +
-            "from acc_accession a " +
-            "where a._mgitype_key = 2 " +
-            "and  a._logicaldb_key = 1 " +
+            "select a._Object_key, a.accID, 'M' " +
+            "from ACC_Accession a " +
+            "where a._MGIType_key = 2 " +
+            "and  a._LogicalDB_key = 1 " +
             "and a.preferred != 1 " +
             "and a.prefixPart = 'MGI:' " +
-            "order by _object_key, accid";
+            "order by _Object_key, accid";
 
 
         return sql;

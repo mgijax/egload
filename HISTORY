@@ -1,3 +1,28 @@
+TAG: egload-tr7041-5
+DATE: 12/01/05
+STAFF: mbw
+CHANGES: revised mail recipients in default config
+
+TAG: egload-tr7041-4
+DATE: 11/17/05
+STAFF: mbw
+CHANGES: tagged for final test on branch
+
+TAG: egload-tr7041-3
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added a fix for index.html
+
+TAG: egload-tr7041-2
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added a fix for configuration
+
+TAG: egload-tr7041-1
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added customized buckets
+
 TAG: egload-tr7041-BP
 DATE: 10/18/05
 STAFF: mbw
