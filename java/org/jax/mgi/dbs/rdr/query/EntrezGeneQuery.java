@@ -74,13 +74,24 @@ public class EntrezGeneQuery extends ObjectQuery
         /**
          * gets geneids and sequence association data from RADAR for mouse
          */
-        return "select geneID = i.geneID, mgiID = i.locusTag, " +
+        return "select geneID = i.geneID, mgiID = x.dbXrefID, " +
+            "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
+            "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
+            "from DP_EntrezGene_Accession a, DP_EntrezGene_Info i, DP_EntrezGene_DBXRef x " +
+            "where i.geneID *= a.geneID " +
+            "and i.taxID = 10090 " +
+	    "and i.geneID = x.geneID " +
+	    "and x.dbXrefID like 'MGI:%' " +
+	    "union " +
+            "select geneID = i.geneID, mgiID = '-', " +
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
             "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
             "from DP_EntrezGene_Accession a, DP_EntrezGene_Info i " +
             "where i.geneID *= a.geneID " +
             "and i.taxID = 10090 " +
-            //"and i.geneID = '193543' " +
+	    "and not exists (select 1 from DP_EntrezGene_DBXRef x " +
+	    "where i.geneID = x.geneID " +
+	    "and x.dbXrefID like 'MGI:%') " +
             "order by geneID";
     }
 
