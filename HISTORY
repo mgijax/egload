@@ -1,3 +1,9 @@
+TAG: egload-3-4-2-0
+DATE: 01/19/2006
+STAFF: lec
+RELEASE: 3.42
+CHANGES: TR 7407; EG moved MGI ids to dbxref
+
 TAG: egload-3-4-1-1
 DATE: 12/02/05
 STAFF: mbw
