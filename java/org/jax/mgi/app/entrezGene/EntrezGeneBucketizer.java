@@ -317,11 +317,14 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
        /**
         * associate NCBI Gene Model to marker
+	* if the there is one, 
+	* and if the chromosome of the NCBI Gene Model equals the chromosome of the Marker
         */
 
        if (mgiMarker.chromosome.equals(entrezGene.getChromosome()))
        {
-           if (this.ncbiGeneModelLookup.lookup(entrezGene.getId()))
+	   String ncbiChromosome = this.ncbiGeneModelLookup.lookup(entrezGene.getId());
+           if (ncbiChromosome != null && ncbiChromosome.equals(mgiMarker.chromosome))
            {
                AccessionLib.createMarkerAssociation(
                    new Integer(LogicalDBConstants.NCBI_GENE),
@@ -329,6 +332,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
            }
        }
+
     }
 
     /**

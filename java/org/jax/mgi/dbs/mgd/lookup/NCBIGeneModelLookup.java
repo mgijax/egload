@@ -1,6 +1,6 @@
 package org.jax.mgi.dbs.mgd.lookup;
 
-import org.jax.mgi.shr.cache.MappedStringToBoolean;
+import org.jax.mgi.shr.cache.MappedStringToString;
 import org.jax.mgi.shr.dbutils.DBException;
 import org.jax.mgi.shr.dbutils.SQLDataManagerFactory;
 import org.jax.mgi.shr.config.ConfigException;
@@ -18,7 +18,7 @@ import org.jax.mgi.dbs.mgd.LogicalDBConstants;
  *
  */
 
-public class NCBIGeneModelLookup extends MappedStringToBoolean
+public class NCBIGeneModelLookup extends MappedStringToString
 {
 
     /**
@@ -43,12 +43,18 @@ public class NCBIGeneModelLookup extends MappedStringToBoolean
     public String getFullInitQuery()
     {
         /**
-         * get those accessions which are designated as NCBI genes
+         * get accession IDs/chromosomes that are designated as NCBI genes
          */
-        String sql = "select accID " +
-                     "from ACC_Accession " +
-                     "where _LogicalDB_key = " +
-                     LogicalDBConstants.NCBI_GENE;
+	String sql = "select a1.accID, cc.chromosome " +
+                     "from MAP_Coordinate c, MRK_Chromosome cc, MAP_Coord_Feature f, ACC_Accession a1 " +
+                     "where c._Collection_key = 4 " +
+                     "and c._MGIType_key = 27 " +
+                     "and c._Object_key = cc._Chromosome_key " +
+                     "and c._Map_key = f._Map_key " +
+                     "and f._Object_key = a1._Object_key " +
+                     "and a1._MGIType_key = 19 " +
+                     "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE;
+
         return sql;
     }
 }
