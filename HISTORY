@@ -1,5 +1,11 @@
+TAG: egload-3-4-2-1
+DATE: 04/19/2006
+STAFF: lec
+CHANGES:
+1) TR 7627/add Chromosome consistency check
+
 TAG: egload-tr7062-BP
-DATE: R03/23/2006
+DATE: 03/23/2006
 STAFF: lec
 CHANGES:
 1) branch point tag for MGI 3.5; loading HomoloGene IDs
