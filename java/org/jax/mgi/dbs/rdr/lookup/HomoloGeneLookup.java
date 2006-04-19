@@ -1,4 +1,4 @@
-package org.jax.mgi.dbs.mgd.lookup;
+package org.jax.mgi.dbs.rdr.lookup;
 
 import org.jax.mgi.shr.cache.MappedStringToString;
 import org.jax.mgi.shr.dbutils.DBException;
@@ -6,19 +6,18 @@ import org.jax.mgi.shr.dbutils.SQLDataManagerFactory;
 import org.jax.mgi.shr.config.ConfigException;
 import org.jax.mgi.shr.cache.CacheException;
 import org.jax.mgi.dbs.SchemaConstants;
-import org.jax.mgi.dbs.mgd.LogicalDBConstants;
 
 /**
  * is a FullCachedLookup for looking up whether or not a given accession
- * id is a NCBI Gene Model and is associated with a marker
+ * id has a HomoloGene ID and is associated with a marker
  * @has a full cache
  * @does provides a lookup for accessing the cached data
  * @company Jackson Laboratory
- * @author M Walker
+ * @author L Corbani
  *
  */
 
-public class NCBIGeneModelLookup extends MappedStringToString
+public class HomoloGeneLookup extends MappedStringToString
 {
 
     /**
@@ -28,12 +27,12 @@ public class NCBIGeneModelLookup extends MappedStringToString
      * configuration
      * @throws DBException thrown if there is an error accessing the database
      */
-    public NCBIGeneModelLookup()
+    public HomoloGeneLookup()
         throws DBException,
         ConfigException,
         CacheException
     {
-        super(SQLDataManagerFactory.getShared(SchemaConstants.MGD));
+        super(SQLDataManagerFactory.getShared(SchemaConstants.RADAR));
     }
 
     /**
@@ -43,18 +42,9 @@ public class NCBIGeneModelLookup extends MappedStringToString
     public String getFullInitQuery()
     {
         /**
-         * get accession IDs/chromosomes that are designated as NCBI genes
+         * retrieve mouse records that have HomoloGene IDs
          */
-	String sql = "select a1.accID, cc.chromosome " +
-                     "from MAP_Coordinate c, MRK_Chromosome cc, MAP_Coord_Feature f, ACC_Accession a1 " +
-                     "where c._Collection_key = 4 " +
-                     "and c._MGIType_key = 27 " +
-                     "and c._Object_key = cc._Chromosome_key " +
-                     "and c._Map_key = f._Map_key " +
-                     "and f._Object_key = a1._Object_key " +
-                     "and a1._MGIType_key = 19 " +
-                     "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE;
-
+        String sql = "select geneID, groupID from DP_HomoloGene where taxID = 10090";
         return sql;
     }
 }
