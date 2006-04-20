@@ -7,6 +7,7 @@ import java.io.File;
 import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
 import org.jax.mgi.dbs.mgd.lookup.NCBIGeneModelLookup;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
+import org.jax.mgi.dbs.rdr.lookup.HomoloGeneLookup;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
 import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
 import org.jax.mgi.shr.bucketizer.AbstractBucketizer;
@@ -79,6 +80,9 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // A FullCachedLookup for obtaining NCBI gene models
     private NCBIGeneModelLookup ncbiGeneModelLookup = null;
 
+    // A FullCachedLookup for obtaining HomoloGene IDs
+    private HomoloGeneLookup homoloGeneLookup = null;
+
     // An FullCachedLookup for obtaining previous associations
     // between EntrezGenes and MGIMarkers
     private EntrezGeneHistory history = null;
@@ -113,6 +117,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         this.problemClones.initCache();
         this.ncbiGeneModelLookup = new NCBIGeneModelLookup();
         this.ncbiGeneModelLookup.initCache();
+        this.homoloGeneLookup = new HomoloGeneLookup();
+        this.homoloGeneLookup.initCache();
     }
 
     /**
@@ -333,6 +339,18 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
            }
        }
 
+       /**
+        * associate HomoloGene ID to marker
+        */
+
+       String homolGeneGroupID = this.homoloGeneLookup.lookup(entrezGene.getId());
+       if (homolGeneGroupID != null)
+       {
+           AccessionLib.createMarkerAssociation(
+               new Integer(LogicalDBConstants.HOMOLOGENE),
+               homolGeneGroupID, mgiMarker.key,
+               new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+       }
     }
 
     /**

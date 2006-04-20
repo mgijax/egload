@@ -1,8 +1,33 @@
+TAG: egload-3-5-0-1
+DATE: 04/20/2006
+STAFF: lec
+CHANGES:
+1) MGI 3.5; merge tr7062 branch
+
 TAG: egload-3-4-2-1
 DATE: 04/19/2006
 STAFF: lec
 CHANGES:
 1) TR 7627/add Chromosome consistency check
+
+TAG: egload-tr7062-3
+DATE: 04/19/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+2) TR 7627; add chromosome check for NCBI Gene Model coordinate vs. MGI
+
+TAG: egload-tr7062-2
+DATE: 03/24/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+
+TAG: egload-tr7062-1
+DATE: 03/23/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
 
 TAG: egload-tr7062-BP
 DATE: 03/23/2006
