@@ -3,7 +3,7 @@
 #
 # Installation script for spseqload
 #
-# 1) cp mirbaseload.config.default mirbaseload.config
+# 1) cp egload.config.default egload.config
 # 2) Install 
 #
 
@@ -33,7 +33,7 @@ fi
 cd `dirname $0`
 
 # establish the config files
-MAIN_CONFIG=mirbaseload.config
+MAIN_CONFIG=egload.config
 
 # Make sure config file exists and source it
 if [ -r ${MAIN_CONFIG} ]
@@ -59,11 +59,4 @@ fi
 #
 echo 'running DLAINSTALL'
 ${DLAINSTALL} ${DEV}
-
-for c in *.config
-do
-echo "Source ${c}"
-. ${c}
-${DLAINSTALL} ${DEV}
-done
 
