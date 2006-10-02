@@ -1,7 +1,0 @@
-Copy the egload.config.default to egload.config and edit to suit.
-
-Run the DLAInstall script and pass it the full path name of the
-common config file and the config file for this load.
-
-${USRLOCALMGI}/dbutils/dlautils/DLAInstall ${USRLOCALMGI}/etc/common.config.sh egload.config
-

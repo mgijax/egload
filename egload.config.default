@@ -13,46 +13,17 @@
 #
 ###########################################################################
 
-#  Installation directory for the GenBank sequence load
-INSTALLDIR=${USRLOCALMGI}/dataload/egload
-
-export INSTALLDIR
-
-###########################################################################
 #
-#  DATABASE SETTINGS BY DATABASE
+#  If the MGICONFIG environment variable does not have a local override,
+#  use the default "live" settings.
 #
-###########################################################################
+if [ "${MGICONFIG}" = "" ]
+then
+    MGICONFIG=/usr/local/mgi/live/mgiconfig
+    export MGICONFIG
+fi
 
-# MGD Connection parameters 
-MGD_DBSERVER=PROD_MGI
-
-MGD_DBURL=shire.informatics.jax.org:4100
-
-MGD_DBNAME=mgd
-
-MGD_DBUSER=mgd_dbo
-MGD_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
-
-MGD_DBSCHEMADIR=${MGDDBSCHEMADIR}
-
-export MGD_DBSERVER MGD_DBURL MGD_DBNAME
-export MGD_DBUSER MGD_DBPASSWORDFILE MGD_DBSCHEMADIR
-
-# RADAR Connection parameters 
-RADAR_DBSERVER=PROD_MGI
-
-RADAR_DBURL=shire.informatics.jax.org:4100
-
-RADAR_DBNAME=radar
-
-RADAR_DBUSER=mgd_dbo
-RADAR_DBPASSWORDFILE=${MGIDBUTILSDIR}/.mgd_dbo_password
-
-RADAR_DBSCHEMADIR=${RADARDBSCHEMADIR}
-
-export RADAR_DBSERVER RADAR_DBURL RADAR_DBNAME RADAR_DBUSER 
-export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR 
+. ${MGICONFIG}/master.config.sh
 
 ###########################################################################
 #
@@ -62,9 +33,9 @@ export RADAR_DBPASSWORDFILE RADAR_DBSCHEMADIR
 
 JAVARUNTIMEOPTS="-Xms1000m -Xmx1000m"
 
-JAVA_LIB=${JAVAPATH}/lib_java_dla/dla.jar:${JAVAPATH}/lib_java_core/core.jar:${JAVAPATH}/lib_java_dbsmgd/dbsmgd.jar:${JAVAPATH}/lib_java_dbsrdr/dbsrdr.jar
+JAVA_LIB=${MGI_JAVALIB}/lib_java_dla/dla.jar:${MGI_JAVALIB}/lib_java_core/core.jar:${MGI_JAVALIB}/lib_java_dbsmgd/dbsmgd.jar:${MGI_JAVALIB}/lib_java_dbsrdr/dbsrdr.jar
 
-CLASSPATH=.:${INSTALLDIR}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
+CLASSPATH=.:${EGLOAD}/classes:${JAVA_LIB}:${COMMON_CLASSPATH}
 
 export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
 
@@ -94,7 +65,7 @@ DLA_LOAD_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 
 # QC report script
-APP_QCRPT=${QCRPTDIR}/egload/egloadRpt.csh
+APP_QCRPT=${QCRPTS}/egload/egloadRpt.csh
 
 export DLA_LOADER DLA_START DLA_LOAD_STREAM 
 export APP_QCRPT
@@ -218,7 +189,12 @@ export RADAR_BCP_OK_TO_OVERWRITE
 MAIL_LOADNAME="EntrezGene Load"
 
 #  Recipient list for mailing the log files (comma-separated)
-MAIL_LOG_PROC="lec,sc,dbm"
+MAIL_LOG_PROC="mgiadmin"
 
 export MAIL_LOADNAME MAIL_LOG_PROC MAIL_LOG_CUR
+
+#  Installation directory
+INSTALLDIR=${EGLOAD}
+
+export INSTALLDIR
 
