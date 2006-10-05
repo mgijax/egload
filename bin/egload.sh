@@ -61,17 +61,11 @@ fi
 #
 #  Establish the configuration file names.
 #
-CONFIG_MASTER=${MGICONFIG}/master.config.sh
 CONFIG=${EGLOAD}/egload.config
 
 #
 #  Make sure the configuration files are readable.
 #
-if [ ! -r ${CONFIG_MASTER} ]
-then
-    echo "Cannot read configuration file: ${CONFIG_MASTER}" | tee -a ${LOG}
-    exit 1
-fi
 if [ ! -r ${CONFIG} ]
 then
     echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
@@ -79,9 +73,14 @@ then
 fi
 
 #
-#  Source the common configuration file.
+# Set and verify the master configuration file name
 #
-. ${CONFIG_MASTER}
+CONFIG_MASTER=${MGICONFIG}/master.config.sh
+if [ ! -r ${CONFIG_MASTER} ]
+then
+    echo "Cannot read configuration file: ${CONFIG_MASTER}" | tee -a ${LOG}
+    exit 1
+fi
 
 #
 #  Source the common DLA functions script.
