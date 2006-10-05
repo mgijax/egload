@@ -59,7 +59,7 @@ then
 fi
 
 #
-#  Establish the configuration file names.
+#  Verify and source the configuration file name.
 #
 CONFIG=${EGLOAD}/egload.config
 
@@ -71,6 +71,7 @@ then
     echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
     exit 1
 fi
+. ${CONFIG}
 
 #
 # Set and verify the master configuration file name
@@ -98,11 +99,6 @@ else
     echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG}
     exit 1
 fi
-
-#
-#  Source the load configuration file.
-#
-. ${CONFIG}
 
 #
 #  Perform pre-load tasks.
