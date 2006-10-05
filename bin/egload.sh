@@ -46,7 +46,7 @@
 #  during configuration and initialization.
 #
 cd `dirname $0`/..
-LOG=${EGLOAD}/egload.log
+LOG=./egload.log
 rm -f ${LOG}
 
 #
@@ -61,7 +61,7 @@ fi
 #
 #  Verify and source the configuration file name.
 #
-CONFIG=${EGLOAD}/egload.config
+CONFIG=./egload.config
 
 #
 #  Make sure the configuration files are readable.
