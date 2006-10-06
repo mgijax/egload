@@ -59,21 +59,6 @@ then
 fi
 
 #
-#  Verify and source the configuration file name.
-#
-CONFIG=`pwd`/egload.config
-
-#
-#  Make sure the configuration files are readable.
-#
-if [ ! -r ${CONFIG} ]
-then
-    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
-    exit 1
-fi
-. ${CONFIG}
-
-#
 # Set and verify the master configuration file name
 #
 CONFIG_MASTER=${MGICONFIG}/master.config.sh
@@ -99,6 +84,17 @@ else
     echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG}
     exit 1
 fi
+
+#
+#  Verify and source the configuration file name.
+#
+CONFIG=`pwd`/egload.config
+if [ ! -r ${CONFIG} ]
+then
+    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
+    exit 1
+fi
+. ${CONFIG}
 
 #
 #  Perform pre-load tasks.
