@@ -59,29 +59,15 @@ then
 fi
 
 #
-#  Establish the configuration file names.
+#  Verify and source the configuration file name.
 #
-COMMON_CONFIG=`pwd`/common.config.sh
 CONFIG=`pwd`/egload.config
-
-#
-#  Make sure the configuration files are readable.
-#
-if [ ! -r ${COMMON_CONFIG} ]
-then
-    echo "Cannot read configuration file: ${COMMON_CONFIG}" | tee -a ${LOG}
-    exit 1
-fi
 if [ ! -r ${CONFIG} ]
 then
     echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
     exit 1
 fi
-
-#
-#  Source the common configuration file.
-#
-. ${COMMON_CONFIG}
+. ${CONFIG}
 
 #
 #  Source the common DLA functions script.
@@ -101,9 +87,14 @@ else
 fi
 
 #
-#  Source the load configuration file.
+# Set and verify the master configuration file name
 #
-. ${CONFIG}
+CONFIG_MASTER=${MGICONFIG}/master.config.sh
+if [ ! -r ${CONFIG_MASTER} ]
+then
+    echo "Cannot read configuration file: ${CONFIG_MASTER}" | tee -a ${LOG}
+    exit 1
+fi
 
 #
 #  Perform pre-load tasks.
@@ -116,7 +107,7 @@ preload
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load application" >> ${LOG_PROC}
 ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
-        -DCONFIG=${COMMON_CONFIG},${CONFIG} \
+        -DCONFIG=${CONFIG_MASTER},${CONFIG} \
         -DJOBKEY=${JOBKEY} -DOUTFILE_PREVENT_FORMATTING=true ${DLA_START}
 STAT=$?
 if [ ${STAT} -ne 0 ]
@@ -132,7 +123,7 @@ fi
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
 ${JAVA} -classpath ${CLASSPATH} \
-        -DCONFIG=${COMMON_CONFIG},${CONFIG} \
+        -DCONFIG=${CONFIG_MASTER},${CONFIG} \
         -DJOBKEY=${JOBKEY} -DDLA_FORMAT_REPORTS_ONLY=true ${DLA_START}
 STAT=$?
 if [ ${STAT} -ne 0 ]
@@ -162,26 +153,3 @@ postload
 
 exit 0
 
-
-###########################################################################
-#
-# Warranty Disclaimer and Copyright Notice
-#
-#  THE JACKSON LABORATORY MAKES NO REPRESENTATION ABOUT THE SUITABILITY OR
-#  ACCURACY OF THIS SOFTWARE OR DATA FOR ANY PURPOSE, AND MAKES NO WARRANTIES,
-#  EITHER EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR A
-#  PARTICULAR PURPOSE OR THAT THE USE OF THIS SOFTWARE OR DATA WILL NOT
-#  INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS, OR OTHER RIGHTS.
-#  THE SOFTWARE AND DATA ARE PROVIDED "AS IS".
-#
-#  This software and data are provided to enhance knowledge and encourage
-#  progress in the scientific community and are to be used only for research
-#  and educational purposes.  Any reproduction or use for commercial purpose
-#  is prohibited without the prior express written permission of The Jackson
-#  Laboratory.
-#
-# Copyright \251 1996, 1999, 2002, 2004 by The Jackson Laboratory
-#
-# All Rights Reserved
-#
-###########################################################################

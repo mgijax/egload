@@ -50,16 +50,6 @@ public class HTMLFormatter_typBucket extends HTMLFormatter
     }
 
     /**
-     * get the trailer text for this format
-     * @return trailer text
-     */
-    public String getTrailer()
-    {
-        String stdTrailer = super.getTrailer();
-        return "</TABLE>" + OutputDataFile.CRT + stdTrailer;
-    }
-
-    /**
      * format the given object in HTML
      * @param data object to format
      * @return formatted string
