@@ -48,7 +48,6 @@ fi
 # Check to see if this is a development installation
 #
 DEV=""
-echo "DEV=${DEV}"
 if [ "${INSTALL_TYPE}" = "dev" ]
 then
     DEV="-d"
