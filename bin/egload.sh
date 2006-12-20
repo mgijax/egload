@@ -16,7 +16,7 @@
 #  Inputs:
 #
 #      - Common configuration file (common.config.sh)
-#      - Entrez Gene load configuration file (config)
+#      - EntrezGene load configuration file (config)
 #
 #  Outputs:
 #
@@ -112,7 +112,7 @@ ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
-    echo "Entrez Gene Load application failed.  Return status: ${STAT}" >> ${LOG_PROC}
+    echo "EntrezGene Load application failed.  Return status: ${STAT}" >> ${LOG_PROC}
     postload
     exit 1
 fi
@@ -126,7 +126,7 @@ ${EGLOAD}/bin/formatreports.sh
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
-    echo "Entrez Gene Load output formatting failed.    Return status: ${STAT}" >> ${LOG_PROC}
+    echo "EntrezGene Load output formatting failed.    Return status: ${STAT}" >> ${LOG_PROC}
     postload
     exit 1
 fi
@@ -138,12 +138,12 @@ ${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
-    echo "Running seqloader QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
+    echo "Running EntrezGene QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
     shutDown
     exit 1
 fi
 
-echo "Entrez Gene Load application completed successfully" >> ${LOG_PROC}
+echo "EntrezGene Load application completed successfully" >> ${LOG_PROC}
 
 postload
 

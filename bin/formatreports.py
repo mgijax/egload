@@ -24,8 +24,8 @@
 import sys 
 import os
 import re
-import db
 import string
+import db
 import reportlib
 
 CRT = reportlib.CRT
@@ -35,16 +35,21 @@ tableStart = '<TABLE BORDER="1" CELLPADDING="5"><TR ALIGN="center" STYLE="font-w
 tableEnd = '</TABLE>'
 anchorEnd = '</A>'
 
-outFileTag = '_OUTFILE_NAME'
+# output file names defined in the configuration file and used in the loader
+# note that the 1-1 bucket is not translated into html format
 
+outFileTag = '_OUTFILE_NAME'
 egFiles = ['ZERO_ONE_OUTFILE_NAME', 'DNA_OUTFILE_NAME', 'RNADNA_OUTFILE_NAME']
 column8Files = ['ONE_N_OUTFILE_NAME', 'N_ONE_OUTFILE_NAME', 'N_M_OUTFILE_NAME', 'CHR_MIS_OUTFILE_NAME']
 column5Files = ['ONE_ZERO_OUTFILE_NAME']
 excludedFiles = ['EX_SEQ_OUTFILE_NAME']
 
+# _ActualDB_key for URLs we need to use
 egURL = 57
 genbankURL = 12
 refseqURL = 35
+
+# tags used in Constants.java for tagging specific ids used in the load
 mgiTag = 'MGIID'
 genbankTag = 'GenBank'
 refseqTag = ['XR', 'XM']
