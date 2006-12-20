@@ -46,7 +46,8 @@ public class NCBIGeneModelLookup extends MappedStringToString
          * get accession IDs/chromosomes that are designated as NCBI genes
          */
 	String sql = "select a1.accID, cc.chromosome " +
-                     "from MAP_Coord_Collection ccc, MAP_Coordinate c, MRK_Chromosome cc, MAP_Coord_Feature f, ACC_Accession a1 " +
+                     "from MAP_Coord_Collection ccc, MAP_Coordinate c, " +
+		     "MRK_Chromosome cc, MAP_Coord_Feature f, ACC_Accession a1 " +
                      "where ccc.name = 'NCBI Gene Model' " +
 		     "and ccc._Collection_key = c._Collection_key " +
                      "and c._MGIType_key = 27 " +

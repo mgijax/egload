@@ -15,6 +15,7 @@ import org.jax.mgi.shr.dbutils.RowReference;
 import org.jax.mgi.shr.config.ConfigException;
 import org.jax.mgi.shr.stringutil.StringLib;
 import org.jax.mgi.dbs.SchemaConstants;
+import org.jax.mgi.dbs.mgd.LogicalDBConstants;
 
 /**
  * is a SVAIndexCache for looking up the previous state of Entrez gene to
@@ -96,19 +97,17 @@ public class EntrezGeneHistory
          */
         return
             "select a1.accID, a2.accID " +
-            "from ACC_AccessionReference r, " +
-            "         ACC_Accession a1, " +
-            "         ACC_Accession a2 " +
+            "from ACC_AccessionReference r, ACC_Accession a1, ACC_Accession a2 " +
             "where r._Refs_key = " + Constants.EGLOAD_REFSKEY + " " +
-            "and a1._Accession_key = r._Accession_key " +
-            "and a1._LogicalDB_key = 55 " +
+            "and r._Accession_key = a1._Accession_key " +
+            "and a1._LogicalDB_key = " + LogicalDBConstants.ENTREZ_GENE +
             "and a1._MGIType_key = 2 " +
             "and a1.preferred = 1 " +
-            "and a2._Object_key = a1._Object_key " +
+            "and a1._Object_key = a2._Object_key " +
             "and a2._MGIType_key = 2 " +
             "and a2._LogicalDB_key = 1 " +
-            "and a2.preferred = 1 " +
-            "and a2.prefixPart = 'MGI:'";
+            "and a2.prefixPart = 'MGI:' " +
+            "and a2.preferred = 1 ";
 
     }
 

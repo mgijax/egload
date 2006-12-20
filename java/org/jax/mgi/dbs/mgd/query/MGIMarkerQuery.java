@@ -84,12 +84,11 @@ public class MGIMarkerQuery extends ObjectQuery
         String stmt = "select a.accID, m.symbol, m.name, m.chromosome, " +
             "type = t.name, a._Object_key " +
             "from ACC_Accession a, MRK_Marker m, MRK_Types t " +
-            "where m._Marker_key = a._Object_key " +
+            "where m._Organism_key = 1 " +
             "and m._Marker_Status_key in (1, 3) " +
-            "and m._Organism_key = 1 " +
+            "and m._Marker_key = a._Object_key " +
             "and a._MGIType_key = 2 " +
             "and a._LogicalDB_key = 1 " +
-            //"and (a.accID = 'MGI:2684876') " +
             "and a.prefixPart = 'MGI:' " +
             "and a.preferred = 1 " +
             "and m._Marker_Type_key = t._Marker_Type_key";

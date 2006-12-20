@@ -12,6 +12,8 @@
 #
 # Outputs:
 #	HTML formatted files (one per .txt file)
+#	We create anchors for MGI ids to the public WI accession report
+#	External anchors are created for GenBank, RefSeq and EntrezGene ids
 #
 # History
 #
@@ -177,7 +179,7 @@ def idAnchors(s):
 
 def processEG():
     #
-    # process EG-oriented s
+    # process EG-oriented reports
     #
 
     # iterate thru Files
@@ -218,7 +220,7 @@ def processEG():
 
 def processMGI_8columns():
     #
-    # process MGI-oriented s with 8 columns
+    # process MGI-oriented reports with 8 columns
     #
 
     # iterate thru Files
@@ -262,7 +264,7 @@ def processMGI_8columns():
 
 def processMGI_5columns():
     #
-    # process MGI-oriented s w/ 5 columns
+    # process MGI-oriented reports w/ 5 columns
     #
 
     # iterate thru Files
@@ -306,7 +308,7 @@ def processMGI_5columns():
 
 def processExcluded():
     #
-    # process excluded
+    # process excluded reports
     #
 
     # iterate thru Files

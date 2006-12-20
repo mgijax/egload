@@ -1,3 +1,9 @@
+TAG: egload-3-5-1-4
+DATE: 12/19/2006
+STAFF: lec
+CHANGES:
+1) re-vise HTML formatting
+
 TAG: egload-3-5-1-3
 TAG: egload-3-5-1-2
 DATE: 10/23/2006
@@ -47,6 +53,50 @@ STAFF: lec
 CHANGES:
 1) TR7894
 
+=======
+TAG: egload-tr7894-10
+DATE: 10/17/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-9
+DATE: 10/11/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-8
+DATE: 10/10/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-7
+TAG: egload-tr7894-6
+DATE: 10/06/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-5
+TAG: egload-tr7894-4
+TAG: egload-tr7894-3
+TAG: egload-tr7894-2
+DATE: 10/05/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-1
+DATE: 10/02/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+>>>>>>> 1.23.2.10
 TAG: egload-tr7894-BP
 DATE: 10/02/2006
 STAFF: lec

@@ -66,28 +66,25 @@ public class AssocAccidLookup extends FullCachedLookup
     public String getFullInitQuery()
     {
 
+	// select sequence ids, sequence types for GenBank and RefSeq associated with mouse Markers
+	// and secondary MGI ids for Markers
+
         String sql =
-            "select a._Object_key, a.accID, t.abbreviation " +
-            "from ACC_Accession a, ACC_Accession a2, " +
-            "     SEQ_Sequence s, VOC_Term t  " +
-            "where a._MGIType_key = 2 " +
-            // refseqs and genbank accIDs
-            "and a._LogicalDB_key in (9, 27) " +
-            "and a.accID = a2.accID " +
-            "and a2._MGIType_key = 19 " +
-            "and a2._LogicalDB_key = a._LogicalDB_key " +
-            "and s._Sequence_key = a2._Object_key " +
-            "and s._SequenceType_key = t._Term_key " +
+            "select c._Marker_key, a.accID, t.abbreviation  " +
+            "from SEQ_Marker_Cache c, ACC_Accession a, VOC_Term t " +
+            "where c._Organism_key = 1 " +
+            "and c._LogicalDB_key in (9, 27)  " +
+            "and c._SequenceType_key = t._Term_key  " +
+            "and c._Sequence_key = a._Object_key " +
+            "and a._MGIType_key = 19 " +
             "union " +
-            // MGI secondary sequences
             "select a._Object_key, a.accID, 'M' " +
             "from ACC_Accession a " +
             "where a._MGIType_key = 2 " +
             "and  a._LogicalDB_key = 1 " +
-            "and a.preferred != 1 " +
             "and a.prefixPart = 'MGI:' " +
-            "order by _Object_key, accid";
-
+            "and a.preferred != 1 " +
+            "order by _Marker_key, accid";
 
         return sql;
     }
