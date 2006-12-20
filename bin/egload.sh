@@ -108,7 +108,7 @@ echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load application" >> ${LOG_PROC}
 ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
-        -DJOBKEY=${JOBKEY} -DOUTFILE_PREVENT_FORMATTING=true ${DLA_START}
+        -DJOBKEY=${JOBKEY} ${DLA_START}
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -122,9 +122,7 @@ fi
 #
 echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
-${JAVA} -classpath ${CLASSPATH} \
-        -DCONFIG=${CONFIG_MASTER},${CONFIG} \
-        -DJOBKEY=${JOBKEY} -DDLA_FORMAT_REPORTS_ONLY=true ${DLA_START}
+${EGLOAD}/bin/formatreports.sh
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
@@ -132,7 +130,6 @@ then
     postload
     exit 1
 fi
-
 
 #
 # run qc reports
@@ -145,7 +142,6 @@ then
     shutDown
     exit 1
 fi
-
 
 echo "Entrez Gene Load application completed successfully" >> ${LOG_PROC}
 
