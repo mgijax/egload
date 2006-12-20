@@ -13,6 +13,8 @@ import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
 import org.jax.mgi.shr.config.EntrezGeneCfg;
+import org.jax.mgi.shr.ioutils.OutputManager;
+
 
 /**
  *
@@ -99,13 +101,14 @@ public class EntrezGeneLoader
             this.entrezGeneHistory.initCache();
         }
 
-        // run mgd prepartion by deleting accession ids for SwissProt and
-        // Entrez Gene
+        // run mgd prepartion by deleting accession ids for SwissProt & Entrez Gene
         if (!this.egCfg.getOkToPreventDelete().booleanValue())
         {
+            printStats("deleting existing accession ids...");
             BatchProcessor batch = super.loadDBMgr.getBatchProcessor();
             batch.addScriptBatch(Constants.DELETE_SCRIPT);
             batch.executeBatch();
+            printStats("finished deleting existing accession ids.");
         }
 
         printStats("database prepared");
@@ -142,9 +145,7 @@ public class EntrezGeneLoader
         throws MGIException
     {
         bucketizer.run(Constants.PROVIDER_MGI, Constants.PROVIDER_ENTREZGENE);
-
         printStats("run complete");
-
     }
 
     /**
@@ -171,12 +172,9 @@ public class EntrezGeneLoader
         long freememEnd = rtime.freeMemory();
         loadStopWatch.stop();
         double totalProcessTime = loadStopWatch.time();
-        text = text.concat("Total bytes: " +
-                           new Double(freememStart - freememEnd));
+        text = text.concat("Total bytes: " + new Double(freememStart - freememEnd));
         text = text.concat("  |  Total time: " + totalProcessTime);
         super.logger.logInfo(text);
         loadStopWatch.start();
     }
-
-
 }

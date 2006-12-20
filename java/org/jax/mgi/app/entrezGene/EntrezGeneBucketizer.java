@@ -50,18 +50,16 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 {
     // static report aliases which correspond to the prefixes used in
     // the configuration file for configuring the OutputDataFiles
-    public static String BUCKET_ONE_TO_ONE = "BUCKET_ONE_TO_ONE";
-    public static String BUCKET_ONE_TO_MANY = "BUCKET_ONE_TO_MANY";
-    public static String BUCKET_MANY_TO_ONE = "BUCKET_MANY_TO_ONE";
-    public static String BUCKET_MANY_TO_MANY = "BUCKET_MANY_TO_MANY";
-    public static String BUCKET_ONE_TO_ZERO = "BUCKET_ONE_TO_ZERO";
-    public static String BUCKET_ZERO_TO_ONE = "BUCKET_ZERO_TO_ONE";
-    public static String CHROMOSOME_MISMATCH = "CHROMOSOME_MISMATCH";
-    public static String EXCLUDED_SEQUENCES = "EXCLUDED_SEQUENCES";
-    public static String BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY =
-        "BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY";
-    public static String BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA =
-        "BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA";
+    public static String BUCKET_ONE_TO_ONE = "ONE_ONE";
+    public static String BUCKET_ONE_TO_MANY = "ONE_N";
+    public static String BUCKET_MANY_TO_ONE = "N_ONE";
+    public static String BUCKET_MANY_TO_MANY = "N_M";
+    public static String BUCKET_ONE_TO_ZERO = "ONE_ZERO";
+    public static String BUCKET_ZERO_TO_ONE = "ZERO_ONE";
+    public static String CHROMOSOME_MISMATCH = "CHR_MIS";
+    public static String EXCLUDED_SEQUENCES = "EX_SEQ";
+    public static String CUSTOM_DNAONLY = "DNA";
+    public static String CUSTOM_RNADNA = "RNADNA";
 
     public static final String TYPE_DNA_ONLY = "Type 1 (DNA Only)";
     public static final String TYPE_DNA_AND_RNA = "Type 2 (DNA and RNA)";
@@ -587,11 +585,9 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                 String s = null;
             }
             if (seqAssocType.equals(this.TYPE_DNA_ONLY))
-                OutputManager.writeln(BUCKET_ZERO_TO_ONE_CUSTOM_DNAONLY,
-                                      output);
+                OutputManager.writeln(CUSTOM_DNAONLY, output);
             else
-                OutputManager.writeln(BUCKET_ZERO_TO_ONE_CUSTOM_RNADNA,
-                                      output);
+                OutputManager.writeln(CUSTOM_RNADNA, output);
         }
     }
 
