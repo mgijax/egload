@@ -57,14 +57,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     public static String BUCKET_ONE_TO_ZERO = "ONE_ZERO";
     public static String BUCKET_ZERO_TO_ONE = "ZERO_ONE";
     public static String CHROMOSOME_MISMATCH = "CHR_MIS";
-    public static String EXCLUDED_SEQUENCES = "EX_SEQ";
-    public static String CUSTOM_DNAONLY = "DNA";
-    public static String CUSTOM_RNADNA = "RNADNA";
-
-    public static final String TYPE_DNA_ONLY = "Type 1 (DNA Only)";
-    public static final String TYPE_DNA_AND_RNA = "Type 2 (DNA and RNA)";
-    public static final String TYPE_RNA_ONLY = "Type 3 (RNA only)";
-    public static final String TYPE_NO_DNA_OR_RNA = "Type 4 (no DNA nor RNA)";
 
     // a Configurator for configuring runtime aspects of the load
     private EntrezGeneCfg egCfg = null;
@@ -120,15 +112,12 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     }
 
     /**
-     * runs the reporting for excluded sequences which was derived through
-     * the bucketization algorithm
      * @assumes the bucketizer algorithm has been run
-     * @effects will create a excluded sequences repport
+     * @effects nothing
      * @throws MGIException thrown to represent any error
      */
     public void postProcess() throws MGIException
     {
-        reportExcludedSequences();
     }
 
     /**
@@ -155,7 +144,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         throws MGIException
     {
         this.reportUnConnectedComponents(bucketItem, BUCKET_ZERO_TO_ONE);
-        this.reportCustomZeroToOne(bucketItem);
     }
 
     /**
@@ -521,225 +509,5 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
             OutputManager.writeln(reportAlias, output);
         }
     }
-
-    /**
-     * create an entry in one of the buckets reporting a customized output
-     * for deb reed which includes separating entries with dna associations
-     * only from the rest and sorting on association classes (i.e., dna only,
-     * dna and rna, and rna only)
-     * @assumes nothing
-     * @effects a new report entry will be made to the customized zero to
-     * one report
-     * @param item the BucketItem representing the association
-     * @param reportAlias the report alias to write to
-     * @throws MGIException thrown to represent any error
-     */
-    private void reportCustomZeroToOne(BucketItem item)
-    throws MGIException
-    {
-        Vector fields = new Vector();
-        String seqAssocType = null;
-        for (Iterator i = item.membersIterator(); i.hasNext();)
-        {
-            Bucketizable b = (Bucketizable)i.next();
-            String output = null;
-            if (b.getProvider().equals(Constants.PROVIDER_MGI))
-            {
-                throw new MGIException("reporting on a One to Zero but " +
-                                       "received a MGI Marker from the " +
-                                       "bucket. This is an internal error");
-            }
-            else
-            {
-                EntrezGene egene = (EntrezGene)b;
-                HashSet sequences = egene.getAllSequences();
-
-                // the sequence association types effects sort order
-                // type can be of the following (in order of sort) :
-                // dna associations only
-                // dna and rna
-                // rna only
-                // none
-                seqAssocType = getSeqAssocType(sequences);
-                if (seqAssocType.equals(this.TYPE_NO_DNA_OR_RNA))
-                    return; // do not report these
-                fields.add(egene.getId() == null ? "" : egene.getId());
-                fields.add(egene.getSymbol() == null ? "" :
-                           egene.getSymbol());
-                fields.add(egene.getChromosome() == null ? "" :
-                           egene.getChromosome());
-                fields.add(egene.svaString());
-                fields.add(seqAssocType);
-                if (this.egCfg.getOkToPerformHistory().booleanValue())
-                {
-                    String oldMGIID =
-                        this.history.lookupEGeneID(egene.getId());
-                    fields.add(oldMGIID == null ? "None" : oldMGIID);
-                    output = Sprintf.sprintf("%s\t%s\t%s\t%s\t%s\t%s", fields);
-                }
-                else
-                    output = Sprintf.sprintf("%s\t%s\t%s\t%s\t%s", fields);
-            }
-            if (output == null)
-            {
-                String s = null;
-            }
-            if (seqAssocType.equals(this.TYPE_DNA_ONLY))
-                OutputManager.writeln(CUSTOM_DNAONLY, output);
-            else
-                OutputManager.writeln(CUSTOM_RNADNA, output);
-        }
-    }
-
-
-
-    /**
-     * iterate through the sequence to gene assoctions derived by the
-     * Bucketizer and report of any that meet the exclusion crireia (see
-     * requirements doc)
-     * @assumes the bucketizer algorithm has been already run
-     * @throws MGIException thrown to represent any error
-     */
-    private void reportExcludedSequences()
-    throws MGIException
-    {
-        String[] indexNames = super.index.getIndexNames();
-        HashSet entrezGenes = new HashSet();
-        HashSet mgiMarkers = new HashSet();
-        HashSet entrezGeneIds = new HashSet();
-        HashSet mgiMarkerIds = new HashSet();
-        String associatedMGIs = null;
-        String associatedEntrezGenes = null;
-
-
-        for (int i = 0; i < indexNames.length; i++)
-        {
-            String name = indexNames[i];
-            for (Iterator it = super.index.keySet(name).iterator();
-                 it.hasNext();)
-            {
-                entrezGenes.clear();
-                mgiMarkers.clear();
-                entrezGeneIds.clear();
-                mgiMarkerIds.clear();
-                SequenceAccession acc = (SequenceAccession)it.next();
-                String seqid = acc.getAccid();
-                if (seqid.equals("-"))
-                    continue;
-                Set associatedGenes = (Set)super.index.lookup(name, acc);
-                for (Iterator it2 = associatedGenes.iterator();
-                     it2.hasNext();)
-                {
-                    Bucketizable gene = (Bucketizable)it2.next();
-                    if (gene.getProvider().equals(
-                        Constants.PROVIDER_ENTREZGENE))
-                        entrezGenes.add(gene);
-                    else if (gene.getProvider().equals(
-                        Constants.PROVIDER_MGI))
-                        mgiMarkers.add(gene);
-                    else
-                        throw new MGIException("Unknown provider type " +
-                        gene.getProvider() +
-                        " found while reporting excluded sequences");
-                }
-                boolean exclude = false;
-                if (entrezGenes.size() > 1)
-                {
-                    exclude = true;
-                    for (Iterator j = entrezGenes.iterator(); j.hasNext();)
-                    {
-                        EntrezGene eg = (EntrezGene) j.next();
-                        entrezGeneIds.add(eg.getId());
-                    }
-                }
-                if (mgiMarkers.size() > 1)
-                {
-                    exclude = true;
-                    for (Iterator j = mgiMarkers.iterator(); j.hasNext();)
-                    {
-                        MGIMarker mgi = (MGIMarker) j.next();
-                        mgiMarkerIds.add(mgi.mgiID);
-                    }
-                }
-                if (exclude)
-                {
-                    associatedMGIs = "None";
-                    associatedEntrezGenes = "None";
-                    if (entrezGeneIds.size() > 1)
-                        associatedEntrezGenes =
-                            StringLib.join(entrezGeneIds, ",");
-                    else if (entrezGeneIds.size() == 1)
-                        associatedEntrezGenes =
-                            (String)entrezGeneIds.iterator().next();
-                    if (mgiMarkerIds.size() > 1)
-                        associatedMGIs =
-                            StringLib.join(mgiMarkerIds, ",");
-                    else if (mgiMarkerIds.size() == 1)
-                        associatedMGIs =
-                            (String)mgiMarkerIds.iterator().next();
-
-                    // write to the excluded sequences report
-                    OutputManager.writeln(EXCLUDED_SEQUENCES,
-                                          Sprintf.sprintf("%s\t%s\t%s\t%s",
-                        acc,
-                        acc.getTypeAsString(),
-                        associatedMGIs,
-                        associatedEntrezGenes));
-                }
-            }
-        }
-
-    }
-
-    /**
-     * get the type of sequence associations which could be dna only,
-     * dna and rna, rna only, or none
-     * @param sequences a HashSet of SequenceAccession objects to evaluate
-     * @return the type represented by a String
-     * @throws DBException thrown if there is an error accessing the database
-     * @throws CacheException thrown if there is an error accessing the cache
-     */
-    private String getSeqAssocType(HashSet sequences)
-    throws DBException, CacheException
-    {
-        String type = this.TYPE_NO_DNA_OR_RNA;
-        for (Iterator i = sequences.iterator(); i.hasNext();)
-        {
-            SequenceAccession acc = (SequenceAccession)i.next();
-            if (acc.getType() == SequenceAccession.UNDEFINED)
-                continue;
-            else if (acc.getType() == SequenceAccession.MGI)
-                continue;
-            else if (acc.getType() == SequenceAccession.PROTEIN)
-                continue;
-            else if (acc.getType() == SequenceAccession.DNA)
-            {
-                // ignore if associated with problem clone
-                if (!this.problemClones.lookup(acc.getAccid()))
-                {
-                    if (type.equals(this.TYPE_NO_DNA_OR_RNA))
-                        type = this.TYPE_DNA_ONLY;
-                    else if (type.equals(this.TYPE_RNA_ONLY))
-                        type = this.TYPE_DNA_AND_RNA;
-                }
-            }
-            else if (acc.getType() == SequenceAccession.RNA)
-            {
-                // ignore if associated with problem clone or if
-                // experimental RNA
-               if (!this.problemClones.lookup(acc.getAccid()) &&
-                   !acc.getAccid().startsWith("XM"))
-               {
-                   if (type.equals(this.TYPE_NO_DNA_OR_RNA))
-                       type = this.TYPE_RNA_ONLY;
-                   else if (type.equals(this.TYPE_DNA_ONLY))
-                       type = this.TYPE_DNA_AND_RNA;
-               }
-            }
-        }
-        return type;
-    }
-
-
 
 }

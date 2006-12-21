@@ -41,10 +41,9 @@ anchorEnd = '</A>'
 # note that the 1-1 bucket is not translated into html format
 
 outFileTag = '_OUTFILE_NAME'
-egFiles = ['ZERO_ONE_OUTFILE_NAME', 'DNA_OUTFILE_NAME', 'RNADNA_OUTFILE_NAME']
+egFiles = ['ZERO_ONE_OUTFILE_NAME']
 column8Files = ['ONE_N_OUTFILE_NAME', 'N_ONE_OUTFILE_NAME', 'N_M_OUTFILE_NAME', 'CHR_MIS_OUTFILE_NAME']
 column5Files = ['ONE_ZERO_OUTFILE_NAME']
-excludedFiles = ['EX_SEQ_OUTFILE_NAME']
 
 # _ActualDB_key for URLs we need to use
 egURL = 57
@@ -306,63 +305,6 @@ def processMGI_5columns():
         inFile.close()
         reportlib.finish_nonps(htmlFile, isHTML = 1)
 
-def processExcluded():
-    #
-    # process excluded reports
-    #
-
-    # iterate thru Files
-    
-    for b in excludedFiles:
-
-        value = os.environ[b]
-	inFile, htmlFile = initFiles(value)
-
-        # print html header
-
-        htmlFile.write(tableStart + CRT)
-        htmlFile.write('<TD>Accession</TD>')
-        htmlFile.write('<TD>Type</TD>')
-        htmlFile.write('<TD>MGI Markers</TD>')
-        htmlFile.write('<TD>EntrezGene Genes</TD>' + CRT)
-
-        # iterate thru input file
-
-        for line in inFile.readlines():
-
-	    tokens = string.split(line, TAB)
-
-	    genbankID = tokens[0]
-	    sequenceType = tokens[1]
-            mgiMarkers = tokens[2]
-            egMarkers = tokens[3]
-
-	    mgihtml = []
-	    if mgiMarkers != 'None':
-		tokens = string.split(mgiMarkers,',')
-		for t in tokens:
-		    mgihtml.append(mgiAnchor(t))
-	    else:
-		mgihtml.append(mgiMarkers)
-
-	    eghtml = []
-	    if egMarkers != 'None':
-		tokens = string.split(egMarkers,',')
-		for t in tokens:
-		    eghtml.append(externalAnchor(t, egURL))
-	    else:
-		eghtml.append(egMarkers)
-
-	    htmlFile.write('<TR><TD>' + externalAnchor(genbankID, genbankURL) + '</TD>')
-	    htmlFile.write('<TD>' + sequenceType + '</TD>')
-	    htmlFile.write('<TD>' + string.join(mgihtml,',') + '</TD>')
-	    htmlFile.write('<TD>' + string.join(eghtml,',') + '</TD></TR>')
-	    htmlFile.write(CRT)
-
-        htmlFile.write(tableEnd)
-        inFile.close()
-        reportlib.finish_nonps(htmlFile, isHTML = 1)
-
 #
 # main
 #
@@ -371,7 +313,5 @@ init()
 processEG()
 processMGI_8columns()
 processMGI_5columns()
-#this report is not used at this time
-#processExcluded()
 exit()
 

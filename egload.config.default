@@ -102,56 +102,32 @@ export CACHE_DEBUG LOG_FACTORY
 #
 ###########################################################################
 
-# web url for creating hypertext links
-FMT_WEB_SERVER_URL=www.informatics.jax.org
-
 ONE_ONE_OUTFILE_NAME=${RPTDIR}/bucket_one_to_one.txt
 ONE_ONE_SORT="-k8,8 -k1.5n,1.0n"
 
 ONE_N_OUTFILE_NAME=${RPTDIR}/bucket_one_to_many.txt
 ONE_N_SORT="-k8,8 -k1.5n,1.0n"
-ONE_N_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
 
 N_ONE_OUTFILE_NAME=${RPTDIR}/bucket_many_to_one.txt
-N_ONE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
 
 N_M_OUTFILE_NAME=${RPTDIR}/bucket_many_to_many.txt
-N_M_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
 
 ONE_ZERO_OUTFILE_NAME=${RPTDIR}/bucket_one_to_zero.txt
 ONE_ZERO_SORT="-k5,5 -k1.5n,1.0n"
-ONE_ZERO_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_mgiBucket
 
 ZERO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one.txt
 ZERO_ONE_SORT="-k5,5 -k1n"
-ZERO_ONE_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_egBucket
-
-DNA_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one_custom_dnaonly.txt
-DNA_SORT="-k5,5 -k1n"
-DNA_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_egBucket
-
-RNADNA_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one_custom_rnadna.txt
-RNADNA_SORT="-k5,5 -k1n"
-RNADNA_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_egBucket
 
 CHR_MIS_OUTFILE_NAME=${RPTDIR}/bucket_mismatched_chr.txt
 CHR_MIS_SORT="-k8,8 -k1.5n,1.0n"
-CHR_MIS_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_typBucket
-
-EX_SEQ_OUTFILE_NAME=${RPTDIR}/excludedSequences.txt
-EX_SEQ_SORT="-k2,2 -k1,1"
-EX_SEQ_FORMATTERS=org.jax.mgi.app.entrezGene.output.HTMLFormatter_excludedSeqs
 
 export ONE_ONE_OUTFILE_NAME ONE_ONE_SORT
-export ONE_N_OUTFILE_NAME ONE_N_SORT ONE_N_FORMATTERS
-export N_ONE_OUTFILE_NAME N_ONE_FORMATTERS
-export N_M_OUTFILE_NAME N_M_FORMATTERS
-export ONE_ZERO_OUTFILE_NAME ONE_ZERO_SORT ONE_ZERO_FORMATTERS
-export ZERO_ONE_OUTFILE_NAME ZERO_ONE_SORT ZERO_ONE_FORMATTERS
-export DNA_OUTFILE_NAME DNA_SORT DNA_FORMATTERS
-export RNADNA_OUTFILE_NAME RNADNA_SORT RNADNA_FORMATTERS
-export CHR_MIS_OUTFILE_NAME CHR_MIS_SORT CHR_MIS_FORMATTERS
-export EX_SEQ_OUTFILE_NAME EX_SEQ_SORT EX_SEQ_FORMATTERS
+export ONE_N_OUTFILE_NAME ONE_N_SORT
+export N_ONE_OUTFILE_NAME
+export N_M_OUTFILE_NAME
+export ONE_ZERO_OUTFILE_NAME ONE_ZERO_SORT
+export ZERO_ONE_OUTFILE_NAME ZERO_ONE_SORT
+export CHR_MIS_OUTFILE_NAME CHR_MIS_SORT
 
 ###########################################################################
 #
