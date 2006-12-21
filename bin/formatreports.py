@@ -80,12 +80,18 @@ def initFiles(value):
 
     # open input (text) file
 
-    inFile = open(value, 'r')
-    head, tail = os.path.split(value)
+    try:
+        inFile = open(value, 'r')
+        head, tail = os.path.split(value)
 
-    # initialize output (html) file
+        # initialize output (html) file
 
-    htmlFile = reportlib.init(tail, outputdir = os.environ['RPTDIR'], printHeading = None, isHTML = 1)
+        htmlFile = reportlib.init(tail, outputdir = os.environ['RPTDIR'], printHeading = None, isHTML = 1)
+
+    except:
+
+	print 'Cannot open file: %s' % (value)
+	sys.exit(1)
 
     return inFile, htmlFile
 
@@ -303,4 +309,5 @@ init()
 processEG()
 processMGI_8columns()
 processMGI_5columns()
+sys.exit(0)
 

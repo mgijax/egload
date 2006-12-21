@@ -23,20 +23,15 @@
 #
 ###########################################################################
 
-#
-#  Set up a log file for the shell script in case there is an error
-#  during configuration and initialization.
-#
 cd `dirname $0`/..
-LOG=`pwd`/egloadreports.log
-rm -f ${LOG}
 
+#
 #
 #  Verify the argument(s) to the shell script.
 #
 if [ $# -ne 0 ]
 then
-    echo "Usage: $0" | tee -a ${LOG}
+    echo "Usage: $0" | tee -a ${LOG_PROC}
     exit 1
 fi
 
@@ -46,31 +41,83 @@ fi
 CONFIG=`pwd`/egload.config
 if [ ! -r ${CONFIG} ]
 then
-    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
+    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG_PROC}
     exit 1
 fi
 . ${CONFIG}
 
+#
+#  Source the common DLA functions script.
+#
+if [ "${DLAJOBSTREAMFUNC}" != "" ]
+then
+    if [ -r ${DLAJOBSTREAMFUNC} ]
+    then
+        . ${DLAJOBSTREAMFUNC}
+    else
+        echo "Cannot source DLA functions script: ${DLAJOBSTREAMFUNC}" | tee -a ${LOG_PROC}
+        exit 1
+    fi
+else
+    echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG_PROC}
+    exit 1
+fi
+
 cd ${RPTDIR}
 
-sort ${ONE_ONE_SORT} ${ONE_ONE_OUTFILE_NAME} > ${ONE_ONE_OUTFILE_NAME}.tmp
-mv ${ONE_ONE_OUTFILE_NAME}.tmp ${ONE_ONE_OUTFILE_NAME}
+# sort text files
 
-sort ${ONE_N_SORT} ${ONE_N_OUTFILE_NAME} > ${ONE_N_OUTFILE_NAME}.tmp
-mv ${ONE_N_OUTFILE_NAME}.tmp ${ONE_N_OUTFILE_NAME}
+if [ -f ${ONE_ONE_OUTFILE_NAME} ]
+then
+    sort ${ONE_ONE_SORT} ${ONE_ONE_OUTFILE_NAME} > ${ONE_ONE_OUTFILE_NAME}.tmp
+    mv ${ONE_ONE_OUTFILE_NAME}.tmp ${ONE_ONE_OUTFILE_NAME}
+else
+   echo "Cannot open report file: ${ONE_ONE_OUTFILE_NAME}" >> ${LOG_PROC}
+fi
 
-sort ${ONE_ZERO_SORT} ${ONE_ZERO_OUTFILE_NAME} > ${ONE_ZERO_OUTFILE_NAME}.tmp
-mv ${ONE_ZERO_OUTFILE_NAME}.tmp ${ONE_ZERO_OUTFILE_NAME}
+if [ -f ${ONE_N_OUTFILE_NAME} ]
+then
+    sort ${ONE_N_SORT} ${ONE_N_OUTFILE_NAME} > ${ONE_N_OUTFILE_NAME}.tmp
+    mv ${ONE_N_OUTFILE_NAME}.tmp ${ONE_N_OUTFILE_NAME}
+else
+   echo "Cannot open report file: ${ONE_N_OUTFILE_NAME}" >> ${LOG_PROC}
+fi
 
-sort ${ZERO_ONE_SORT} ${ZERO_ONE_OUTFILE_NAME} > ${ZERO_ONE_OUTFILE_NAME}.tmp
-mv ${ZERO_ONE_OUTFILE_NAME}.tmp ${ZERO_ONE_OUTFILE_NAME}
+if [ -f ${ONE_ZERO_OUTFILE_NAME} ]
+then
+    sort ${ONE_ZERO_SORT} ${ONE_ZERO_OUTFILE_NAME} > ${ONE_ZERO_OUTFILE_NAME}.tmp
+    mv ${ONE_ZERO_OUTFILE_NAME}.tmp ${ONE_ZERO_OUTFILE_NAME}
+else
+   echo "Cannot open report file: ${ONE_ZERO_OUTFILE_NAME}" >> ${LOG_PROC}
+fi
 
-sort ${CHR_MIS_SORT} ${CHR_MIS_OUTFILE_NAME} > ${CHR_MIS_OUTFILE_NAME}.tmp
-mv ${CHR_MIS_OUTFILE_NAME}.tmp ${CHR_MIS_OUTFILE_NAME}
+if [ -f ${ZERO_ONE_OUTFILE_NAME} ]
+then
+    sort ${ZERO_ONE_SORT} ${ZERO_ONE_OUTFILE_NAME} > ${ZERO_ONE_OUTFILE_NAME}.tmp
+    mv ${ZERO_ONE_OUTFILE_NAME}.tmp ${ZERO_ONE_OUTFILE_NAME}
+else
+   echo "Cannot open report file: ${ZERO_ONE_OUTFILE_NAME}" >> ${LOG_PROC}
+fi
 
-${EGLOAD}/bin/formatreports.py
+if [ -f ${CHR_MIS_OUTFILE_NAME} ]
+then
+    sort ${CHR_MIS_SORT} ${CHR_MIS_OUTFILE_NAME} > ${CHR_MIS_OUTFILE_NAME}.tmp
+    mv ${CHR_MIS_OUTFILE_NAME}.tmp ${CHR_MIS_OUTFILE_NAME}
+else
+   echo "Cannot open report file: ${CHR_MIS_OUTFILE_NAME}" >> ${LOG_PROC}
+fi
 
-echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC}
+# convert text files to html
+
+${EGLOAD}/bin/formatreports.py >> ${LOG_PROC}
+STAT=$?
+if [ ${STAT} -ne 0 ]
+then
+    echo "EntrezGene Load report formatting failed.    Return status: ${STAT}" >> ${LOG_PROC}
+    exit 1
+fi
+
+echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC_PROC}
 
 exit 0
 
