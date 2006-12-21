@@ -99,7 +99,8 @@ fi
 #
 #  Perform pre-load tasks.
 #
-preload
+preload ${OUTPUTDIR}
+cleanDir ${OUTPUTDIR}
 
 #
 #  Run the load application.

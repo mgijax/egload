@@ -45,9 +45,6 @@ export JAVARUNTIMEOPTS JAVA_LIB CLASSPATH
 #
 ###########################################################################
 
-# this will control whether or not to run only report formatting 
-DLA_FORMAT_REPORTS_ONLY=false
-
 # this will report on previous associations between eg and mgi
 EGLOAD_PERFORM_HISTORY=false
 
@@ -67,6 +64,7 @@ DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 # QC report script
 APP_QCRPT=${QCRPTS}/egload/egloadRpt.csh
 
+export EGLOAD_PERFORM_HISTORY JOBSTREAM
 export DLA_LOADER DLA_START DLA_LOAD_STREAM 
 export APP_QCRPT
 
@@ -169,7 +167,10 @@ export RADAR_BCP_OK_TO_OVERWRITE
 #  The name of the load for the subject of an email notification
 MAIL_LOADNAME="EntrezGene Load"
 
-export MAIL_LOADNAME
+#  Recipient list for mailing the log files (comma-separated)
+MAIL_LOG_PROC="mgiadmin"
+
+export MAIL_LOADNAME MAIL_LOG_PROC
 
 #  Installation directory
 INSTALLDIR=${EGLOAD}

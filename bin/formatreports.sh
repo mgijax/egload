@@ -117,7 +117,7 @@ then
     exit 1
 fi
 
-echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC_PROC}
+echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC}
 
 exit 0
 
