@@ -28,7 +28,7 @@
 #  during configuration and initialization.
 #
 cd `dirname $0`/..
-LOG=`pwd`/egload.log
+LOG=`pwd`/egloadreports.log
 rm -f ${LOG}
 
 #
@@ -51,16 +51,6 @@ then
 fi
 . ${CONFIG}
 
-#
-# Set and verify the master configuration file name
-#
-CONFIG_MASTER=${MGICONFIG}/master.config.sh
-if [ ! -r ${CONFIG_MASTER} ]
-then
-    echo "Cannot read configuration file: ${CONFIG_MASTER}" | tee -a ${LOG}
-    exit 1
-fi
-
 cd ${RPTDIR}
 
 sort ${ONE_ONE_SORT} ${ONE_ONE_OUTFILE_NAME} > ${ONE_ONE_OUTFILE_NAME}.tmp
@@ -75,17 +65,8 @@ mv ${ONE_ZERO_OUTFILE_NAME}.tmp ${ONE_ZERO_OUTFILE_NAME}
 sort ${ZERO_ONE_SORT} ${ZERO_ONE_OUTFILE_NAME} > ${ZERO_ONE_OUTFILE_NAME}.tmp
 mv ${ZERO_ONE_OUTFILE_NAME}.tmp ${ZERO_ONE_OUTFILE_NAME}
 
-sort ${DNA_SORT} ${DNA_OUTFILE_NAME} > ${DNA_OUTFILE_NAME}.tmp
-mv ${DNA_OUTFILE_NAME}.tmp ${DNA_OUTFILE_NAME}
-
-sort ${RNADNA_SORT} ${RNADNA_OUTFILE_NAME} > ${RNADNA_OUTFILE_NAME}.tmp
-mv ${RNADNA_OUTFILE_NAME}.tmp ${RNADNA_OUTFILE_NAME}
-
 sort ${CHR_MIS_SORT} ${CHR_MIS_OUTFILE_NAME} > ${CHR_MIS_OUTFILE_NAME}.tmp
 mv ${CHR_MIS_OUTFILE_NAME}.tmp ${CHR_MIS_OUTFILE_NAME}
-
-sort ${EX_SEQ_SORT} ${EX_SEQ_OUTFILE_NAME} > ${EX_SEQ_OUTFILE_NAME}.tmp
-mv ${EX_SEQ_OUTFILE_NAME}.tmp ${EX_SEQ_OUTFILE_NAME}
 
 ${EGLOAD}/bin/formatreports.py
 

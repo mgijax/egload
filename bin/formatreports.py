@@ -40,7 +40,6 @@ anchorEnd = '</A>'
 # output file names defined in the configuration file and used in the loader
 # note that the 1-1 bucket is not translated into html format
 
-outFileTag = '_OUTFILE_NAME'
 egFiles = ['ZERO_ONE_OUTFILE_NAME']
 column8Files = ['ONE_N_OUTFILE_NAME', 'N_ONE_OUTFILE_NAME', 'N_M_OUTFILE_NAME', 'CHR_MIS_OUTFILE_NAME']
 column5Files = ['ONE_ZERO_OUTFILE_NAME']
@@ -64,8 +63,6 @@ def init():
 
     global urls
 
-    db.useOneConnection(1)
-
     # initialize urls
 
     urls = {}
@@ -75,13 +72,6 @@ def init():
         key = r['_ActualDB_key']
         value = r['url']
         urls[key] = '<A HREF="%s">' % (value)
-
-def exit():
-    #
-    # clean up, close files, etc.
-    #
-
-    db.useOneConnection(0)
 
 def initFiles(value):
     #
@@ -181,7 +171,7 @@ def processEG():
     # process EG-oriented reports
     #
 
-    # iterate thru Files
+    # iterate thru files
     
     for b in egFiles:
 
@@ -222,7 +212,7 @@ def processMGI_8columns():
     # process MGI-oriented reports with 8 columns
     #
 
-    # iterate thru Files
+    # iterate thru files
     
     for b in column8Files:
 
@@ -266,7 +256,7 @@ def processMGI_5columns():
     # process MGI-oriented reports w/ 5 columns
     #
 
-    # iterate thru Files
+    # iterate thru files
     
     for b in column5Files:
 
@@ -313,5 +303,4 @@ init()
 processEG()
 processMGI_8columns()
 processMGI_5columns()
-exit()
 
