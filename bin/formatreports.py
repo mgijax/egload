@@ -371,6 +371,7 @@ init()
 processEG()
 processMGI_8columns()
 processMGI_5columns()
-processExcluded()
+#this report is not used at this time
+#processExcluded()
 exit()
 
