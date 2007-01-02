@@ -68,22 +68,27 @@ public class AssocAccidLookup extends FullCachedLookup
 
 	// select sequence ids, sequence types for GenBank and RefSeq associated with mouse Markers
 	// and secondary MGI ids for Markers
+	// exclude DNA segments
 
         String sql =
             "select c._Marker_key, a.accID, t.abbreviation  " +
-            "from SEQ_Marker_Cache c, ACC_Accession a, VOC_Term t " +
+            "from SEQ_Marker_Cache c, ACC_Accession a, VOC_Term t, MRK_Marker m " +
             "where c._Organism_key = 1 " +
             "and c._LogicalDB_key in (9, 27)  " +
             "and c._SequenceType_key = t._Term_key  " +
             "and c._Sequence_key = a._Object_key " +
             "and a._MGIType_key = 19 " +
+	    "and c._Marker_key = m._Marker_key " +
+	    "and m._Marker_Type_key != 2 "+
             "union " +
             "select a._Object_key, a.accID, 'M' " +
-            "from ACC_Accession a " +
+            "from ACC_Accession a, MRK_Marker m " +
             "where a._MGIType_key = 2 " +
             "and  a._LogicalDB_key = 1 " +
             "and a.prefixPart = 'MGI:' " +
             "and a.preferred != 1 " +
+	    "and a._Object_key = m._Marker_key " +
+	    "and m._Marker_Type_key != 2 "+
             "order by _Marker_key, accid";
 
         return sql;

@@ -73,6 +73,7 @@ public class EntrezGeneQuery extends ObjectQuery
     {
         /**
          * gets geneids and sequence association data from RADAR for mouse
+	 * excludes DNA segments
          */
         return "select geneID = i.geneID, mgiID = x.dbXrefID, " +
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
