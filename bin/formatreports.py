@@ -231,6 +231,7 @@ def processMGI_8columns():
         htmlFile.write('<TD>Marker</TD>')
         htmlFile.write('<TD>Symbol</TD>')
         htmlFile.write('<TD>Chromosome</TD>')
+        htmlFile.write('<TD>Entrez Gene</TD>')
         htmlFile.write('<TD>Associated Sequences</TD>')
 	htmlFile.write('<TD>Marker Type</TD>' + CRT)
 
@@ -243,12 +244,14 @@ def processMGI_8columns():
 	    mgiID = tokens[0]
 	    mgiSymbol = tokens[1]
             mgiChromosome = tokens[2]
+	    egID = tokens[3]
             sequences = tokens[6]
 	    markerType = tokens[7]
 
 	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
 	    htmlFile.write('<TD>' + mgiSymbol + '</TD>')
 	    htmlFile.write('<TD>' + mgiChromosome + '</TD>')
+	    htmlFile.write('<TD>' + externalAnchor(egID, egURL) + '</TD>')
 	    htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
 	    htmlFile.write('<TD>' + markerType + '</TD></TR>')
 	    htmlFile.write(CRT)

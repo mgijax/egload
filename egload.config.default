@@ -101,23 +101,23 @@ export CACHE_DEBUG LOG_FACTORY
 ###########################################################################
 
 ONE_ONE_OUTFILE_NAME=${RPTDIR}/bucket_one_to_one.txt
-ONE_ONE_SORT="-k8,8 -k1.5n,1.0n"
+ONE_ONE_SORT="-k1.5n"
 
 ONE_N_OUTFILE_NAME=${RPTDIR}/bucket_one_to_many.txt
-ONE_N_SORT="-k8,8 -k1.5n,1.0n"
+ONE_N_SORT="-k1.5n"
 
 N_ONE_OUTFILE_NAME=${RPTDIR}/bucket_many_to_one.txt
 
 N_M_OUTFILE_NAME=${RPTDIR}/bucket_many_to_many.txt
 
 ONE_ZERO_OUTFILE_NAME=${RPTDIR}/bucket_one_to_zero.txt
-ONE_ZERO_SORT="-k5,5 -k1.5n,1.0n"
+ONE_ZERO_SORT="-k1.5n"
 
 ZERO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one.txt
-ZERO_ONE_SORT="-k5,5 -k1n"
+ZERO_ONE_SORT="-k1n"
 
 CHR_MIS_OUTFILE_NAME=${RPTDIR}/bucket_mismatched_chr.txt
-CHR_MIS_SORT="-k8,8 -k1.5n,1.0n"
+CHR_MIS_SORT="-k1.5n"
 
 export ONE_ONE_OUTFILE_NAME ONE_ONE_SORT
 export ONE_N_OUTFILE_NAME ONE_N_SORT
