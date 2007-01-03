@@ -66,6 +66,14 @@ fi
 cd ${RPTDIR}
 
 # sort text files
+#
+# note that "sort" sorts on blank space (including tabs)
+# the AbstractCollection "toString" method (used by HashSet, used by Bucketizer) 
+# uses ", " formatting.
+# This extra space causes problems in sorting these files.
+# If you need to sort on more than one column in the file, you'll have to sed the
+# files first to replace ", " with ",".
+#
 
 if [ -f ${ONE_ONE_OUTFILE_NAME} ]
 then
