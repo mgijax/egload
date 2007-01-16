@@ -125,6 +125,15 @@ then
     exit 1
 fi
 
+# for each text file, write the number of lines
+for i in ${ONE_ONE_OUTFILE_NAME} ${ONE_N_OUTFILE_NAME} ${ONE_ZERO_OUTFILE_NAME} ${ZERO_ONE_OUTFILE_NAME} ${CHR_MIS_OUTFILE_NAME}
+do
+echo `wc -l $i` > $i.tmp
+echo "\n" >> $i.tmp
+cat $i >> $i.tmp
+mv $i.tmp $i
+done
+
 echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC}
 
 exit 0
