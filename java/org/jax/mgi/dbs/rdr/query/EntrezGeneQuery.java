@@ -220,6 +220,8 @@ public class EntrezGeneQuery extends ObjectQuery
                     egene.nrSeqs.add(acc);
                 else if (seqCategory.equals(Constants.NP))
                     egene.npSeqs.add(acc);
+                else if (seqCategory.equals(Constants.NG))
+                    egene.ngSeqs.add(acc);
             }
 
         }
@@ -244,6 +246,7 @@ public class EntrezGeneQuery extends ObjectQuery
         private HashSet nmSeqs = new HashSet();
         private HashSet nrSeqs = new HashSet();
         private HashSet npSeqs = new HashSet();
+        private HashSet ngSeqs = new HashSet();
 
         private HashSet xmSeqs = new HashSet();
         private HashSet xrSeqs = new HashSet();
@@ -284,6 +287,11 @@ public class EntrezGeneQuery extends ObjectQuery
             return this.npSeqs;
         }
 
+        public Set getNGs()
+        {
+            return this.ngSeqs;
+        }
+
         public Set getXMs()
         {
             if (super.getXMSequences() == null)
@@ -319,6 +327,7 @@ public class EntrezGeneQuery extends ObjectQuery
             refseqSeqs.addAll(nmSeqs);
             refseqSeqs.addAll(nrSeqs);
             refseqSeqs.addAll(npSeqs);
+            refseqSeqs.addAll(ngSeqs);
             refseqSeqs.addAll(xmSeqs);
             refseqSeqs.addAll(xrSeqs);
             refseqSeqs.addAll(xpSeqs);

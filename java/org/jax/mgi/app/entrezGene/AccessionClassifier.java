@@ -17,8 +17,9 @@ import java.util.regex.Matcher;
 public class AccessionClassifier {
 
     protected Pattern nmPattern = Pattern.compile("NM_.*");
-    protected Pattern nrPattern = Pattern.compile("NR_.*");
     protected Pattern npPattern = Pattern.compile("NP_.*");
+    protected Pattern nrPattern = Pattern.compile("NR_.*");
+    protected Pattern ngPattern = Pattern.compile("NG_.*");
     protected Pattern xmPattern = Pattern.compile("XM_.*");
     protected Pattern xrPattern = Pattern.compile("XR_.*");
     protected Pattern xpPattern = Pattern.compile("XP_.*");
@@ -38,10 +39,12 @@ public class AccessionClassifier {
             mgiPattern.matcher(accid.toUpperCase());
         Matcher nmMatcher =
             nmPattern.matcher(accid.toUpperCase());
-        Matcher npMatcher =
-            npPattern.matcher(accid.toUpperCase());
         Matcher nrMatcher =
             nrPattern.matcher(accid.toUpperCase());
+        Matcher npMatcher =
+            npPattern.matcher(accid.toUpperCase());
+        Matcher ngMatcher =
+            ngPattern.matcher(accid.toUpperCase());
         Matcher xmMatcher =
             xmPattern.matcher(accid.toUpperCase());
         Matcher xpMatcher =
@@ -66,6 +69,8 @@ public class AccessionClassifier {
             return Constants.NR;
         else if (npMatcher.find())
             return Constants.NP;
+        else if (ngMatcher.find())
+            return Constants.NG;
         else if (genbankMatcher.find())
              return Constants.GENBANK;
         else

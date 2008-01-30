@@ -16,6 +16,7 @@ public class Constants
     public static final String NM = "NM";
     public static final String NR = "NR";
     public static final String NP = "NP";
+    public static final String NG = "NG";
     public static final String MGIID = "MGIID";
     public static final String UNKNOWN = "UNKNOWN";
     public static final String PROVIDER_MGI = "MGI";

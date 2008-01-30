@@ -174,6 +174,9 @@ public class MGIMarkerQuery extends ObjectQuery
                       else if (seqCategory.equals(Constants.NP))
                           // set marker attribute
                           marker.npSeqs.add(acc);
+                      else if (seqCategory.equals(Constants.NG))
+                          // set marker attribute
+                          marker.ngSeqs.add(acc);
                       else if (seqCategory.equals(Constants.MGIID))
                       {
                           // set marker attribute
@@ -227,6 +230,7 @@ public class MGIMarkerQuery extends ObjectQuery
         public HashSet nmSeqs = new HashSet();
         public HashSet nrSeqs = new HashSet();
         public HashSet npSeqs = new HashSet();
+        public HashSet ngSeqs = new HashSet();
 
         public HashSet xmSeqs = new HashSet();
         public HashSet xrSeqs = new HashSet();
@@ -246,6 +250,7 @@ public class MGIMarkerQuery extends ObjectQuery
             refseqSeqs.addAll(nmSeqs);
             refseqSeqs.addAll(nrSeqs);
             refseqSeqs.addAll(npSeqs);
+            refseqSeqs.addAll(ngSeqs);
             refseqSeqs.addAll(xmSeqs);
             refseqSeqs.addAll(xrSeqs);
             refseqSeqs.addAll(xpSeqs);

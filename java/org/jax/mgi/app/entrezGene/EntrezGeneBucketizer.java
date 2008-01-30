@@ -252,7 +252,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
        /**
         * associate entrez gene refseq sequences to the marker,
-        * XMs, XRs, XPs, NMs, NRs, NPs
+        * XMs, XRs, XPs, NMs, NRs, NPs, NGs
         */
 
        for (Iterator i = entrezGene.getXMs().iterator(); i.hasNext();)
@@ -300,6 +300,14 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
        }
 
        for (Iterator i = entrezGene.getNPs().iterator(); i.hasNext();)
+       {
+           SequenceAccession acc = (SequenceAccession)i.next();
+           String accid = acc.getAccid();
+           makeAssociationToMarker(accid, mgiMarker, null,
+                                   LogicalDBConstants.REFSEQ);
+       }
+
+       for (Iterator i = entrezGene.getNGs().iterator(); i.hasNext();)
        {
            SequenceAccession acc = (SequenceAccession)i.next();
            String accid = acc.getAccid();
