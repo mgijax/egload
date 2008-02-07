@@ -22,5 +22,6 @@ public class Constants
     public static final String PROVIDER_MGI = "MGI";
     public static final String PROVIDER_ENTREZGENE = "ENTREZGENE";
     public static final int EGLOAD_REFSKEY = 64047;
+    public static final int EGLOAD_GU_REFSKEY = 75786;
     public static final String DELETE_SCRIPT = "sql/MGDdelete.sql";
 }

@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
  * is a class that can identify types of accession numbers by their
  * character patterns
  * @has nothing
- * @does identifies accession types (NM, NR, NP, XM, XR, XP, GenBank, MGI)
+ * @does identifies accession types (NM, NR, NP, NG, XM, XR, XP, GenBank, MGI)
  * by applying pattern matching on the accession characters
  * @company Jackson Laboratory
  * @author M Walker

@@ -5,8 +5,8 @@ import java.io.File;
 
 
 import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
-import org.jax.mgi.dbs.mgd.lookup.NCBIGeneModelLookup;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
+import org.jax.mgi.dbs.mgd.lookup.GeneUnificationLookup;
 import org.jax.mgi.dbs.rdr.lookup.HomoloGeneLookup;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
 import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
@@ -67,8 +67,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // A FullcachedLookup for obtainning problem clones
     private ProblemClonesLookup problemClones = null;
 
-    // A FullCachedLookup for obtaining NCBI gene models
-    private NCBIGeneModelLookup ncbiGeneModelLookup = null;
+    // A FullCachedLookup for obtaining GU IDs
+    private GeneUnificationLookup guLookup = null;
 
     // A FullCachedLookup for obtaining HomoloGene IDs
     private HomoloGeneLookup homoloGeneLookup = null;
@@ -105,8 +105,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         this.egCfg = new EntrezGeneCfg();
         this.problemClones = new ProblemClonesLookup();
         this.problemClones.initCache();
-        this.ncbiGeneModelLookup = new NCBIGeneModelLookup();
-        this.ncbiGeneModelLookup.initCache();
+        this.guLookup = new GeneUnificationLookup();
+        this.guLookup.initCache();
         this.homoloGeneLookup = new HomoloGeneLookup();
         this.homoloGeneLookup.initCache();
     }
@@ -223,123 +223,231 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
             this.reportConnectedComponents(bucketItem, BUCKET_ONE_TO_ONE);
         }
 
-        /**
-         * create a new EntrezGene association to the MGIMarker in DB
-         */
+	/**
+	 * if the EntrezGene ID is not in the NCBI Gene Unification association load
+	 * then we need to add a EntrezGene association to the Marker:
+	 *    create a new EntrezGene association to the MGIMarker in DB
+	 *    associate entrez gene genbank sequences to the marker
+         *    associate entrez gene refseq sequences to the marker,
+	 *
+	 * in this instance we use the EG reference
+	 */
 
-        AccessionLib.createMarkerAssociation(
-            new Integer(LogicalDBConstants.ENTREZ_GENE),
-            entrezGene.getId(), mgiMarker.key,
-            new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+	String guID = this.guLookup.lookup(entrezGene.getId());
 
+	if (guID == null)
+	{
+            /**
+             * create a new EntrezGene association to the MGIMarker in DB
+             */
+    
+            AccessionLib.createMarkerAssociation(
+                new Integer(LogicalDBConstants.ENTREZ_GENE),
+                entrezGene.getId(), mgiMarker.key,
+                new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
 
-        /**
-         * associate entrez gene genbank sequences to the marker
-         */
-        for (Iterator i = entrezGene.getGenBankSeqs().iterator();
-             i.hasNext();)
-        {
-            SequenceAccession acc = (SequenceAccession)i.next();
-            String accid = acc.getAccid();
-            if (acc.getType() == SequenceAccession.RNA)
+            /**
+             * associate entrez gene genbank sequences to the marker
+             */
+            for (Iterator i = entrezGene.getGenBankSeqs().iterator();
+                 i.hasNext();)
             {
-                Set seqAssociations =
-                    (Set)super.index.lookup(Constants.GENBANK, acc);
-                makeAssociationToMarker(accid, mgiMarker, seqAssociations,
-                                    LogicalDBConstants.SEQUENCE);
+                SequenceAccession acc = (SequenceAccession)i.next();
+                String accid = acc.getAccid();
+                if (acc.getType() == SequenceAccession.RNA)
+                {
+                    Set seqAssociations =
+                        (Set)super.index.lookup(Constants.GENBANK, acc);
+                    makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                        LogicalDBConstants.SEQUENCE,
+					Constants.EGLOAD_REFSKEY);
+                }
             }
-        }
 
-       /**
-        * associate entrez gene refseq sequences to the marker,
-        * XMs, XRs, XPs, NMs, NRs, NPs, NGs
-        */
+           /**
+            * associate entrez gene refseq sequences to the marker,
+            * XMs, XRs, XPs, NMs, NRs, NPs, NGs
+            */
 
-       for (Iterator i = entrezGene.getXMs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           Set seqAssociations =
-                (Set)super.index.lookup(Constants.XM, acc);
-           makeAssociationToMarker(accid, mgiMarker, seqAssociations,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getXRs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           Set seqAssociations =
-                (Set)super.index.lookup(Constants.XR, acc);
-           makeAssociationToMarker(accid, mgiMarker, seqAssociations,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getXPs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           makeAssociationToMarker(accid, mgiMarker, null,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getNMs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           makeAssociationToMarker(accid, mgiMarker, null,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getNRs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           makeAssociationToMarker(accid, mgiMarker, null,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getNPs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           makeAssociationToMarker(accid, mgiMarker, null,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       for (Iterator i = entrezGene.getNGs().iterator(); i.hasNext();)
-       {
-           SequenceAccession acc = (SequenceAccession)i.next();
-           String accid = acc.getAccid();
-           makeAssociationToMarker(accid, mgiMarker, null,
-                                   LogicalDBConstants.REFSEQ);
-       }
-
-       /**
-        * associate NCBI Gene Model to marker
-	* if the there is one, 
-	* and if the chromosome of the NCBI Gene Model equals the chromosome of the Marker
-        */
-
-       if (mgiMarker.chromosome.equals(entrezGene.getChromosome()))
-       {
-	   String ncbiChromosome = this.ncbiGeneModelLookup.lookup(entrezGene.getId());
-           if (ncbiChromosome != null && ncbiChromosome.equals(mgiMarker.chromosome))
+           for (Iterator i = entrezGene.getXMs().iterator(); i.hasNext();)
            {
-               AccessionLib.createMarkerAssociation(
-                   new Integer(LogicalDBConstants.NCBI_GENE),
-                   entrezGene.getId(), mgiMarker.key,
-                   new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               Set seqAssociations =
+                    (Set)super.index.lookup(Constants.XM, acc);
+               makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
            }
-       }
 
-       /**
+           for (Iterator i = entrezGene.getXRs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               Set seqAssociations =
+                    (Set)super.index.lookup(Constants.XR, acc);
+               makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getXPs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNMs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNRs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNPs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNGs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_REFSKEY);
+           }
+	}
+
+        /**
+	 * if the EntrezGene ID exists in the Gene Unification association,
+	 * then we need to add additional accession ids to the existing Marker:
+	 *    associate entrez gene genbank sequences to the marker
+         *    associate entrez gene refseq sequences to the marker,
+	 *
+	 * in this instance we use the GU reference
+	 */
+
+	else
+	{
+            /**
+             * associate entrez gene genbank sequences to the marker
+             */
+            for (Iterator i = entrezGene.getGenBankSeqs().iterator();
+                 i.hasNext();)
+            {
+                SequenceAccession acc = (SequenceAccession)i.next();
+                String accid = acc.getAccid();
+                if (acc.getType() == SequenceAccession.RNA)
+                {
+                    Set seqAssociations =
+                        (Set)super.index.lookup(Constants.GENBANK, acc);
+                    makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                        LogicalDBConstants.SEQUENCE,
+					Constants.EGLOAD_GU_REFSKEY);
+                }
+            }
+
+           /**
+            * associate entrez gene refseq sequences to the marker,
+            * XMs, XRs, XPs, NMs, NRs, NPs, NGs
+            */
+
+           for (Iterator i = entrezGene.getXMs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               Set seqAssociations =
+                    (Set)super.index.lookup(Constants.XM, acc);
+               makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getXRs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               Set seqAssociations =
+                    (Set)super.index.lookup(Constants.XR, acc);
+               makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getXPs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNMs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNRs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNPs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+
+           for (Iterator i = entrezGene.getNGs().iterator(); i.hasNext();)
+           {
+               SequenceAccession acc = (SequenceAccession)i.next();
+               String accid = acc.getAccid();
+               makeAssociationToMarker(accid, mgiMarker, null,
+                                       LogicalDBConstants.REFSEQ,
+				       Constants.EGLOAD_GU_REFSKEY);
+           }
+	}
+
+
+        /**
         * associate HomoloGene ID to marker
         */
 
-       String homolGeneGroupID = this.homoloGeneLookup.lookup(entrezGene.getId());
-       if (homolGeneGroupID != null)
-       {
+        String homolGeneGroupID = this.homoloGeneLookup.lookup(entrezGene.getId());
+
+        if (homolGeneGroupID != null)
+	{
            AccessionLib.createMarkerAssociation(
                new Integer(LogicalDBConstants.HOMOLOGENE),
                homolGeneGroupID, mgiMarker.key,
@@ -355,13 +463,15 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      * @param currentAssociations a list of current sequence associations for
      * the given marker
      * @param logicaldb the logical db to be used when creating the accession
+     * @param refkey the reference to be used when creating the accession
      * record in the database
      * @throws MGIException
      */
     private void makeAssociationToMarker(String accid,
                                          MGIMarker mgiMarker,
                                          Set currentAssociations,
-                                         int logicaldb)
+                                         int logicaldb,
+					 int refkey)
     throws MGIException
     {
         boolean newAssociation = false;
@@ -395,7 +505,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         {
             AccessionLib.createMarkerAssociation(
                new Integer(logicaldb),
-               accid, mgiMarker.key, new Integer(Constants.EGLOAD_REFSKEY),
+               accid, mgiMarker.key, new Integer(refkey),
                this.loadStream);
         }
 
