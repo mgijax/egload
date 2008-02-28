@@ -247,22 +247,22 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                 new Integer(LogicalDBConstants.ENTREZ_GENE),
                 entrezGene.getId(), mgiMarker.key,
                 new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+        }
 
-            /**
-             * associate entrez gene genbank sequences to the marker
-             */
-            for (Iterator i = entrezGene.getGenBankSeqs().iterator();
-                 i.hasNext();)
+        /**
+         * associate entrez gene genbank sequences to the marker
+         */
+        for (Iterator i = entrezGene.getGenBankSeqs().iterator();
+             i.hasNext();)
+        {
+            SequenceAccession acc = (SequenceAccession)i.next();
+            String accid = acc.getAccid();
+            if (acc.getType() == SequenceAccession.RNA)
             {
-                SequenceAccession acc = (SequenceAccession)i.next();
-                String accid = acc.getAccid();
-                if (acc.getType() == SequenceAccession.RNA)
-                {
-                    Set seqAssociations =
-                        (Set)super.index.lookup(Constants.GENBANK, acc);
-                    makeAssociationToMarker(accid, mgiMarker, seqAssociations,
-                                        LogicalDBConstants.SEQUENCE);
-                }
+                Set seqAssociations =
+                    (Set)super.index.lookup(Constants.GENBANK, acc);
+                makeAssociationToMarker(accid, mgiMarker, seqAssociations,
+                                    LogicalDBConstants.SEQUENCE);
             }
         }
 
