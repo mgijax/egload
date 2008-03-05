@@ -6,7 +6,6 @@ import java.io.File;
 
 import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
-import org.jax.mgi.dbs.mgd.lookup.GeneUnificationLookup;
 import org.jax.mgi.dbs.rdr.lookup.HomoloGeneLookup;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
 import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
@@ -67,9 +66,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // A FullcachedLookup for obtainning problem clones
     private ProblemClonesLookup problemClones = null;
 
-    // A FullCachedLookup for obtaining GU IDs
-    private GeneUnificationLookup guLookup = null;
-
     // A FullCachedLookup for obtaining HomoloGene IDs
     private HomoloGeneLookup homoloGeneLookup = null;
 
@@ -105,8 +101,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         this.egCfg = new EntrezGeneCfg();
         this.problemClones = new ProblemClonesLookup();
         this.problemClones.initCache();
-        this.guLookup = new GeneUnificationLookup();
-        this.guLookup.initCache();
         this.homoloGeneLookup = new HomoloGeneLookup();
         this.homoloGeneLookup.initCache();
     }
@@ -224,30 +218,19 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         }
 
 	/**
-	 * if the EntrezGene ID is not in the NCBI Gene Unification association load
-	 * then we need to add a EntrezGene association to the Marker:
-	 *    create a new EntrezGene association to the MGIMarker in DB
-	 *
-	 * add the additional accession ids to the exxisting Marker:
-	 * (either the new EnterzGene ID or the NCBI Gene Unification ID)
-	 *    associate entrez gene genbank sequences to the marker
-         *    associate entrez gene refseq sequences to the marker,
-	 *
+	 * create a new EntrezGene association to the MGIMarker in DB
+	 * associate entrez gene genbank sequences to the marker
+         * associate entrez gene refseq sequences to the marker
 	 */
 
-	String guID = this.guLookup.lookup(entrezGene.getId());
-
-	if (guID == null)
-	{
-            /**
-             * create a new EntrezGene association to the MGIMarker in DB
-             */
+        /**
+         * create a new EntrezGene association to the MGIMarker in DB
+         */
     
-            AccessionLib.createMarkerAssociation(
-                new Integer(LogicalDBConstants.ENTREZ_GENE),
-                entrezGene.getId(), mgiMarker.key,
-                new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
-        }
+        AccessionLib.createMarkerAssociation(
+            new Integer(LogicalDBConstants.ENTREZ_GENE),
+            entrezGene.getId(), mgiMarker.key,
+            new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
 
         /**
          * associate entrez gene genbank sequences to the marker
