@@ -1,0 +1,309 @@
+TAG: egload-tr8543-BP
+DATE: 03/26/2008
+STAFF: lec
+CHANGES:
+1) branch point tag for TR8543
+
+TAG: egload-tr8832-BP
+DATE: 03/06/2008
+STAFF: lec
+CHANGES:
+1) branch point tag for TR8832
+
+TAG: egload-4-0-0-6
+DATE: 03/05/2008
+STAFF: lec
+CHANGES:
+1) TR8543/mouse EntrezGene load changes - gene unification
+
+TAG: egload-4-0-0-5
+TAG: egload-4-0-0-4
+TAG: egload-4-0-0-3
+TAG: egload-4-0-0-2
+DATE: 02/28/2008
+DATE: 02/26/2008
+STAFF: lec
+CHANGES:
+1) TR8543/mouse EntrezGene load changes - gene unification
+
+TAG: egload-4-0-0-1
+DATE: 01/30/2008
+STAFF: lec
+CHANGES:
+1) TR8743; add NG_ sequences
+
+TAG: egload-3-5-1-9
+DATE: 01/18/2007
+STAFF: lec
+CHANGES:
+1) print line counts in tab-delimited reports
+
+TAG: egload-3-5-1-8
+DATE: 01/03/2007
+STAFF: lec
+CHANGES:
+1) fix html/tab format
+
+TAG: egload-3-5-1-7
+TAG: egload-3-5-1-6
+TAG: egload-3-5-1-5
+DATE: 12/21/2006
+STAFF: lec
+CHANGES:
+1) TR8068
+
+TAG: egload-3-5-1-4
+DATE: 12/19/2006
+STAFF: lec
+CHANGES:
+1) re-vise HTML formatting
+
+TAG: egload-3-5-1-3
+TAG: egload-3-5-1-2
+DATE: 10/23/2006
+STAFF: lec
+CHANGES:
+1) merged tr7894 branch
+
+TAG: egload-tr7894-10
+DATE: 10/17/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-9
+DATE: 10/11/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-8
+DATE: 10/10/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-7
+TAG: egload-tr7894-6
+DATE: 10/06/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-5
+TAG: egload-tr7894-4
+TAG: egload-tr7894-3
+TAG: egload-tr7894-2
+DATE: 10/05/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-1
+DATE: 10/02/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+=======
+TAG: egload-tr7894-10
+DATE: 10/17/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-9
+DATE: 10/11/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-8
+DATE: 10/10/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+2) TR7943
+
+TAG: egload-tr7894-7
+TAG: egload-tr7894-6
+DATE: 10/06/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-5
+TAG: egload-tr7894-4
+TAG: egload-tr7894-3
+TAG: egload-tr7894-2
+DATE: 10/05/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-1
+DATE: 10/02/2006
+STAFF: lec
+CHANGES:
+1) TR7894
+
+TAG: egload-tr7894-BP
+DATE: 10/02/2006
+STAFF: lec
+CHANGES:
+1) TR7894; branch point tag
+
+TAG: egload-3-5-1-1
+DATE: 09/06/2006
+STAFF: lec
+CHANGES:
+1) build 36; merge
+
+TAG: egload-build36-2
+DATE: 08/17/2006
+STAFF: lec
+CHANGES:
+1) build 36
+
+TAG: egload-build36-1
+DATE: 07/27/2006
+STAFF: lec
+CHANGES:
+1) build 36
+
+TAG: egload-build36-BP
+DATE: 07/19/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for build 36
+
+TAG: egload-3-5-0-2
+DATE: 05/05/2006
+STAFF: lec
+CHANGES:
+1) MGI 3.5
+
+TAG: egload-3-5-0-1
+DATE: 04/20/2006
+STAFF: lec
+CHANGES:
+1) MGI 3.5; merge tr7062 branch
+
+TAG: egload-3-4-2-1
+DATE: 04/19/2006
+STAFF: lec
+CHANGES:
+1) TR 7627/add Chromosome consistency check
+
+TAG: egload-tr7062-3
+DATE: 04/19/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+2) TR 7627; add chromosome check for NCBI Gene Model coordinate vs. MGI
+
+TAG: egload-tr7062-2
+DATE: 03/24/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+
+TAG: egload-tr7062-1
+DATE: 03/23/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+
+TAG: egload-tr7062-BP
+DATE: 03/23/2006
+STAFF: lec
+CHANGES:
+1) branch point tag for MGI 3.5; loading HomoloGene IDs
+
+TAG: egload-3-4-2-0
+DATE: 01/19/2006
+STAFF: lec
+RELEASE: 3.42
+CHANGES: TR 7407; EG moved MGI ids to dbxref
+
+TAG: egload-3-4-1-1
+DATE: 12/02/05
+STAFF: mbw
+RELEASE: 3.41
+CHANGES: merged branch tr7041 to the trunk
+
+TAG: egload-tr7041-5
+DATE: 12/01/05
+STAFF: mbw
+CHANGES: revised mail recipients in default config
+
+TAG: egload-tr7041-4
+DATE: 11/17/05
+STAFF: mbw
+CHANGES: tagged for final test on branch
+
+TAG: egload-tr7041-3
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added a fix for index.html
+
+TAG: egload-tr7041-2
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added a fix for configuration
+
+TAG: egload-tr7041-1
+DATE: 10/25/05
+STAFF: mbw
+CHANGES: added customized buckets
+
+TAG: egload-tr7041-BP
+DATE: 10/18/05
+STAFF: mbw
+CHANGES: added customized buckets
+
+TAG: egload-1-0-6
+DATE: 08/25/05
+STAFF: mbw
+RELEASE: PROD
+CHANGES: patch to fix bug causing nonmouse records to be deleted
+
+TAG: egload-1-0-5
+DATE: 08/25/05
+STAFF: mbw
+RELEASE: PROD
+CHANGES: patch to fix bug causing marker to DNA sequence associations
+
+TAG: egload-1-0-4
+DATE: 08/11/05
+STAFF: mbw
+RELEASE: dev
+CHANGES: fixed links in index.html file
+
+TAG: egload-1-0-3
+DATE: 08/08/05
+STAFF: mbw
+RELEASE: dev
+CHANGES: javadocs only
+
+TAG: egload-1-0-2
+DATE: 08/03/05
+STAFF: mbw
+RELEASE: dev
+CHANGES: integration testing
+
+TAG: egload-1-0-1
+DATE: 08/03/05
+STAFF: mbw
+RELEASE: dev
+CHANGES: integration testing
+
+TAG: egload-1-0-0
+DATE: 08/03/05
+STAFF: mbw
+RELEASE: dev
+CHANGES: initial tag for integration test
+
