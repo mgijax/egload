@@ -165,6 +165,8 @@ public class GUQuery extends ObjectQuery
     {
 	String guId;
 	HashMap markers;
+	SeqIdsByMarkerIdLookup rsLookup;
+	SeqIdsByMarkerIdLookup gbLookup;
 
 	public GU(String id)
 	{
