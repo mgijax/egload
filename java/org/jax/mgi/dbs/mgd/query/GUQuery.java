@@ -118,7 +118,7 @@ public class GUQuery extends ObjectQuery
              * subsequent calls to the interpret() method
              * @return the new GU object
              */
-            public Object interpretRows(Vector v)
+            public Object interpretRows(Vector v) throws CacheException, ConfigException, DBException
             {
                 GURow commonElements = (GURow)v.get(0);
                 GU gr = new GU(commonElements.guId);
@@ -168,7 +168,7 @@ public class GUQuery extends ObjectQuery
 	SeqIdsByMarkerIdLookup rsLookup;
 	SeqIdsByMarkerIdLookup gbLookup;
 
-	public GU(String id)
+	public GU(String id) throws CacheException, ConfigException, DBException
 	{
 	    guId = id;
 	    markers = new HashMap();
