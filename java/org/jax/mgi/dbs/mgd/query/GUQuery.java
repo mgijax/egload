@@ -192,7 +192,7 @@ public class GUQuery extends ObjectQuery
 	    markers = new HashMap();
 	}
 
-	public void addMarker(String mkr, HashMap seqs)
+	public void addMarker(Integer mkr, HashMap seqs)
 	{
 	    markers.put(mkr, seqs);
 	}
