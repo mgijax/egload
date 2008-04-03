@@ -146,6 +146,8 @@ public class EntrezGeneLoader
     {
         bucketizer.run(Constants.PROVIDER_MGI, Constants.PROVIDER_ENTREZGENE);
         printStats("run complete");
+	bucketizer.process_GU();
+	printStats("run gu complete");
     }
 
     /**
