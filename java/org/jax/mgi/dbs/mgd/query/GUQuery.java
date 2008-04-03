@@ -19,7 +19,7 @@ import org.jax.mgi.dbs.SchemaConstants;
 import org.jax.mgi.app.entrezGene.EntrezGeneBucketizable;
 import org.jax.mgi.app.entrezGene.Constants;
 import org.jax.mgi.dbs.mgd.LogicalDBConstants;
-import org.jax.mgi.dbs.mgd.lookup.SeqIdsByMarkerIdLookup;
+import org.jax.mgi.dbs.mgd.lookup.SeqIdsByMarkerKeyLookup;
 
 
 /**
@@ -38,8 +38,8 @@ import org.jax.mgi.dbs.mgd.lookup.SeqIdsByMarkerIdLookup;
 
 public class GUQuery extends ObjectQuery
 {
-    SeqIdsByMarkerIdLookup rsLookup = new SeqIdsByMarkerIdLookup(LogicalDBConstants.REFSEQ);
-    SeqIdsByMarkerIdLookup gbLookup = new SeqIdsByMarkerIdLookup(LogicalDBConstants.SEQUENCE);
+    SeqIdsByMarkerKeyLookup rsLookup = new SeqIdsByMarkerKeyLookup(LogicalDBConstants.REFSEQ);
+    SeqIdsByMarkerKeyLookup gbLookup = new SeqIdsByMarkerKeyLookup(LogicalDBConstants.SEQUENCE);
     
     /**
      * Constructor
@@ -69,7 +69,7 @@ public class GUQuery extends ObjectQuery
         /**
          * gets gene unification/marker associations data
          */
-	return "select guId = a.accID, mgiId = a2.accID " +
+	return "select guId = a.accID, mgiKey = a2._Object_key " +
 	     "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r, ACC_Accession a2 " +
 	     "where a._MGIType_key = 2 " +
 	     "and a._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
@@ -112,7 +112,7 @@ public class GUQuery extends ObjectQuery
             {
                 GURow gr = new GURow();
                 gr.guId = row.getString(1);
-                gr.mgiId = row.getString(2);
+                gr.mgiKey = row.getInt(2);
                 return gr;
             }
             /**
@@ -132,20 +132,18 @@ public class GUQuery extends ObjectQuery
                     for (int i = 0; i < v.size(); i++)
                     {
                         GURow row = (GURow)v.get(i);
-		        String mgiId = row.mgiId;
+		        Integer mgiKey = row.mgiKey;
+			HashMap seqs = new HashMap();
 
 		        // get refseq for the marker
-		        HashSet refseqs = rsLookup.lookup(mgiId);
-			HashMap rs = new HashMap();
-			rs.put("RefSeq", rs);
-			gu.addMarker(mgiId, rs);
+		        HashSet refseqs = rsLookup.lookup(mgiKey);
+			seqs.put("RefSeq", refseqs);
 
 		        // get genbank for the marker
-		        HashSet genbanks = gbLookup.lookup(mgiId);
-			HashMap gb = new HashMap();
-			gb.put("GenBank", gb);
-			gu.addMarker(mgiId, gb);
+		        HashSet genbanks = gbLookup.lookup(mgiKey);
+			seqs.put("GenBank", genbanks);
 
+			gu.addMarker(mgiKey, seqs);
                     }
 
                     return gu;
@@ -185,8 +183,8 @@ public class GUQuery extends ObjectQuery
      */
     public class GU
     {
-	String guId;
-	HashMap markers;
+	private String guId;
+	private HashMap markers;
 
 	public GU(String id) throws CacheException, ConfigException, DBException
 	{
@@ -198,6 +196,10 @@ public class GUQuery extends ObjectQuery
 	{
 	    markers.put(mkr, seqs);
 	}
+
+	public String getGUId() { return guId; };
+
+	public HashMap getMarkers() { return markers; };
     }
 
     /**
@@ -212,13 +214,12 @@ public class GUQuery extends ObjectQuery
     public class GURow
     {
       public String guId = null;
-      public String mgiId = null;
+      public Integer mgiKey = null;
 
       public String toString()
       {
-        return guId + "|" + mgiId;
+        return guId + "|" + mgiKey;
       }
     }
-
 }
 
