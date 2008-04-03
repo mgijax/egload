@@ -167,10 +167,7 @@ export RADAR_BCP_OK_TO_OVERWRITE
 #  The name of the load for the subject of an email notification
 MAIL_LOADNAME="EntrezGene Load"
 
-#  Recipient list for mailing the log files (comma-separated)
-MAIL_LOG_PROC="mgiadmin"
-
-export MAIL_LOADNAME MAIL_LOG_PROC
+export MAIL_LOADNAME 
 
 #  Installation directory
 INSTALLDIR=${EGLOAD}
