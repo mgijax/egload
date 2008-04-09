@@ -219,6 +219,11 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
         this.addEgToMap(bucketItem);
 
+	// FOR TESTING
+	int a = 1;
+	if (a == 1)
+	      return;
+
         // have to match on chromosomes unless one is undetermined.
         // report to either one to one bucket or the mismatched
         // chromosome bucket
@@ -351,7 +356,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                new Integer(LogicalDBConstants.HOMOLOGENE),
                homolGeneGroupID, mgiMarker.key,
                new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
-       }
+        }
     }
 
     /**
@@ -384,27 +389,79 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    // create ldb 55 association between GU and all markers
 	    //
     
-            //AccessionLib.createMarkerAssociation(
-            //    new Integer(LogicalDBConstants.ENTREZ_GENE),
-            //    guId, mgiMarker.key,
-            //    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
-
-	    //
-	    // if the GU is associated with only one marker
-	    //
-	    // and
-	    //
-	    // if the marker is only associated with one the existing GU id (guByMarker)
-	    //
-	    //   keep going...
-	    //
-
-	    if (markers.size() == 1) {
-		// if the GU id is in the egMap, then assign the RefSeq and GenBank associations
-	        System.out.println(guId);
-	        System.out.println(markers);
+	    Iterator iterator1 = markers.keySet().iterator();
+	    while (iterator1.hasNext()) {
+		Integer markerKey = (Integer) iterator1.next();
+                AccessionLib.createMarkerAssociation(
+                    new Integer(LogicalDBConstants.ENTREZ_GENE),
+                    guId, markerKey,
+                    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
 	    }
 
+	    // if the GU is associated with only one marker
+
+	    if (markers.size() == 1) {
+
+		// check if marker/guId in guByMarker == guId/marker in guData
+
+	        Iterator iterator2 = markers.keySet().iterator();
+	        while (iterator2.hasNext()) {
+		    Integer markerKey = (Integer) iterator2.next();
+                    HashSet guMarkers = guByMarker.lookup(markerKey);
+
+		    // if there is a one-to-one between guData and guByMarker...
+
+		    if (guMarkers.size() == 1 && guMarkers.contains(guId)) {
+
+			// if the GU id is in the egMap, then assign the RefSeq/GenBank associations
+
+	                EntrezGene eg = (EntrezGene) egMap.get(guId);
+			if (eg != null) {
+
+			    // get all sequences
+			    HashMap allSequencesSet = (HashMap) markers.get(markerKey);
+
+			    // get genbank set
+			    HashSet genbankSet = (HashSet) allSequencesSet.get("GenBank");
+
+			    // get refseq set
+			    //HashSet refseqSet = (HashSet) allSequencesSet.get("RefSeq");
+
+                            for (Iterator i = eg.getGenBankSeqs().iterator();i.hasNext();) {
+
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence exists in GU, then continue to next sequence
+
+	                        System.out.println(accid);
+	                        System.out.println(markers);
+
+				if (genbankSet == null) {
+				    continue;
+				}
+				
+				// if sequence exists in GU, then skip
+				// else, add the association
+
+				if (genbankSet.contains(accid)) {
+				    continue;
+				}
+				else {
+				    if (acc.getType() == SequenceAccession.RNA) {
+                                        AccessionLib.createMarkerAssociation(
+                                            new Integer(LogicalDBConstants.SEQUENCE),
+                                            accid, markerKey, 
+				            new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    }
+				}
+                            }
+
+	                    System.out.println(guId);
+			}
+		    }
+		}
+	    }
 	}
     }
 
