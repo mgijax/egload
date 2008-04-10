@@ -495,6 +495,106 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
                             }
 
+			    for (Iterator i = eg.getXPs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
+				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
+			    for (Iterator i = eg.getNMs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
+				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
+			    for (Iterator i = eg.getNRs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
+				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
+			    for (Iterator i = eg.getNPs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
+				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
+			    for (Iterator i = eg.getNGs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
+				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
 	                    System.out.println(guId);
 			}
 		    }
