@@ -424,37 +424,75 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 			    // get genbank set
 			    HashSet genbankSet = (HashSet) allSequencesSet.get("GenBank");
 
-			    // get refseq set
-			    //HashSet refseqSet = (HashSet) allSequencesSet.get("RefSeq");
-
                             for (Iterator i = eg.getGenBankSeqs().iterator();i.hasNext();) {
 
                                 SequenceAccession acc = (SequenceAccession)i.next();
                                 String accid = acc.getAccid();
 
-				// if sequence exists in GU, then continue to next sequence
-
 	                        System.out.println(accid);
 	                        System.out.println(markers);
 
-				if (genbankSet == null) {
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (genbankSet != null && genbankSet.contains(accid)) {
 				    continue;
 				}
-				
-				// if sequence exists in GU, then skip
+
 				// else, add the association
 
-				if (genbankSet.contains(accid)) {
+				if (acc.getType() == SequenceAccession.RNA) {
+                                    AccessionLib.createMarkerAssociation(
+                                        new Integer(LogicalDBConstants.SEQUENCE),
+                                        accid, markerKey, 
+				        new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				}
+                            }
+
+                            // associate entrez gene refseq sequences to the marker,
+                            // XMs, XRs, XPs, NMs, NRs, NPs, NGs
+
+			    // get refseq set
+			    HashSet refseqSet = (HashSet) allSequencesSet.get("RefSeq");
+
+			    for (Iterator i = eg.getXMs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
 				    continue;
 				}
-				else {
-				    if (acc.getType() == SequenceAccession.RNA) {
-                                        AccessionLib.createMarkerAssociation(
-                                            new Integer(LogicalDBConstants.SEQUENCE),
-                                            accid, markerKey, 
-				            new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
-				    }
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                            }
+
+			    for (Iterator i = eg.getXRs().iterator();i.hasNext();)
+                            {
+                                SequenceAccession acc = (SequenceAccession)i.next();
+                                String accid = acc.getAccid();
+
+				// if sequence set is null, continue
+				// if sequence exists in GU, then continue to next sequence
+
+				if (refseqSet != null && refseqSet.contains(accid)) {
+				    continue;
 				}
+
+				// else, add the association
+
+                                AccessionLib.createMarkerAssociation(
+                                    new Integer(LogicalDBConstants.REFSEQ),
+                                    accid, markerKey, 
+				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
                             }
 
 	                    System.out.println(guId);
