@@ -219,11 +219,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
         this.addEgToMap(bucketItem);
 
-	// FOR TESTING
-	int a = 1;
-	if (a == 1)
-	      return;
-
         // have to match on chromosomes unless one is undetermined.
         // report to either one to one bucket or the mismatched
         // chromosome bucket
@@ -594,8 +589,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                     accid, markerKey, 
 				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
                             }
-
-	                    System.out.println(guId);
 			}
 		    }
 		}
