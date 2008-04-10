@@ -1,8 +1,11 @@
-TAG: egload-tr8543-??????
-DATE: ??????
-STAFF: ???
+TAG: egload-tr8543-1
+DATE: 04/10/2008
+STAFF: lec
 CHANGES:
 1) added GUIdsByMarkerIdLookup
+2) added GUQuery
+3) updated EntrezGeneBucketizer
+4) updated EntrezGeneLoader
 
 TAG: egload-tr8543-BP
 DATE: 03/26/2008

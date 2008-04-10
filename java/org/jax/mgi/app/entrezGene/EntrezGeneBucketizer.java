@@ -429,14 +429,11 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
 				if (genbankSet != null) {
 				    if (genbankSet.contains(accid)) {
-					System.out.println(accid);
 				        continue;
 				    }
 				}
 
 				// else, add the association
-
-				System.out.println("associating");
 
 				if (acc.getType() == SequenceAccession.RNA) {
                                     AccessionLib.createMarkerAssociation(
@@ -460,8 +457,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -480,8 +479,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -500,8 +501,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -520,8 +523,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -540,8 +545,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -560,8 +567,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
@@ -580,8 +589,10 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (refseqSet != null && refseqSet.contains(accid)) {
-				    continue;
+				if (refseqSet != null) {
+				     if (refseqSet.contains(accid)) {
+				         continue;
+				     }
 				}
 
 				// else, add the association
