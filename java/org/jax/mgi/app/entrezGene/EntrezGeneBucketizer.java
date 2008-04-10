@@ -390,7 +390,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                 AccessionLib.createMarkerAssociation(
                     new Integer(LogicalDBConstants.ENTREZ_GENE),
                     guId, markerKey,
-                    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+                    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
 	    }
 
 	    // if the GU is associated with only one marker
@@ -424,23 +424,25 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 SequenceAccession acc = (SequenceAccession)i.next();
                                 String accid = acc.getAccid();
 
-	                        System.out.println(accid);
-	                        System.out.println(markers);
-
 				// if sequence set is null, continue
 				// if sequence exists in GU, then continue to next sequence
 
-				if (genbankSet != null && genbankSet.contains(accid)) {
-				    continue;
+				if (genbankSet != null) {
+				    if (genbankSet.contains(accid)) {
+					System.out.println(accid);
+				        continue;
+				    }
 				}
 
 				// else, add the association
+
+				System.out.println("associating");
 
 				if (acc.getType() == SequenceAccession.RNA) {
                                     AccessionLib.createMarkerAssociation(
                                         new Integer(LogicalDBConstants.SEQUENCE),
                                         accid, markerKey, 
-				        new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
 				}
                             }
 
@@ -467,7 +469,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getXRs().iterator();i.hasNext();)
@@ -487,7 +489,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getXPs().iterator();i.hasNext();)
@@ -507,7 +509,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getNMs().iterator();i.hasNext();)
@@ -527,7 +529,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getNRs().iterator();i.hasNext();)
@@ -547,7 +549,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getNPs().iterator();i.hasNext();)
@@ -567,7 +569,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 
 			    for (Iterator i = eg.getNGs().iterator();i.hasNext();)
@@ -587,7 +589,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                                 AccessionLib.createMarkerAssociation(
                                     new Integer(LogicalDBConstants.REFSEQ),
                                     accid, markerKey, 
-				    new Integer(Constants.EGLOAD_GU_REFSKEY), this.loadStream);
+				    new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
                             }
 			}
 		    }
