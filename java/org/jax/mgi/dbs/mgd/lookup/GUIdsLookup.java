@@ -49,7 +49,7 @@ public class GUIdsLookup extends MappedStringToString
 	String sql = "select guID1 = a.accID, guID2 = a.accID " +
 	             "from ACC_Accession a, ACC_AccessionReference r " +
 	             "where a._MGIType_key = 2 " +
-	             "and a._LogicalDB_key = " + LogicalDBConstants.ENTREZ_GENE +
+	             "and a._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
 	             "and a._Accession_key = r._Accession_key " +
 	             "and r._Refs_key = " + Constants.EGLOAD_GU_REFSKEY;
 
