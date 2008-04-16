@@ -19,6 +19,8 @@ import org.jax.mgi.app.entrezGene.Constants;
 
 /**
  * @is An object that knows how to look up the set of GU ids for a markerKey
+ *   A GU Id is an NCBI Gene Model ID determined to be associated with an 
+ *   MGI Gene by the MGI Gene Unification (GU) process
  * @has
  * @does
  *   <UL>
@@ -67,7 +69,7 @@ public class GUIdsByMarkerKeyLookup extends FullCachedLookup {
      */
     public String getFullInitQuery() {
 
-	// select mgiIds of markers and their guId associations
+	// select marker keys of markers and their guId associations
         String sql =
             "select _Marker_key = a._Object_key, guId = a.accID " + 
              "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r " +
@@ -83,37 +85,39 @@ public class GUIdsByMarkerKeyLookup extends FullCachedLookup {
     }
 
     /**
-     * return the RowDataInterpreter for creating  KeyValue objects from the query results
+     * return the RowDataInterpreter for creating  KeyValue objects 
+     * from the query results
      * @return the RowDataInterpreter for this query
      */
     public RowDataInterpreter getRowDataInterpreter() {
-           class Interpreter implements MultiRowInterpreter {
-            
-		public Object interpret(RowReference ref)
+       class Interpreter implements MultiRowInterpreter {
+	
+	   public Object interpret(RowReference ref)
+	   throws DBException
+	   {
+		return new RowData(ref);
+	   }
+
+	   public Object interpretKey(RowReference ref) 
 		throws DBException
-		{
-		    return new RowData(ref);
-		}
+	   {
+	       return ref.getInt(1);
+	   }
 
-		public Object interpretKey(RowReference ref) throws DBException
-		{
-		    return ref.getInt(1);
+	    public Object interpretRows(Vector v)
+	   {
+		RowData rd = (RowData)v.get(0);
+		Integer markerKey = rd.markerKey;
+		HashSet guIDSet = new HashSet();
+		for (Iterator it = v.iterator(); it.hasNext();)
+		{ 
+		    rd = (RowData)it.next();
+		    guIDSet.add(rd.guID);
 		}
-
-		public Object interpretRows(Vector v)
-		{
-		    RowData rd = (RowData)v.get(0);
-		    Integer markerKey = rd.markerKey;
-		    HashSet guIDSet = new HashSet();
-		    for (Iterator it = v.iterator(); it.hasNext();)
-		    { 
-			rd = (RowData)it.next();
-			guIDSet.add(rd.guID);
-		    }
-		    return new KeyValue(markerKey, guIDSet);
-		}
-	    }
-	    
+		return new KeyValue(markerKey, guIDSet);
+	   }
+       }
+	
         return new Interpreter();
     }
     /**
