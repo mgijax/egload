@@ -3,10 +3,11 @@ TAG: egload-tr8543-1
 DATE: 04/15/2008
 STAFF: lec
 CHANGES:
-1) added GUIdsByMarkerIdLookup
+1) added GUIdsByMarkerKeyLookup
 2) added GUQuery
-3) updated EntrezGeneBucketizer
-4) updated EntrezGeneLoader
+3) added GUIdsLookup
+4) updated EntrezGeneBucketizer
+5) updated EntrezGeneLoader
 
 TAG: egload-tr8543-BP
 DATE: 03/26/2008
