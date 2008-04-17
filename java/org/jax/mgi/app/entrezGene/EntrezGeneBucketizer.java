@@ -434,32 +434,31 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 		HashSet genbankSet = 
 		    (HashSet) allSequencesSet.get(Constants.GENBANK);
 
-		if (genbankSet != null) {
+                for (Iterator i = eg.getGenBankSeqs().iterator();i.hasNext();) {
 
-                    for (Iterator i = eg.getGenBankSeqs().iterator();i.hasNext();) {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
-
+		    if (genbankSet != null) {
 		        if (genbankSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-		        if (acc.getType() == SequenceAccession.RNA) {
-                            AccessionLib.createMarkerAssociation(
-                                new Integer(LogicalDBConstants.SEQUENCE),
-                                accid, markerKey, 
-			        new Integer(Constants.EGLOAD_REFSKEY), 
-				    this.loadStream);
-                        }
+		    if (acc.getType() == SequenceAccession.RNA) {
+                        AccessionLib.createMarkerAssociation(
+                            new Integer(LogicalDBConstants.SEQUENCE),
+                            accid, markerKey, 
+		            new Integer(Constants.EGLOAD_REFSKEY), 
+			    this.loadStream);
                     }
-                } // genbankSet
+                }
 
                 // associate entrez gene refseq sequences to the marker,
                 // XMs, XRs, XPs, NMs, NRs, NPs, NGs
@@ -468,162 +467,173 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 		HashSet refseqSet = 
 		    (HashSet) allSequencesSet.get(Constants.REFSEQ);
 
-		if (refseqSet != null) {
+		for (Iterator i = eg.getXMs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		    for (Iterator i = eg.getXMs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
-
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		    for (Iterator i = eg.getXRs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		for (Iterator i = eg.getXRs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
+
+		    // else, add the association
     
-		        // else, add the association
-    
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		    for (Iterator i = eg.getXPs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		for (Iterator i = eg.getXPs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		    for (Iterator i = eg.getNMs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		for (Iterator i = eg.getNMs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		    for (Iterator i = eg.getNRs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		for (Iterator i = eg.getNRs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		    for (Iterator i = eg.getNPs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+		for (Iterator i = eg.getNPs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
 
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
-    
-		        // else, add the association
+			}
+		    }
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
-				this.loadStream);
-                    }
+		    // else, add the association
 
-		    for (Iterator i = eg.getNGs().iterator();i.hasNext();)
-                    {
-                        SequenceAccession acc = (SequenceAccession)i.next();
-                        String accid = acc.getAccid();
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
+			this.loadStream);
+                }
 
-		        // if sequence set is null, continue
-		        // if sequence exists in GU, 
-			// then continue to next sequence
+		for (Iterator i = eg.getNGs().iterator();i.hasNext();)
+                {
+                    SequenceAccession acc = (SequenceAccession)i.next();
+                    String accid = acc.getAccid();
 
+		    // if sequence set is null, continue
+		    // if sequence exists in GU, 
+		    // then continue to next sequence
+
+		    if (refseqSet != null) {
 		        if (refseqSet.contains(accid)) {
 		            continue;
-		        }
+			}
+		    }
 
-		        // else, add the association
+		    // else, add the association
 
-                        AccessionLib.createMarkerAssociation(
-                            new Integer(LogicalDBConstants.REFSEQ),
-                            accid, markerKey, 
-			    new Integer(Constants.EGLOAD_REFSKEY), 
+                    AccessionLib.createMarkerAssociation(
+                        new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey, 
+			new Integer(Constants.EGLOAD_REFSKEY), 
 				this.loadStream);
-                    }
-		} // refseqSet
+                }
 
 	    } // guMarkers size
 
