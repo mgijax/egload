@@ -459,7 +459,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 				    this.loadStream);
                         }
                     }
-                }
+                } // genbankSet
 
                 // associate entrez gene refseq sequences to the marker,
                 // XMs, XRs, XPs, NMs, NRs, NPs, NGs
@@ -623,9 +623,11 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 			    new Integer(Constants.EGLOAD_REFSKEY), 
 				this.loadStream);
                     }
-		}
-	    }
-	}
+		} // refseqSet
+
+	    } // guMarkers size
+
+	} // guData iterator
     }
 
     /**

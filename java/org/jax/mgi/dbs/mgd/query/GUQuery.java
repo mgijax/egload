@@ -20,26 +20,27 @@ import org.jax.mgi.app.entrezGene.EntrezGeneBucketizable;
 import org.jax.mgi.app.entrezGene.Constants;
 import org.jax.mgi.dbs.mgd.LogicalDBConstants;
 import org.jax.mgi.dbs.mgd.lookup.SeqIdsByMarkerKeyLookup;
+import org.jax.mgi.app.entrezGene.Constants;
 
 
 /**
  *
  * is an extension of ObjectQuery for specifically getting Entrez Gene data
  * from the database. The inner class GU is used to store the
- * results from the query. It has two types of attributes: class attributes
- * (typical to any class) and bucketizable attributes (those attributes used
- * in the bucketizing algorithm)
+ * results from the query.
  * @does provides the query and RowDataInterpreter for obtaining
  * GU objects from the database
  * @company The Jackson Laboratory
- * @author M Walker
+ * @author lec
  *
  */
 
 public class GUQuery extends ObjectQuery
 {
-    SeqIdsByMarkerKeyLookup rsLookup = new SeqIdsByMarkerKeyLookup(LogicalDBConstants.REFSEQ);
-    SeqIdsByMarkerKeyLookup gbLookup = new SeqIdsByMarkerKeyLookup(LogicalDBConstants.SEQUENCE);
+    SeqIdsByMarkerKeyLookup rsLookup = 
+       new SeqIdsByMarkerKeyLookup(LogicalDBConstants.REFSEQ);
+    SeqIdsByMarkerKeyLookup gbLookup = 
+       new SeqIdsByMarkerKeyLookup(LogicalDBConstants.SEQUENCE);
     
     /**
      * Constructor
@@ -69,19 +70,14 @@ public class GUQuery extends ObjectQuery
         /**
          * gets gene unification/marker associations data
          */
-	return "select guId = a.accID, mgiKey = a2._Object_key " +
-	     "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r, ACC_Accession a2 " +
+	return "select guId = a.accID, mgiKey = a._Object_key " +
+	     "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r " +
 	     "where a._MGIType_key = 2 " +
 	     "and a._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
 	     "and a._Object_key = m._Marker_key " +
 	     "and m._Organism_key = 1 " +
 	     "and a._Accession_key = r._Accession_key " +
 	     "and r._Refs_key = " + Constants.EGLOAD_GU_REFSKEY +
-	     "and a._Object_key = a2._Object_key " +
-	     "and a2._MGIType_key = 2 " +
-	     "and a2._LogicalDB_key = 1 " +
-	     "and a2.prefixPart = 'MGI:' " +
-	     "and a2.preferred = 1 " +
 	     "order by guId";
 
     }
@@ -137,11 +133,11 @@ public class GUQuery extends ObjectQuery
 
 		        // get refseq for the marker
 		        HashSet refseqs = rsLookup.lookup(mgiKey);
-			seqs.put("RefSeq", refseqs);
+			seqs.put(Constants.REFSEQ, refseqs);
 
 		        // get genbank for the marker
 		        HashSet genbanks = gbLookup.lookup(mgiKey);
-			seqs.put("GenBank", genbanks);
+			seqs.put(Constants.GENBANK, genbanks);
 
 			gu.addMarker(mgiKey, seqs);
                     }
@@ -175,15 +171,19 @@ public class GUQuery extends ObjectQuery
 
     /**
      * is a plain old java object for GU data (guId and its set of markers)
-     * @has nothing
+     * @has guId - an NCBI Gene Model Id
+     * and a set of markers with their associated GenBank & RefSeq Ids
      * @does nothing
      * @company The Jackson Laboratory
-     * @author M Walker
+     * @author lec
      *
      */
     public class GU
     {
 	private String guId;
+
+	// markers looks like: {markerKey: HashMap of Sequences}
+	// HashMap of Sequences looks like: {Provider:HashSet of provider seqIds}
 	private HashMap markers;
 
 	public GU(String id) throws CacheException, ConfigException, DBException
@@ -205,10 +205,10 @@ public class GUQuery extends ObjectQuery
     /**
      *
      * is a plain old java object for holding one row of data from the query
-     * @has nothing
+     * @has guId and mgiKey
      * @does nothing
      * @company Jackson Laboratory
-     * @author M Walker
+     * @author lec
      *
      */
     public class GURow
