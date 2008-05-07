@@ -1,3 +1,22 @@
+TAG: egload-4-0-0-7
+DATE: 05/07/2008
+STAFF: sc
+CHANGES: merge tr8543 branch to trunk
+
+TAG: egload-tr8543-4
+TAG: egload-tr8543-3
+TAG: egload-tr8543-2
+TAG: egload-tr8543-1
+DATE: 04/17/2008
+DATE: 04/15/2008
+STAFF: lec
+CHANGES:
+1) added GUIdsByMarkerKeyLookup
+2) added GUQuery
+3) added GUIdsLookup
+4) updated EntrezGeneBucketizer
+5) updated EntrezGeneLoader
+
 TAG: egload-tr8543-BP
 DATE: 03/26/2008
 STAFF: lec
