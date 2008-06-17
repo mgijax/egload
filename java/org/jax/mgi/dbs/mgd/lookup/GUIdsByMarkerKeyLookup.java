@@ -79,7 +79,7 @@ public class GUIdsByMarkerKeyLookup extends FullCachedLookup {
              "and m._Organism_key = 1 " +
              "and a._Accession_key = r._Accession_key " +
              "and r._Refs_key = " + Constants.EGLOAD_GU_REFSKEY + " " +
-             "order by guId";
+             "order by _Marker_key";
 
         return sql;
     }
