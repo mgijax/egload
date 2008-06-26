@@ -213,15 +213,30 @@ public class EntrezGeneQuery extends ObjectQuery
                     egene.addXRSequence(acc);
                 }
                 else if (seqCategory.equals(Constants.XP))
+		{
                     egene.xpSeqs.add(acc);
+		     egene.addXPSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NM))
+		{
                     egene.nmSeqs.add(acc);
+		     egene.addNMSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NR))
+		{
                     egene.nrSeqs.add(acc);
+		     egene.addNRSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NP))
+		{
                     egene.npSeqs.add(acc);
+		    egene.addNPSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NG))
+		{
                     egene.ngSeqs.add(acc);
+		    egene.addNGSequence(acc);
+		}
             }
 
         }
@@ -274,22 +289,34 @@ public class EntrezGeneQuery extends ObjectQuery
 
         public Set getNMs()
         {
-            return this.nmSeqs;
+	    if (super.getNMSequences() == null)
+                return new HashSet();
+            else
+                return super.getNMSequences();
         }
 
         public Set getNRs()
         {
-            return this.nrSeqs;
+	    if (super.getNRSequences() == null)
+                return new HashSet();
+            else
+                return super.getNRSequences();
         }
 
         public Set getNPs()
         {
-            return this.npSeqs;
+	    if (super.getNPSequences() == null)
+                return new HashSet();
+            else
+                return super.getNPSequences();
         }
 
         public Set getNGs()
         {
-            return this.ngSeqs;
+	    if (super.getNGSequences() == null)
+                return new HashSet();
+            else
+                return super.getNGSequences();
         }
 
         public Set getXMs()
@@ -310,7 +337,10 @@ public class EntrezGeneQuery extends ObjectQuery
 
         public Set getXPs()
         {
-            return this.xpSeqs;
+	    if (super.getXPSequences() == null)
+                return new HashSet();
+            else
+                return super.getXPSequences();
         }
 
         public Set getGenBankSeqs()
