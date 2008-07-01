@@ -1,3 +1,11 @@
+TAG: egload-tr8543_2-3
+DATE: 07/01/2008
+STAFF: sc
+CHANGES: fixed bug in processing zero-to-one bucket
+         for non 1:1 need to iterate over members
+	 not associations; there are no associations
+	 for zero-to-one only a single EG member
+
 TAG: egload-tr8543_2-2
 TAG: egload-tr8543_2-1
 DATE: 06/26/2008

@@ -152,6 +152,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      */
     public void process_One_To_Many(BucketItem bucketItem)
         throws MGIException {
+	
 	processNonOne_To_OneBucketItem(bucketItem);
         this.reportConnectedComponents(bucketItem, BUCKET_ONE_TO_MANY);
     }
@@ -167,6 +168,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      */
     public void process_Zero_To_One(BucketItem bucketItem)
         throws MGIException {	
+	
 	processNonOne_To_OneBucketItem(bucketItem);
 	this.reportUnConnectedComponents(bucketItem, BUCKET_ZERO_TO_ONE);
     }
@@ -251,7 +253,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         EntrezGene entrezGene =
             (EntrezGene)assoc.getMember(Constants.PROVIDER_ENTREZGENE);
 	String egId = entrezGene.getId();
-
+	
 	// add to the set of egIds (for later processing
 	egIdSet.add(egId);
 	    
@@ -345,33 +347,37 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     * All Non-One_To_One buckets (except for One_To_Zero) are processed the same
     * If there are GU associations, pass on to process_GU method
     * @assumes nothing
-    * @effects Sequences associations to GU markers may be created
-    * @param bucketItem BucketItem object EntrezGene objects may have GU  
-    *        associations 
+    * @effects Sequences associations to GU markers may be created, ldb 55
+    * associations will be created.
+    * @param bucketItem BucketItem containing EntrezGene and MGIMarker associations
+    * however:
+    * if 'bucketItem' zero-to-one cardinality, it will have no MGIMarker object
+    * if 'bucketItem' one-to-zero cardinality, it will have no EntrezGene object
+    * EntrezGene objects may have GU associations 
     * @throws nothing
     */
     private void processNonOne_To_OneBucketItem(BucketItem bucketItem) 
         throws MGIException {
-        Iterator it = bucketItem.associationsIterator(Constants.PROVIDER_ENTREZGENE);
-	//Iterator it = bucketItem.associationsIterator(Constants.PROVIDER_MGI);
-	while(it.hasNext()) {
-	    // get the association; an EntrezGene with no MGIMarker association
-	    Association assoc = (Association) it.next();
-
-	    // get the entrezGene object and the entrezgene Id
-	    EntrezGene entrezGene =
-	        (EntrezGene)assoc.getMember(Constants.PROVIDER_ENTREZGENE);
-	    String egId = entrezGene.getId();
+	
+	// Iterate over individual members looking for EntrezGene members
+	for (Iterator i = bucketItem.membersIterator(); i.hasNext();) { 
+	    Bucketizable b = (Bucketizable)i.next();
+            if (b.getProvider().equals(Constants.PROVIDER_ENTREZGENE)) {
 	    
-	    // add to the set of egIds (for later processing
-	    egIdSet.add(egId);
+		// get the entrezGene object and the entrezgene Id
+		EntrezGene entrezGene = (EntrezGene)b;    
+		String egId = entrezGene.getId();
+		
+		// add to the set of egIds (for later processing
+		egIdSet.add(egId);
 	    
-	    // get the set of GU Markers with which this egId is associated
-	    HashSet guMarkersAssocWithEgId = this.markersByGUIdLookup.lookup(egId);
-	    // if there are gu associations for 'egId' process accordingly
-	    if(guMarkersAssocWithEgId != null) {
-	        process_GU(entrezGene, guMarkersAssocWithEgId);
-	    }	
+		// get the set of GU Markers with which this egId is associated
+		HashSet guMarkersAssocWithEgId = this.markersByGUIdLookup.lookup(egId);
+		// if there are gu associations for 'egId' process accordingly
+		if(guMarkersAssocWithEgId != null) {
+		    process_GU(entrezGene, guMarkersAssocWithEgId);
+		}
+	    }
 	}
     }
     
@@ -565,6 +571,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	if (guMarkers.size() == 1) {
 	    // get the set of GU Ids with which this marker is associated
 	    HashSet guIdsAssocWithMarker = guIdsByMarkerKeyLookup.lookup(guMarkerKey);
+	    // create sequence associations if GU 1:1
 	    if (guIdsAssocWithMarker.size() == 1) {
 		 createSequenceAssociations(entrezGene, guMarkerKey);
 	    }
