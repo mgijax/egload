@@ -312,7 +312,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 		new Integer(LogicalDBConstants.ENTREZ_GENE),
 		entrezGene.getId(), egMarkerKey,
 		new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
-	    createSequenceAssociations(entrezGene, egMarkerKey);
+	    createAssociations(entrezGene, egMarkerKey);
     }
     /**
      * Report all NCBI Gene Models in MGI that are not in EntrezGene 
@@ -407,7 +407,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      *        to which we will associate Homologene group id (if present)
      * @throws nothing
      */
-    private void createSequenceAssociations(EntrezGene entrezGene, 
+    private void createAssociations(EntrezGene entrezGene, 
 		Integer markerKey) throws MGIException {
 	for (Iterator i = entrezGene.getGenBankSeqs().iterator();
 	     i.hasNext();) {
@@ -423,10 +423,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 		 * the sequence with the marker
 		 */
 		if (seqAssociations.size() == 1) {
-		    AccessionLib.createMarkerAssociation(
-			new Integer(LogicalDBConstants.SEQUENCE),
-			accid, markerKey, 
-			new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		    makeSeqAssociationToMarker (new Integer(LogicalDBConstants.SEQUENCE),
+                        accid, markerKey);
 		}
 	    }
 	}
@@ -441,10 +439,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
 		(Set)super.index.lookup(Constants.XM, acc);
 	    if (seqAssociations.size() == 1) {
-		AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
 	    }
 	}
 
@@ -454,10 +450,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
 		(Set)super.index.lookup(Constants.XR, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             }
 	}
 
@@ -467,10 +461,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	     Set seqAssociations =
                 (Set)super.index.lookup(Constants.XP, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		 makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             } 
 	}
 
@@ -480,10 +472,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
                 (Set)super.index.lookup(Constants.NM, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             }
 	}
 
@@ -493,10 +483,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
                 (Set)super.index.lookup(Constants.NR, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             }
 	}
 
@@ -506,10 +494,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
                 (Set)super.index.lookup(Constants.NP, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             }
 	}
 
@@ -519,10 +505,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    Set seqAssociations =
                 (Set)super.index.lookup(Constants.NG, acc);
 	    if (seqAssociations.size() == 1) {
-                AccessionLib.createMarkerAssociation(
-                        new Integer(LogicalDBConstants.REFSEQ),
-                        accid, markerKey,
-                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+		makeSeqAssociationToMarker (new Integer(LogicalDBConstants.REFSEQ),
+                        accid, markerKey);
             }
 	}
 
@@ -542,6 +526,26 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	}
     }
 
+     /**
+     * associate a sequence ID with a marker if the sequence is not associated
+     * with a problem clone
+     * @assumes nothing
+     * @effects 'seqID' may be associated with 'markerKey' in the database
+     * @param logicalDBKey - ldb with which to make the sequence to marker
+     *  association
+     * @param seqID - id to associate with 'markerKey'
+     * @param markerKey the marker to which we may associate 'seqID'
+     * @throws nothing
+     */
+    private void makeSeqAssociationToMarker(Integer logicalDBKey, String seqID, 
+	    Integer markerKey) throws MGIException {
+	if ( ! this.problemClones.lookup(seqID)) {
+	    AccessionLib.createMarkerAssociation(
+                        logicalDBKey, seqID, markerKey,
+                        new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
+	}
+    }
+				    
     /**
      * processes the gene unification associations
      * @assumes 'guMarkers' contains at least one member
@@ -573,7 +577,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    HashSet guIdsAssocWithMarker = guIdsByMarkerKeyLookup.lookup(guMarkerKey);
 	    // create sequence associations if GU 1:1
 	    if (guIdsAssocWithMarker.size() == 1) {
-		 createSequenceAssociations(entrezGene, guMarkerKey);
+		 createAssociations(entrezGene, guMarkerKey);
 	    }
 	}	    
     }
