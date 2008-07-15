@@ -43,6 +43,7 @@ anchorEnd = '</A>'
 egFiles = ['ZERO_ONE_OUTFILE_NAME']
 column8Files = ['ONE_N_OUTFILE_NAME', 'N_ONE_OUTFILE_NAME', 'N_M_OUTFILE_NAME', 'CHR_MIS_OUTFILE_NAME']
 column5Files = ['ONE_ZERO_OUTFILE_NAME']
+column2Files = ['GM_NOTIN_OUTFILE_NAME']
 
 # _ActualDB_key for URLs we need to use
 egURL = 57
@@ -304,6 +305,40 @@ def processMGI_5columns():
         inFile.close()
         reportlib.finish_nonps(htmlFile, isHTML = 1)
 
+def processMGI_2columns():
+    #
+    # process MGI-oriented reports w/ 2 columns
+    #
+
+    # iterate thru files
+
+    for b in column2Files:
+
+        value = os.environ[b]
+        inFile, htmlFile = initFiles(value)
+
+        # print html header
+
+        htmlFile.write(tableStart + CRT)
+	htmlFile.write('<TD>Marker</TD>' + CRT)
+        htmlFile.write('<TD>EG ID</TD>')
+
+        # iterate thru input file
+
+        for line in inFile.readlines():
+
+            tokens = string.split(line, TAB)
+
+            egID = tokens[0]
+            mgiID = tokens[1]
+	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
+	    htmlFile.write('<TD>' + egID + '</TD>')
+            htmlFile.write(CRT)
+
+        htmlFile.write(tableEnd)
+        inFile.close()
+        reportlib.finish_nonps(htmlFile, isHTML = 1)
+
 #
 # main
 #
@@ -312,5 +347,6 @@ init()
 processEG()
 processMGI_8columns()
 processMGI_5columns()
+processMGI_2columns()
 sys.exit(0)
 

@@ -1,3 +1,16 @@
+TAG: egload-tr8543_2-5
+DATE: 07/15/2008
+STAFF: sc
+CHANGES:
+1) Removed: GUIdsLookup and GUQuery
+2) Added html formatting of NCBI Gene Model IDs no longer in EG
+3) Removed MGIMarkerQuery.MGIMarker attributes which can now be just 
+   bucketized attributes
+3) Same as above for EntrezGeneQuery
+4) EntrezGeneBucketizer - more comments, slight change to  GMs with no 
+   EntrezGene Id report
+5) added new report to index.html
+
 TAG: egload-tr8543_2-4
 DATE: 07/02/2008
 STAFF: sc

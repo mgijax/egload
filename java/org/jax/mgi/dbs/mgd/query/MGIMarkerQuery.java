@@ -126,8 +126,6 @@ public class MGIMarkerQuery extends ObjectQuery
 
               // adds the the preferred MGI ID to the set of all MGI Ids
 	      // for this MGIMarker
-              marker.mgiIDs.add(new SequenceAccession(marker.mgiID,
-                  SequenceAccession.MGI));
               // adds the preferred MGI ID to the Bucketizable SVASet
               marker.addMGIID(new SequenceAccession(marker.mgiID,
                   SequenceAccession.MGI));
@@ -151,64 +149,46 @@ public class MGIMarkerQuery extends ObjectQuery
 
                       if (seqCategory.equals(Constants.GENBANK))
                       {
-                          // set marker attribute
-                          marker.genbankSeqs.add(acc);
                           // set bucketizable data
                           marker.addGenBankSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XM))
                       {
-                          // set marker attribute
-                          marker.xmSeqs.add(acc);
                           // set bucketizable data
                           marker.addXMSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XR))
                       {
-                          // set marker attribute
-                          marker.xrSeqs.add(acc);
                           // set bucketizable data
                           marker.addXRSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XP))
 		      {
-                          // set marker attribute
-                          marker.xpSeqs.add(acc);
 			  // set bucketizable data
                           marker.addXPSequence(acc);
 		      }
                       else if (seqCategory.equals(Constants.NM))
 		      {
-                          // set marker attribute
-                          marker.nmSeqs.add(acc);
 			  // set bucketizable data
                           marker.addNMSequence(acc);
 		      }
                       else if (seqCategory.equals(Constants.NR))
 		      {
-                          // set marker attribute
-                          marker.nrSeqs.add(acc);
 		          // set bucketizable data
                           marker.addNRSequence(acc);
 		      }
                       else if (seqCategory.equals(Constants.NP))
 		      {
-                          // set marker attribute
-                          marker.npSeqs.add(acc);
 			  // set bucketizable data
                           marker.addNPSequence(acc);
 		      }
                       else if (seqCategory.equals(Constants.NG))
 		      {
-                          // set marker attribute
-                          marker.ngSeqs.add(acc);
 			  // set bucketizable data
                           marker.addNGSequence(acc);
 		      }
                       else if (seqCategory.equals(Constants.MGIID))
                       {
-                          // set marker attribute
-                          marker.mgiIDs.add(acc);
                           // set bucketizable data
                           marker.addMGIID(acc);
                       }
@@ -250,25 +230,6 @@ public class MGIMarkerQuery extends ObjectQuery
         public String mgiID = null;
         public String type = null;
 
-	// 6/20/08 - this isn't needed
-        //private String[] sequenceGroups =
-          //  {Constants.GENBANK, Constants.XM, Constants.XR, Constants.MGIID};
-
-        // all HashSets defined here contain instances of SequenceAccession
-        public HashSet genbankSeqs = new HashSet();
-
-        public HashSet nmSeqs = new HashSet();
-        public HashSet nrSeqs = new HashSet();
-        public HashSet npSeqs = new HashSet();
-        public HashSet ngSeqs = new HashSet();
-
-        public HashSet xmSeqs = new HashSet();
-        public HashSet xrSeqs = new HashSet();
-        public HashSet xpSeqs = new HashSet();
-
-        // mgiIDs can be primary or secondary
-        public HashSet mgiIDs = new HashSet();
-
         public MGIMarker(String id)
         {
             super(id, Constants.PROVIDER_MGI);
@@ -277,20 +238,20 @@ public class MGIMarkerQuery extends ObjectQuery
         public HashSet getAllRefSeqSequences()
         {
             HashSet refseqSeqs = new HashSet();
-            refseqSeqs.addAll(nmSeqs);
-            refseqSeqs.addAll(nrSeqs);
-            refseqSeqs.addAll(npSeqs);
-            refseqSeqs.addAll(ngSeqs);
-            refseqSeqs.addAll(xmSeqs);
-            refseqSeqs.addAll(xrSeqs);
-            refseqSeqs.addAll(xpSeqs);
+            refseqSeqs.addAll(super.getNMSequences());
+            refseqSeqs.addAll(super.getNRSequences());
+            refseqSeqs.addAll(super.getNPSequences());
+            refseqSeqs.addAll(super.getNGSequences());
+            refseqSeqs.addAll(super.getXMSequences());
+            refseqSeqs.addAll(super.getXRSequences());
+            refseqSeqs.addAll(super.getXPSequences());
             return refseqSeqs;
         }
 
         public HashSet getAllSequences()
         {
             HashSet allSeqs = new HashSet();
-            allSeqs.addAll(genbankSeqs);
+            allSeqs.addAll(super.getGenBankSequences());
             allSeqs.addAll(getAllRefSeqSequences());
             return allSeqs;
         }
@@ -300,9 +261,9 @@ public class MGIMarkerQuery extends ObjectQuery
             HashSet refseqSeqs = getAllRefSeqSequences();
 
             return mgiID + " : " + name + " | " + symbol + " | " + chromosome +
-                " | " + Constants.MGIID + " = " + mgiIDs.toString() +
-                " | " + Constants.GENBANK + " = " + genbankSeqs.toString() +
-                " | " + Constants.REFSEQ + " = " + refseqSeqs.toString();
+                " | " + Constants.MGIID + " = " + super.getMGIIDs().toString() +
+                " | " + Constants.GENBANK + " = " + super.getGenBankSequences().toString() +
+                " | " + Constants.REFSEQ + " = " + getAllRefSeqSequences().toString();
         }
     }
 
