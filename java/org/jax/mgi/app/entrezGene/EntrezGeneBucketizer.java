@@ -3,24 +3,19 @@ package org.jax.mgi.app.entrezGene;
 import java.util.*;
 import java.io.File;
 
-
 import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
 import org.jax.mgi.dbs.mgd.lookup.GUIdsByMarkerKeyLookup;
 import org.jax.mgi.dbs.mgd.lookup.MarkersByGUIdLookup;
-//import org.jax.mgi.dbs.mgd.lookup.GUIdsLookup;
 import org.jax.mgi.dbs.rdr.lookup.HomoloGeneLookup;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
 import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
-//import org.jax.mgi.dbs.mgd.query.GUQuery;
-//import org.jax.mgi.dbs.mgd.query.GUQuery.GU;
 import org.jax.mgi.dbs.mgd.query.NCBIGMQuery;
 import org.jax.mgi.dbs.mgd.query.NCBIGMQuery.GM;
 import org.jax.mgi.shr.bucketizer.AbstractBucketizer;
 import org.jax.mgi.shr.bucketizer.BucketItem;
 import org.jax.mgi.shr.bucketizer.BucketItem.Association;
 import org.jax.mgi.shr.bucketizer.Bucketizable;
-//import org.jax.mgi.shr.sva.SVASet;
 import org.jax.mgi.shr.exception.MGIException;
 import org.jax.mgi.shr.ioutils.OutputManager;
 import org.jax.mgi.shr.dbutils.DataIterator;
@@ -76,7 +71,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // a SQLStream for writing to MGD
     private SQLStream loadStream = null;
 
-    // A FullcachedLookup for obtainning problem clones
+    // A FullcachedLookup for obtaining problem clones
     private ProblemClonesLookup problemClones = null;
 
     // A FullCachedLookup for obtaining the set of markers for a GU id
@@ -321,8 +316,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      public void getInvalidGMIds() throws MGIException {
 	NCBIGMQuery query = new NCBIGMQuery();
 	DataIterator it = query.execute();
-	String header = "NCBI GM ID\tComma delimitted list of Marker MGI IDs\n";
-	OutputManager.write(GM_NOTIN_ENTREZGENE, header);
+	//String header = "NCBI GM ID\tComma delimited list of Marker MGI IDs\n";
+	//OutputManager.write(GM_NOTIN_ENTREZGENE, header);
 	while (it.hasNext()) {
 	    GM gm = (GM)it.next();
 	    String gmId = gm.getGMId();
@@ -330,12 +325,16 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    if (!egIdSet.contains(gmId)) {
 		StringBuffer output = new StringBuffer();
 		output.append(gmId);
+		output.append("\t");
 		for (Iterator i = markers.iterator(); i.hasNext();) {
 		    String m = (String)i.next();
 		    if (m != null) {
-			output.append(", ");
 			output.append(m);
+			output.append(", ");
 		    }
+		}
+		if (output.charAt(output.length()-1) == ',') {
+		    output.deleteCharAt(output.length());
 		}
                 output.append("\n");
 		//report it
@@ -396,7 +395,7 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
      *        with > 1 marker from bucketizing consideration
      *	   c) if there are two Bucektizable objects associated with the seqId
      *        then there is one EntrezGene and one MGIMarker object indicating
-     *        this sequence is associated with another marker, so we don't want
+     *        this sequence is associated with a marker, so we don't want
      *        to associate it with 'markerKey'
      * @assumes nothing
      * @effects Sequences associations to 'markerKey' may be created.
@@ -419,7 +418,8 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
                         (Set)super.index.lookup(Constants.GENBANK, acc);
 		/**
 		 * if only one member, it is an EntrezGene object with no 
-		 * corresponding MGIMarker object, so we want to associate
+		 * corresponding MGIMarker object. This sequence is not associated with
+		 * any so we want to associate
 		 * the sequence with the marker
 		 */
 		if (seqAssociations.size() == 1) {
@@ -528,7 +528,9 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 
      /**
      * associate a sequence ID with a marker if the sequence is not associated
-     * with a problem clone
+     * with a problem clone. Problem Clone lookup only applies to therefore
+     * only contains genbank sequences, for simplicity we apply all seqids
+     * to this lookup. RefSeqs will not be found.
      * @assumes nothing
      * @effects 'seqID' may be associated with 'markerKey' in the database
      * @param logicalDBKey - ldb with which to make the sequence to marker
