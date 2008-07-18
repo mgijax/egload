@@ -101,7 +101,8 @@ public class NCBIGMQuery extends ObjectQuery
 	    "and a3._MGIType_key = " + MGITypeConstants.MARKER +
 	    "and a3._LogicalDB_key = 1 " +
 	    "and a3.prefixPart = 'MGI:' " +
-	    "and a3.preferred = 1)";
+	    "and a3.preferred = 1) " + 
+	    "order by ncbiGMID";
     }
 
 
