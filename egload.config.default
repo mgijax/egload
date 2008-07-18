@@ -119,6 +119,8 @@ ZERO_ONE_SORT="-k1n"
 CHR_MIS_OUTFILE_NAME=${RPTDIR}/bucket_mismatched_chr.txt
 CHR_MIS_SORT="-k1.5n"
 
+GM_NOTIN_OUTFILE_NAME=${RPTDIR}/gmId_notin_entrezgene.txt
+
 export ONE_ONE_OUTFILE_NAME ONE_ONE_SORT
 export ONE_N_OUTFILE_NAME ONE_N_SORT
 export N_ONE_OUTFILE_NAME
@@ -126,7 +128,7 @@ export N_M_OUTFILE_NAME
 export ONE_ZERO_OUTFILE_NAME ONE_ZERO_SORT
 export ZERO_ONE_OUTFILE_NAME ZERO_ONE_SORT
 export CHR_MIS_OUTFILE_NAME CHR_MIS_SORT
-
+export GM_NOTIN_OUTFILE_NAME
 ###########################################################################
 #
 #  BCP MANAGER SETTINGS BY DATABASE

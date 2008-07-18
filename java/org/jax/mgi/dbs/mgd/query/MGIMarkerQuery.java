@@ -25,12 +25,12 @@ import org.jax.mgi.app.entrezGene.Constants;
 /**
  * is an extension of ObjectQuery for specifically getting MGI marker data
  * from the database. The inner class MGIMarker is used to store the
- * results from the query. It has two types of attributes: class attributes
+ * results from the query. It has two types of attributes: instance attributes
  * (typical to any class) and bucketizable attributes (those attributes used
  * in the bucketizing algorithm)
  * @has nothing
  * @does runs the query and creates the MGIMarker objects from the query
- * results and sets all the class attributes and "bucketizable" attributes
+ * results and sets all the instance attributes and "bucketizable" attributes
  * for these objects
  * @company The Jackson Laboratory
  * @author M Walker
@@ -44,7 +44,8 @@ public class MGIMarkerQuery extends ObjectQuery
   // the MGD database manager
   private SQLDataManager sqlMgr = null;
 
-  // a FullCachedLookup for obtaining sequence associations to a marker
+  // a FullCachedLookup for obtaining sequence associations (and non-preferred
+  // MGI IDs for the marker
   private AssocAccidLookup sequenceLookup = null;
 
   // classify a sequence type using character pattern matching on an accid
@@ -70,7 +71,7 @@ public class MGIMarkerQuery extends ObjectQuery
 
 
     /**
-     * Get the query string for querying MGI markers
+     * Get the query string for querying preferred MGI markers
      * @assumes Nothing
      * @effects Nothing
      * @return The query string
@@ -97,11 +98,11 @@ public class MGIMarkerQuery extends ObjectQuery
     }
 
     /**
-     * get a RowDataInterpreter for creating EntrezGene objects from the query
+     * get a RowDataInterpreter for creating MGIMarker objects from the query
      * results
      * @assumes nothing
      * @effects nothing
-     * @return The RowDataInterpreter object.
+     * @return The RowDataInterpreter object
      */
 
     public RowDataInterpreter getRowDataInterpreter() {
@@ -111,26 +112,31 @@ public class MGIMarkerQuery extends ObjectQuery
           public Object interpret(RowReference row)
               throws DBException
           {
+	      // create MGIMarker object - this sets the preferred MGI ID as 
+	      // a Bucketizable ID attribute
               MGIMarker marker = new MGIMarker(row.getString(1));
+	      // set the preferred MGI ID as a MGIMarker attribute
               marker.mgiID = row.getString(1);
+	      
               marker.symbol = row.getString(2);
               marker.name = row.getString(3);
               marker.chromosome = row.getString(4);
               marker.type = row.getString(5);
               marker.key = row.getInt(6);
 
-              // adds the MGI ID to the marker
-              marker.mgiIDs.add(new SequenceAccession(marker.mgiID,
-                  SequenceAccession.MGI));
-              // adds the MGI ID as a Bucketizable element
+              // adds the the preferred MGI ID to the set of all MGI Ids
+	      // for this MGIMarker
+              // adds the preferred MGI ID to the Bucketizable SVASet
               marker.addMGIID(new SequenceAccession(marker.mgiID,
                   SequenceAccession.MGI));
 
               /**
-               * obtain sequence associations
+               * obtain sequence associations AND non-preferred MGI ids for the 
+	       * marker
                */
               try
               {
+		  // sequences also contains non-preferred MGI IDs
                   Vector sequences = sequenceLookup.lookup(marker.key);
                   if (sequences == null)
                       return marker;
@@ -143,44 +149,46 @@ public class MGIMarkerQuery extends ObjectQuery
 
                       if (seqCategory.equals(Constants.GENBANK))
                       {
-                          // set marker attribute
-                          marker.genbankSeqs.add(acc);
                           // set bucketizable data
                           marker.addGenBankSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XM))
                       {
-                          // set marker attribute
-                          marker.xmSeqs.add(acc);
                           // set bucketizable data
                           marker.addXMSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XR))
                       {
-                          // set marker attribute
-                          marker.xrSeqs.add(acc);
                           // set bucketizable data
                           marker.addXRSequence(acc);
                       }
                       else if (seqCategory.equals(Constants.XP))
-                          // set marker attribute
-                          marker.xpSeqs.add(acc);
+		      {
+			  // set bucketizable data
+                          marker.addXPSequence(acc);
+		      }
                       else if (seqCategory.equals(Constants.NM))
-                          // set marker attribute
-                          marker.nmSeqs.add(acc);
+		      {
+			  // set bucketizable data
+                          marker.addNMSequence(acc);
+		      }
                       else if (seqCategory.equals(Constants.NR))
-                          // set marker attribute
-                          marker.nrSeqs.add(acc);
+		      {
+		          // set bucketizable data
+                          marker.addNRSequence(acc);
+		      }
                       else if (seqCategory.equals(Constants.NP))
-                          // set marker attribute
-                          marker.npSeqs.add(acc);
+		      {
+			  // set bucketizable data
+                          marker.addNPSequence(acc);
+		      }
                       else if (seqCategory.equals(Constants.NG))
-                          // set marker attribute
-                          marker.ngSeqs.add(acc);
+		      {
+			  // set bucketizable data
+                          marker.addNGSequence(acc);
+		      }
                       else if (seqCategory.equals(Constants.MGIID))
                       {
-                          // set marker attribute
-                          marker.mgiIDs.add(acc);
                           // set bucketizable data
                           marker.addMGIID(acc);
                       }
@@ -203,8 +211,8 @@ public class MGIMarkerQuery extends ObjectQuery
 
     /**
      * is a plain old java object for MGI marker data
-     * @has entrez gene class attributes and "bucketzable" attributes (those
-     * attributes used by the AbstractBucketizer to find discover associations
+     * @has MGIMarker instance attributes and "bucketizable" attributes (those
+     * attributes used by the AbstractBucketizer to find associations
      * between entrez genes and mgi markers)
      * @does nothing
      * @company The Jackson Laboratory
@@ -214,30 +222,13 @@ public class MGIMarkerQuery extends ObjectQuery
     public class MGIMarker
         extends EntrezGeneBucketizable
     {
+	// Marker attributes
         public Integer key = null;
         public String name = null;
         public String symbol = null;
         public String chromosome = null;
         public String mgiID = null;
         public String type = null;
-
-        private String[] sequenceGroups =
-            {Constants.GENBANK, Constants.XM, Constants.XR, Constants.MGIID};
-
-        // all HashSets defined here contain instances of SequenceAccession
-        public HashSet genbankSeqs = new HashSet();
-
-        public HashSet nmSeqs = new HashSet();
-        public HashSet nrSeqs = new HashSet();
-        public HashSet npSeqs = new HashSet();
-        public HashSet ngSeqs = new HashSet();
-
-        public HashSet xmSeqs = new HashSet();
-        public HashSet xrSeqs = new HashSet();
-        public HashSet xpSeqs = new HashSet();
-
-        // mgiIDs can be primary or secondary
-        public HashSet mgiIDs = new HashSet();
 
         public MGIMarker(String id)
         {
@@ -247,20 +238,20 @@ public class MGIMarkerQuery extends ObjectQuery
         public HashSet getAllRefSeqSequences()
         {
             HashSet refseqSeqs = new HashSet();
-            refseqSeqs.addAll(nmSeqs);
-            refseqSeqs.addAll(nrSeqs);
-            refseqSeqs.addAll(npSeqs);
-            refseqSeqs.addAll(ngSeqs);
-            refseqSeqs.addAll(xmSeqs);
-            refseqSeqs.addAll(xrSeqs);
-            refseqSeqs.addAll(xpSeqs);
+            refseqSeqs.addAll(super.getNMSequences());
+            refseqSeqs.addAll(super.getNRSequences());
+            refseqSeqs.addAll(super.getNPSequences());
+            refseqSeqs.addAll(super.getNGSequences());
+            refseqSeqs.addAll(super.getXMSequences());
+            refseqSeqs.addAll(super.getXRSequences());
+            refseqSeqs.addAll(super.getXPSequences());
             return refseqSeqs;
         }
 
         public HashSet getAllSequences()
         {
             HashSet allSeqs = new HashSet();
-            allSeqs.addAll(genbankSeqs);
+            allSeqs.addAll(super.getGenBankSequences());
             allSeqs.addAll(getAllRefSeqSequences());
             return allSeqs;
         }
@@ -270,9 +261,9 @@ public class MGIMarkerQuery extends ObjectQuery
             HashSet refseqSeqs = getAllRefSeqSequences();
 
             return mgiID + " : " + name + " | " + symbol + " | " + chromosome +
-                " | " + Constants.MGIID + " = " + mgiIDs.toString() +
-                " | " + Constants.GENBANK + " = " + genbankSeqs.toString() +
-                " | " + Constants.REFSEQ + " = " + refseqSeqs.toString();
+                " | " + Constants.MGIID + " = " + super.getMGIIDs().toString() +
+                " | " + Constants.GENBANK + " = " + super.getGenBankSequences().toString() +
+                " | " + Constants.REFSEQ + " = " + getAllRefSeqSequences().toString();
         }
     }
 
