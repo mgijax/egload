@@ -330,11 +330,13 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 		    String m = (String)i.next();
 		    if (m != null) {
 			output.append(m);
-			output.append(", ");
+			output.append(",");
 		    }
 		}
+		System.out.println(output.charAt(output.length()-1));
+		System.out.println(output.charAt(output.length()-2));
 		if (output.charAt(output.length()-1) == ',') {
-		    output.deleteCharAt(output.length());
+		    output.deleteCharAt(output.length()-1);
 		}
                 output.append("\n");
 		//report it
