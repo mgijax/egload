@@ -333,8 +333,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 			output.append(",");
 		    }
 		}
-		System.out.println(output.charAt(output.length()-1));
-		System.out.println(output.charAt(output.length()-2));
 		if (output.charAt(output.length()-1) == ',') {
 		    output.deleteCharAt(output.length()-1);
 		}
