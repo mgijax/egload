@@ -27,7 +27,9 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
      * the Bucketizer
      */
     protected static String[] svaNames =
-        {Constants.GENBANK, Constants.MGIID, Constants.XM, Constants.XR};
+        {Constants.GENBANK, Constants.MGIID, Constants.XM, Constants.XR,
+		Constants.XP, Constants.NM, Constants.NR, Constants.NP,
+		Constants.NG};
 
     /**
      * constructor
@@ -76,6 +78,51 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
     }
 
     /**
+     * get the XP sequences from this instance
+     * @return XP sequences
+     */
+    public Set getXPSequences()
+    {
+        return super.svaSet.getSVA(Constants.XP);
+    }
+
+    /**
+     * get the NM sequences from this instance
+     * @return NM sequences
+     */
+    public Set getNMSequences()
+    {
+        return super.svaSet.getSVA(Constants.NM);
+    }
+
+    /**
+     * get the NR sequences from this instance
+     * @return NR sequences
+     */
+    public Set getNRSequences()
+    {
+        return super.svaSet.getSVA(Constants.NR);
+    }
+
+    /**
+     * get the NP sequences from this instance
+     * @return NP sequences
+     */
+    public Set getNPSequences()
+    {
+        return super.svaSet.getSVA(Constants.NP);
+    }
+
+    /**
+     * get the NG sequences from this instance
+     * @return NG sequences
+     */
+    public Set getNGSequences()
+    {
+        return super.svaSet.getSVA(Constants.NG);
+    }
+
+    /**
      * add a GenBank sequence to this instance
      * @param accid the GenBank sequence to add
      */
@@ -109,6 +156,51 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
     public void addXRSequence(SequenceAccession accid)
     {
         super.svaSet.addSVAMember(Constants.XR, accid);
+    }
+
+    /**
+     * add an XP sequence to this instance
+     * @param accid the XP sequence to add
+     */
+    public void addXPSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.XP, accid);
+    }
+
+    /**
+     * add an NM sequence to this instance
+     * @param accid the NM sequence to add
+     */
+    public void addNMSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NM, accid);
+    }
+
+    /**
+     * add an NR sequence to this instance
+     * @param accid the NR sequence to add
+     */
+    public void addNRSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NR, accid);
+    }
+
+    /**
+     * add an NP sequence to this instance
+     * @param accid the NP sequence to add
+     */
+    public void addNPSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NP, accid);
+    }
+
+    /**
+     * add an NG sequence to this instance
+     * @param accid the NG sequence to add
+     */
+    public void addNGSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NG, accid);
     }
 
     /**

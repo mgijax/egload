@@ -59,12 +59,12 @@ public class EntrezGeneLoader
     private EntrezGeneHistory entrezGeneHistory = null;
 
     /**
-     * the list of names of attributes used in the Bucketizer includes
-     * GenBank, MGIID, XR and XM
+     * the list of names of attributes used in the Bucketizer 
      */
-    private String[] sequenceGroups = {Constants.GENBANK,
-        Constants.MGIID, Constants.XR, Constants.XM};
-
+    private String[] sequenceGroups = {Constants.GENBANK, 
+		Constants.MGIID, Constants.XM, Constants.XR,
+                Constants.XP, Constants.NM, Constants.NR, Constants.NP,
+                Constants.NG};
     /**
      * stopwatch for timing
      */
@@ -146,8 +146,8 @@ public class EntrezGeneLoader
     {
         bucketizer.run(Constants.PROVIDER_MGI, Constants.PROVIDER_ENTREZGENE);
         printStats("run complete");
-	bucketizer.process_GU();
-	printStats("run gu complete");
+	bucketizer.getInvalidGMIds();
+	printStats("reporting invalid NCBI GM Ids complete");
     }
 
     /**

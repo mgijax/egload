@@ -126,7 +126,7 @@ then
 fi
 
 # for each text file, write the number of lines
-for i in ${ONE_ONE_OUTFILE_NAME} ${ONE_N_OUTFILE_NAME} ${ONE_ZERO_OUTFILE_NAME} ${ZERO_ONE_OUTFILE_NAME} ${CHR_MIS_OUTFILE_NAME}
+for i in ${ONE_ONE_OUTFILE_NAME} ${ONE_N_OUTFILE_NAME} ${ONE_ZERO_OUTFILE_NAME} ${ZERO_ONE_OUTFILE_NAME} ${CHR_MIS_OUTFILE_NAME} ${GM_NOTIN_OUTFILE_NAME}
 do
 echo `wc -l $i` > $i.tmp
 echo "\n" >> $i.tmp

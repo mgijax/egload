@@ -152,11 +152,10 @@ public class EntrezGeneQuery extends ObjectQuery
             {
                 EntrezGeneRow commonElements = (EntrezGeneRow)v.get(0);
                 EntrezGene egene = new EntrezGene(commonElements.id);
-                egene.mgiID = commonElements.mgiID;
                 egene.chromosome = commonElements.chromosome;
                 egene.symbol = commonElements.symbol;
 
-                egene.addMGIID(new SequenceAccession(egene.mgiID,
+                egene.addMGIID(new SequenceAccession(commonElements.mgiID,
                     SequenceAccession.MGI));
 
                 for (int i = 0; i < v.size(); i++)
@@ -199,29 +198,36 @@ public class EntrezGeneQuery extends ObjectQuery
 
                 if (seqCategory.equals(Constants.GENBANK))
                 {
-                    egene.genbank.add(acc);
                     egene.addGenBankSequence(acc);
                 }
                 else if (seqCategory.equals(Constants.XM))
                 {
-                    egene.xmSeqs.add(acc);
                     egene.addXMSequence(acc);
                 }
                 else if (seqCategory.equals(Constants.XR))
                 {
-                    egene.xrSeqs.add(acc);
                     egene.addXRSequence(acc);
                 }
                 else if (seqCategory.equals(Constants.XP))
-                    egene.xpSeqs.add(acc);
+		{
+		     egene.addXPSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NM))
-                    egene.nmSeqs.add(acc);
+		{
+		     egene.addNMSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NR))
-                    egene.nrSeqs.add(acc);
+		{
+		     egene.addNRSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NP))
-                    egene.npSeqs.add(acc);
+		{
+		    egene.addNPSequence(acc);
+		}
                 else if (seqCategory.equals(Constants.NG))
-                    egene.ngSeqs.add(acc);
+		{
+		    egene.addNGSequence(acc);
+		}
             }
 
         }
@@ -240,17 +246,7 @@ public class EntrezGeneQuery extends ObjectQuery
         extends EntrezGeneBucketizable
     {
         private String chromosome = null;
-        private String mgiID = null;
         private String symbol = null;
-        private HashSet genbank = new HashSet();
-        private HashSet nmSeqs = new HashSet();
-        private HashSet nrSeqs = new HashSet();
-        private HashSet npSeqs = new HashSet();
-        private HashSet ngSeqs = new HashSet();
-
-        private HashSet xmSeqs = new HashSet();
-        private HashSet xrSeqs = new HashSet();
-        private HashSet xpSeqs = new HashSet();
 
         public EntrezGene(String id)
         {
@@ -264,7 +260,7 @@ public class EntrezGeneQuery extends ObjectQuery
 
         public String getMGIID()
         {
-            return this.mgiID;
+            return super.getMGIIDs().toString();
         }
 
         public String getSymbol()
@@ -274,22 +270,34 @@ public class EntrezGeneQuery extends ObjectQuery
 
         public Set getNMs()
         {
-            return this.nmSeqs;
+	    if (super.getNMSequences() == null)
+                return new HashSet();
+            else
+                return super.getNMSequences();
         }
 
         public Set getNRs()
         {
-            return this.nrSeqs;
+	    if (super.getNRSequences() == null)
+                return new HashSet();
+            else
+                return super.getNRSequences();
         }
 
         public Set getNPs()
         {
-            return this.npSeqs;
+	    if (super.getNPSequences() == null)
+                return new HashSet();
+            else
+                return super.getNPSequences();
         }
 
         public Set getNGs()
         {
-            return this.ngSeqs;
+	    if (super.getNGSequences() == null)
+                return new HashSet();
+            else
+                return super.getNGSequences();
         }
 
         public Set getXMs()
@@ -310,7 +318,10 @@ public class EntrezGeneQuery extends ObjectQuery
 
         public Set getXPs()
         {
-            return this.xpSeqs;
+	    if (super.getXPSequences() == null)
+                return new HashSet();
+            else
+                return super.getXPSequences();
         }
 
         public Set getGenBankSeqs()
@@ -324,20 +335,20 @@ public class EntrezGeneQuery extends ObjectQuery
         public HashSet getAllRefSeqSequences()
         {
             HashSet refseqSeqs = new HashSet();
-            refseqSeqs.addAll(nmSeqs);
-            refseqSeqs.addAll(nrSeqs);
-            refseqSeqs.addAll(npSeqs);
-            refseqSeqs.addAll(ngSeqs);
-            refseqSeqs.addAll(xmSeqs);
-            refseqSeqs.addAll(xrSeqs);
-            refseqSeqs.addAll(xpSeqs);
+            refseqSeqs.addAll(super.getNMSequences());
+            refseqSeqs.addAll(super.getNRSequences());
+            refseqSeqs.addAll(super.getNPSequences());
+            refseqSeqs.addAll(super.getNGSequences());
+            refseqSeqs.addAll(super.getXMSequences());
+            refseqSeqs.addAll(super.getXRSequences());
+            refseqSeqs.addAll(super.getXPSequences());
             return refseqSeqs;
         }
 
         public HashSet getAllSequences()
         {
             HashSet allSeqs = new HashSet();
-            allSeqs.addAll(genbank);
+            allSeqs.addAll(super.getGenBankSequences());
             allSeqs.addAll(getAllRefSeqSequences());
             return allSeqs;
         }
@@ -348,9 +359,9 @@ public class EntrezGeneQuery extends ObjectQuery
             HashSet refseqs = getAllRefSeqSequences();
 
             return id + " : " + chromosome + " | " + Constants.MGIID +
-                " = " + mgiID.toString() + " | " +
-                Constants.GENBANK + " = " + genbank.toString() +
-                " | " + Constants.REFSEQ + " = " + refseqs.toString();
+                " = " + super.getMGIIDs().toString() + " | " +
+                Constants.GENBANK + " = " + super.getGenBankSequences().toString() +
+                " | " + Constants.REFSEQ + " = " + getAllRefSeqSequences().toString();
         }
     }
 
@@ -379,10 +390,5 @@ public class EntrezGeneQuery extends ObjectQuery
             dna + "|" + rna + "|" + prot;
       }
     }
-
-
-
 }
-
-
 

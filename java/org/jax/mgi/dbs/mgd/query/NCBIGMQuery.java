@@ -19,23 +19,24 @@ import org.jax.mgi.dbs.SchemaConstants;
 import org.jax.mgi.app.entrezGene.EntrezGeneBucketizable;
 import org.jax.mgi.app.entrezGene.Constants;
 import org.jax.mgi.dbs.mgd.LogicalDBConstants;
+import org.jax.mgi.dbs.mgd.MGITypeConstants;
 import org.jax.mgi.dbs.mgd.lookup.SeqIdsByMarkerKeyLookup;
 import org.jax.mgi.app.entrezGene.Constants;
 
 
 /**
  *
- * is an extension of ObjectQuery for specifically getting Entrez Gene data
- * from the database. The inner class GU is used to store the
+ * is an extension of ObjectQuery for specifically NCBI Gene Model Ids
+ * from the database. The inner class GM is used to store the
  * results from the query.
  * @does provides the query and RowDataInterpreter for obtaining
- * GU objects from the database
+ * NCBI Gene Model objects from the database
  * @company The Jackson Laboratory
- * @author lec
+ * @author sc
  *
  */
 
-public class GUQuery extends ObjectQuery
+public class NCBIGMQuery extends ObjectQuery
 {
     SeqIdsByMarkerKeyLookup rsLookup = 
        new SeqIdsByMarkerKeyLookup(LogicalDBConstants.REFSEQ);
@@ -52,7 +53,7 @@ public class GUQuery extends ObjectQuery
      * @throws DBException thrown if there is an error accessing the database
      */
 
-    public GUQuery() throws CacheException, ConfigException,
+    public NCBIGMQuery() throws CacheException, ConfigException,
         DBException
     {
         super(SQLDataManagerFactory.getShared(SchemaConstants.MGD));
@@ -68,18 +69,40 @@ public class GUQuery extends ObjectQuery
     public String getQuery()
     {
         /**
-         * gets gene unification/marker associations data
+         * gets NCBI Gene Model and marker associations (MGI ID if there is one)
          */
-	return "select guId = a.accID, mgiKey = a._Object_key " +
-	     "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r " +
-	     "where a._MGIType_key = 2 " +
-	     "and a._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
-	     "and a._Object_key = m._Marker_key " +
-	     "and m._Organism_key = 1 " +
-	     "and a._Accession_key = r._Accession_key " +
-	     "and r._Refs_key = " + Constants.EGLOAD_GU_REFSKEY +
-	     "order by guId";
-
+	return "select  distinct a1.accid as ncbiGMID,  a3.accID " +
+	    "from ACC_Accession a1, ACC_Accession a2, ACC_Accession a3 " +
+	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE +
+	    "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
+	    "and a1.accid = a2.accid " +
+	    "and a1.preferred = 1 " +
+	    "and a2._MGItype_key = " + MGITypeConstants.MARKER +
+	    "and a2._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
+	    "and a2._Object_key = a3._Object_key " +
+	    "and a2.preferred = 1 " +
+	    "and a3._MGIType_key = " + MGITypeConstants.MARKER +
+	    "and a3._LogicalDB_key = 1 " +
+	    "and a3.prefixPart = 'MGI:' " +
+	    "and a3.preferred = 1 " +
+	    "union " +
+	    "select distinct a1.accid as ncbiGMID, accID=null " +
+	    "from ACC_Accession a1 " +
+	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE +
+	    "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
+	    "and a1.preferred = 1 " +
+	    "and not exists (select 1 " +
+	    "from ACC_Accession a2, ACC_Accession a3 " +
+	    "where a1.accid = a2.accid " +
+	    "and a2._MGItype_key = " + MGITypeConstants.MARKER +
+	    "and a2._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
+	    "and a2._Object_key = a3._Object_key " +
+	    "and a2.preferred = 1 " +
+	    "and a3._MGIType_key = " + MGITypeConstants.MARKER +
+	    "and a3._LogicalDB_key = 1 " +
+	    "and a3.prefixPart = 'MGI:' " +
+	    "and a3.preferred = 1) " + 
+	    "order by ncbiGMID";
     }
 
 
@@ -89,7 +112,7 @@ public class GUQuery extends ObjectQuery
      * version of the RowDataInterpreter called MultiRowInterpreter which
      * is used for processing cartesian products such that many rows represent
      * a single object
-     * @return a RowDataInterpreter for creating GU objects
+     * @return a RowDataInterpreter for creating GM objects
      */
     public RowDataInterpreter getRowDataInterpreter()
     {
@@ -106,43 +129,34 @@ public class GUQuery extends ObjectQuery
              */
             public Object interpret(RowReference row) throws DBException
             {
-                GURow gr = new GURow();
-                gr.guId = row.getString(1);
-                gr.mgiKey = row.getInt(2);
+                GMRow gr = new GMRow();
+                gr.gmId = row.getString(1);
+                gr.mgiId = row.getString(2);
                 return gr;
             }
             /**
-             * processes a Vector of objects to create an GU object
+             * processes a Vector of objects to create an GM object
 	     * this is selecting all of the GU/RefSeq/GenBank associations
 	     * that already exist in MGI
              * @param v the vector of objects obtained from returns from
              * subsequent calls to the interpret() method
-             * @return the new GU object
+             * @return the new GM object
              */
             public Object interpretRows(Vector v) throws InterpretException
             {
 		try {
-                    GURow commonElements = (GURow)v.get(0);
-                    GU gu = new GU(commonElements.guId);
+                    GMRow commonElements = (GMRow)v.get(0);
+                    GM gm = new GM(commonElements.gmId);
 
                     for (int i = 0; i < v.size(); i++)
                     {
-                        GURow row = (GURow)v.get(i);
-		        Integer mgiKey = row.mgiKey;
-			HashMap seqs = new HashMap();
+                        GMRow row = (GMRow)v.get(i);
+		        String mgiId = row.mgiId;
 
-		        // get refseq for the marker
-		        HashSet refseqs = rsLookup.lookup(mgiKey);
-			seqs.put(Constants.REFSEQ, refseqs);
-
-		        // get genbank for the marker
-		        HashSet genbanks = gbLookup.lookup(mgiKey);
-			seqs.put(Constants.GENBANK, genbanks);
-
-			gu.addMarker(mgiKey, seqs);
+			gm.addMarker(mgiId);
                     }
 
-                    return gu;
+                    return gm;
 
 		} catch (DBException e) {
 		    throw new InterpretException(e.getMessage());
@@ -170,55 +184,58 @@ public class GUQuery extends ObjectQuery
     }
 
     /**
-     * is a plain old java object for GU data (guId and its set of markers)
-     * @has guId - an NCBI Gene Model Id
+     * is a plain old java object for NCBI GMs and their associations to markers
+     * @has gmId - an NCBI Gene Model Id
      * and a set of markers with their associated GenBank & RefSeq Ids
      * @does nothing
      * @company The Jackson Laboratory
      * @author lec
      *
      */
-    public class GU
+    public class GM
     {
-	private String guId;
+        // NCBI Gene Model Id
+	private String gmId;
+	
+	// Marker MGI IDs associated with 'gmID' via the GU
+	private HashSet markers;
 
-	// markers looks like: {markerKey: HashMap of Sequences}
-	// HashMap of Sequences looks like: {Provider:HashSet of provider seqIds}
-	private HashMap markers;
-
-	public GU(String id) throws CacheException, ConfigException, DBException
+	public GM(String id) throws CacheException, ConfigException, DBException
 	{
-	    guId = id;
-	    markers = new HashMap();
+	    gmId = id;
+	    markers = new HashSet();
 	}
 
-	public void addMarker(Integer mkr, HashMap seqs)
+	// add an marker MGI ID
+	public void addMarker(String mkr)
 	{
-	    markers.put(mkr, seqs);
+	    markers.add(mkr);
 	}
 
-	public String getGUId() { return guId; };
+	// get the NCBI Gene Model ID
+	public String getGMId() { return gmId; };
 
-	public HashMap getMarkers() { return markers; };
+	// get the set of marker MGI Ids for 'gmId'
+	public HashSet getMarkers() { return markers; };
     }
 
     /**
      *
      * is a plain old java object for holding one row of data from the query
-     * @has guId and mgiKey
+     * @has gmId and mgiKey
      * @does nothing
      * @company Jackson Laboratory
      * @author lec
      *
      */
-    public class GURow
+    public class GMRow
     {
-      public String guId = null;
-      public Integer mgiKey = null;
+      public String gmId = null;
+      public String mgiId = null;
 
       public String toString()
       {
-        return guId + "|" + mgiKey;
+        return gmId + "|" + mgiId;
       }
     }
 }
