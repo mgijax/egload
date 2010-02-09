@@ -166,6 +166,19 @@ export RADAR_BCP_OK_TO_OVERWRITE
 #  MISCELLANEOUS SETTINGS
 #
 ###########################################################################
+
+#
+# radarPreprocess.sh settings
+#
+
+# comma delimited list of assembly names
+ASSEMBLIES="Reference assembly (C57BL/6J),Reference assembly"
+
+# sql update file
+UPDATE_FILE=${OUTPUTDIR}/DP_EntrezGene_Accession.sql
+
+export ASSEMBLIES UPDATE_FILE
+
 #  The name of the load for the subject of an email notification
 MAIL_LOADNAME="EntrezGene Load"
 
