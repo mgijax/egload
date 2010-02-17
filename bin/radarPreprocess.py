@@ -90,8 +90,8 @@ def init():
 #	'and (assembly = "%s" ' + \
 #	'or assembly = "%s") ' + \
 #	'order by geneID' % (radar, primaryAssembly, secondaryAssembly), 'auto')
-    results = db.sql('select distinct geneID, genomic, assembly, substring(genomic, 1, 3) as prefix from %s..DP_EntrezGene_Accession where taxID = 10090 and (assembly = "%s" or assembly = "%s") and (substring(genomic, 1, 3) = "NT_" or substring(genomic, 1, 3) = "NW_") order by geneID' % (radar, primaryAssembly, secondaryAssembly), 'auto')
-    print 'results length: %s' % len(results)   
+    results = db.sql('select distinct geneID, genomic, assembly, substring(genomic, 1, 3) as prefix from %s..DP_EntrezGene_Accession where taxID = 10090 and (substring(genomic, 1, 3) = "NT_" or substring(genomic, 1, 3) = "NW_") order by geneID' % radar, 'auto')
+    #print 'results length: %s' % len(results)   
     for r in results:
 	seqId = string.strip(r['genomic'])
 	assembly = string.strip(r['assembly'])
@@ -102,13 +102,11 @@ def init():
 	    geneIdDict[geneId].append(sequenceInfo)
 	else:
 	    geneIdDict[geneId] = [sequenceInfo]
-    print 'geneIdDictLength: %s' % len(geneIdDict)
+    #print 'geneIdDictLength: %s' % len(geneIdDict)
     geneIdList = geneIdDict.keys()
     geneIdList.sort()
-    #for g in geneIdList:
-	#seqs = geneIdDict[g]
-	#for s in seqs:
-	    #print '%s%s%s%s%s%s' % (g, TAB, s.getSeqId(), TAB, s.getAssembly(), CRT)
+    for g in geneIdList:
+	seqs = geneIdDict[g]
 
     fd = open(sqlFile, 'w')
 
@@ -125,74 +123,39 @@ def parseRecords():
     for geneId in geneIdList:
 	# attributes of the best sequence found so far
 	currentPick = ''	    # SequenceInfo object
-	currentBestSeqId = ''       
-	currentBestPrefix = '' 	
-	currentBestAssembly = ''
+	currentBestPrefix = ''
 	
 	# get the set of  SequenceInfo objects for a geneId
 	seqInfoList = geneIdDict[geneId]
-	#if len(seqInfoList) == 0:
-		#print 'geneID: %s ' % geneId
-                #print "No contigs"
-	#elif len(seqInfoList) > 1:
-	    #print 'geneID: %s ' % geneId
-	    #for s in seqInfoList:
-	#	print  'seqId: %s, assembly: %s' %  (s.getSeqId(), s.getAssembly())
+	#print 'GeneID: %s Contigs: %s' % (geneId, len(seqInfoList))
 	# Iterate through the SequenceInfo objects and determine
 	# the one we want to keep
-	hasPrimary = 0
-	hasSecondary = 0
-	hasBoth = 0
 	for seqInfo in seqInfoList:
 	    seqId = seqInfo.getSeqId()
 	    prefix = seqInfo.getPrefix()
 	    assembly = seqInfo.getAssembly()
- 	    if currentPick == '':
-		# This is the first seqInfo for geneId
-		currentPick = seqInfo
-		currentBestSeqId = seqId
-		currentBestPrefix = prefix
-		currentBestAssembly = assembly
-	    if currentBestPrefix == 'NT_':
-		if currentBestAssembly == primaryAssembly:
-		    # This is the best case an NT_ on the primary assembly
-		    # take the first we come to 
-		    #break
-		    hasPrimary = 1 
-		else: # currentBestAssembly is secondaryAssembly 
-		    if assembly == primaryAssembly:
-			# primary trumps secondary
-			currentPick = seqInfo
-			currentBestSeqId = seqId
-			currentBestPrefix = prefix
-			currentBestAssembly = assembly
-			hasSecondary = 1
-	    else: # currentBestPrefix is 'NW_'
-		if prefix == 'NT_':
-		    # NT_ trumps NW_
+	    if assembly != secondaryAssembly:
+		if currentPick == '':
+		    # This is the first seqInfo for geneId
 		    currentPick = seqInfo
-                    currentBestSeqId = seqId
-                    currentBestPrefix = prefix
-                    currentBestAssembly = assembly
-		else: # incoming prefix is 'NW_'
-		    if currentBestAssembly == primaryAssembly:
-			# primary trumps secondary
-			# take first one we come to
-			continue
-		    else: # currentBestAssembly is secondary assembly
-			if assembly == primaryAssembly:
-			    # primary trumps secondary
-			    currentPick = seqInfo
-			    currentBestSeqId = seqId
-			    currentBestPrefix = prefix
-			    currentBestAssembly = assembly
+		    currentBestPrefix = prefix
+		if currentBestPrefix == 'NT_' :
+		    # any NT means we are done
+		    break
+		else: # currentBestPrefix is 'NW_'
+		    if prefix == 'NT_':
+			# NT_ trumps NW_
+			currentPick = seqInfo
+			currentBestPrefix = prefix
+			break
 	#print 'list size before: %s' % len(seqInfoList)
-	seqInfoList.remove(currentPick)
-	#print 'list size after: %s' % len(seqInfoList)
-	if hasPrimary == 1 and hasSecondary == 1:
-	    hasBoth = 1
-	#print 'Picking: %s %s %s %s' % (geneId, currentPick.getSeqId(), currentPick.getAssembly(), hasBoth)
+	# In this case no contig picked because all on secondaryAssembly
+        if currentPick != '':
+	    seqInfoList.remove(currentPick)
+	    #print 'list size after: %s' % len(seqInfoList)
+	    #print 'Picking: %s %s %s' % (geneId, currentPick.getSeqId(), currentPick.getAssembly())
         writeUpdate(geneId, seqInfoList)
+    fd.close()
 #
 # main
 #

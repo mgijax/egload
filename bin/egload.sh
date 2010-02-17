@@ -103,6 +103,15 @@ preload ${OUTPUTDIR}
 cleanDir ${OUTPUTDIR}
 
 #
+# run Radar Preprocessor
+#
+echo "\n`date`" >> ${LOG_PROC}
+echo "Run the Radar Preprocess application" >> ${LOG_PROC} 
+${EGLOAD}/bin/radarPreprocess.sh 
+STAT=$?
+checkStatus ${STAT} "radarPreprocess.sh"
+
+#
 #  Run the load application.
 #
 echo "\n`date`" >> ${LOG_PROC}
@@ -111,12 +120,7 @@ ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
         -DJOBKEY=${JOBKEY} ${DLA_START}
 STAT=$?
-if [ ${STAT} -ne 0 ]
-then
-    echo "EntrezGene Load application failed.  Return status: ${STAT}" >> ${LOG_PROC}
-    postload
-    exit 1
-fi
+checkStatus ${STAT} ${EGLOAD}
 
 #
 # post format reports
@@ -125,28 +129,17 @@ echo "\n`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
 ${EGLOAD}/bin/formatreports.sh
 STAT=$?
-if [ ${STAT} -ne 0 ]
-then
-    echo "EntrezGene Load output formatting failed.    Return status: ${STAT}" >> ${LOG_PROC}
-    postload
-    exit 1
-fi
+checkStatus ${STAT} "formatreports.sh"
 
 #
 # run qc reports
 #
 ${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
 STAT=$?
-if [ ${STAT} -ne 0 ]
-then
-    echo "Running EntrezGene QC reports failed.	Return status: ${STAT}" >> ${LOG_PROC}
-    shutDown
-    exit 1
-fi
+checkStatus ${STAT} ${APP_QCRPT}
 
 echo "EntrezGene Load application completed successfully" >> ${LOG_PROC}
 
 postload
 
 exit 0
-
