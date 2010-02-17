@@ -1,3 +1,29 @@
+TAG: egload-tr9773-2
+DATE: 02/17/2010
+STAFF: sc
+CHANGES: MGI 4.33 TR9773 Links to Gene Model Evidence
+1) egload.sh - updated to use checkStatus function
+2) radarPreprocess.sh - tweaked to include only C57 reference genome
+3) The following classes need to be updated when added a new sequence
+   'type' e.g. NT and NW refseqs:
+a) java/org/jax/mgi/app/entrezGene/AccessionClassifier.java
+   Add Pattern and Matcher and Matcher.find()
+b) java/org/jax/mgi/app/entrezGene/Constants.java
+   Add NT and NW Constants 
+c) java/org/jax/mgi/app/entrezGene/EntrezGeneBucketizable.java
+   Add NT and NW to svaNames
+   Add get/add NT/NW sequence methods
+d) java/org/jax/mgi/app/entrezGene/EntrezGeneBucketizer.java
+   Add NT/NW to createAssociations method
+e) java/org/jax/mgi/app/entrezGene/EntrezGeneLoader.java
+   Add NT/NW to sequenceGroups array
+f) java/org/jax/mgi/dbs/mgd/query/MGIMarkerQuery.java
+   Add NT/NW to interpret method
+g) java/org/jax/mgi/dbs/rdr/query/EntrezGeneQuery.java
+   Add NT/NW to storeSequence method
+   Add getNT/getNW method
+   Add NT/NW to getAllRefSeqSequences method
+
 TAG: egload-tr9773-1
 DATE: 02/08/2010
 STAFF: sc
