@@ -64,7 +64,7 @@ public class EntrezGeneLoader
     private String[] sequenceGroups = {Constants.GENBANK, 
 		Constants.MGIID, Constants.XM, Constants.XR,
                 Constants.XP, Constants.NM, Constants.NR, Constants.NP,
-                Constants.NG};
+                Constants.NG, Constants.NT, Constants.NW};
     /**
      * stopwatch for timing
      */
