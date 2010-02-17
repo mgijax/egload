@@ -187,6 +187,16 @@ public class MGIMarkerQuery extends ObjectQuery
 			  // set bucketizable data
                           marker.addNGSequence(acc);
 		      }
+		     else if (seqCategory.equals(Constants.NT))
+                      {
+                          // set bucketizable data
+                          marker.addNTSequence(acc);
+                      }
+		      else if (seqCategory.equals(Constants.NW))
+                      {
+                          // set bucketizable data
+                          marker.addNWSequence(acc);
+                      }
                       else if (seqCategory.equals(Constants.MGIID))
                       {
                           // set bucketizable data
@@ -242,6 +252,8 @@ public class MGIMarkerQuery extends ObjectQuery
             refseqSeqs.addAll(super.getNRSequences());
             refseqSeqs.addAll(super.getNPSequences());
             refseqSeqs.addAll(super.getNGSequences());
+	    refseqSeqs.addAll(super.getNTSequences());
+            refseqSeqs.addAll(super.getNWSequences());
             refseqSeqs.addAll(super.getXMSequences());
             refseqSeqs.addAll(super.getXRSequences());
             refseqSeqs.addAll(super.getXPSequences());
