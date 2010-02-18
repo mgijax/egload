@@ -1,3 +1,11 @@
+TAG: egload-tr9773-3
+DATE: 02/18/2010
+STAFF: sc
+CHANGES: MGI 4.33 TR9773 Links to Gene Model Evidence
+1) java/org/jax/mgi/app/entrezGene/EntrezGeneBucketizer.java
+   removed restriction for NG sequences associations being 
+   created only if associated with only one marker
+
 TAG: egload-tr9773-2
 DATE: 02/17/2010
 STAFF: sc
@@ -14,7 +22,8 @@ c) java/org/jax/mgi/app/entrezGene/EntrezGeneBucketizable.java
    Add NT and NW to svaNames
    Add get/add NT/NW sequence methods
 d) java/org/jax/mgi/app/entrezGene/EntrezGeneBucketizer.java
-   Add NT/NW to createAssociations method
+   Add NT/NW to createAssociations method and removed restrict
+   for associating with just one marker
 e) java/org/jax/mgi/app/entrezGene/EntrezGeneLoader.java
    Add NT/NW to sequenceGroups array
 f) java/org/jax/mgi/dbs/mgd/query/MGIMarkerQuery.java

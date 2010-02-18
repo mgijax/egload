@@ -511,11 +511,9 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    String accid = acc.getAccid();
 	    Set seqAssociations =
                 (Set)super.index.lookup(Constants.NG, acc);
-	    if (seqAssociations.size() == 1) {
-		makeSeqAssociationToMarker (new Integer(
-		LogicalDBConstants.REFSEQ),
-                        accid, markerKey);
-            }
+	    makeSeqAssociationToMarker (new Integer(
+	    LogicalDBConstants.REFSEQ),
+		    accid, markerKey);
 	}
         for (Iterator i = entrezGene.getNTs().iterator(); i.hasNext();) {
             SequenceAccession acc = (SequenceAccession)i.next();
