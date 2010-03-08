@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#  egload.sh
+#  radarPreprocess.sh
 ###########################################################################
 #
 #  Purpose:  This script controls the execution of radar preprocessing tasks

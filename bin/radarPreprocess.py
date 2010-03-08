@@ -59,6 +59,13 @@ template = 'update DP_EntrezGene_Accession ' + \
 	'and genomic = "%s"%s'
 
 class SequenceInfo:
+    # Concept: Represents the sequence info needed to determine
+    #          Which NT or NW contig we want to keep for each gene
+    #   IS: container object for sequence info
+    #   HAS: attributes representing sequence info
+    #   DOES: provides methods to get the sequence info
+    # Implementation:
+
     def __init__(self, \
 	seqId, \
 	prefix, \
@@ -78,18 +85,14 @@ class SequenceInfo:
 	return self.assembly
 
 def init():
-    #
-    # initialize database, dictionaries, etc.
-    #
+    # Purpose: initialize database, dictionaries, file descriptor
+    # Returns: nothing
+    # Assumes: nothing
+    # Effects: queries database, creates file in filesystem, 
+    # Throws: nothing
 
     global geneIdDict, assemblyList, fd
     
-#    results = db.sql('select geneID, genomic, assembly, substring(genomic, 1, 3) as prefix ' + \
-#	'from %s..DP_EntrezGene_Accession ' + \
-#	'where taxID = 10090 ' + \
-#	'and (assembly = "%s" ' + \
-#	'or assembly = "%s") ' + \
-#	'order by geneID' % (radar, primaryAssembly, secondaryAssembly), 'auto')
     results = db.sql('select distinct geneID, genomic, assembly, substring(genomic, 1, 3) as prefix from %s..DP_EntrezGene_Accession where taxID = 10090 and (substring(genomic, 1, 3) = "NT_" or substring(genomic, 1, 3) = "NW_") order by geneID' % radar, 'auto')
     #print 'results length: %s' % len(results)   
     for r in results:
@@ -111,13 +114,27 @@ def init():
     fd = open(sqlFile, 'w')
 
 def writeUpdate(geneId, seqInfoList):
-	for seqInfo in seqInfoList:
-	    seqId = seqInfo.getSeqId()
-	    cmd = template % (geneId, seqId, CRT)
-	    fd.write(cmd)
-	    fd.write("go%s" % CRT)
+    # Purpose: writes update statement to sql file
+    # Returns: nothing
+    # Assumes: fd is valid file descriptor
+    # Effects: nothing 
+    # Throws: nothing
+
+    for seqInfo in seqInfoList:
+	seqId = seqInfo.getSeqId()
+	cmd = template % (geneId, seqId, CRT)
+	fd.write(cmd)
+	fd.write("go%s" % CRT)
 
 def parseRecords():
+    # Purpose: iterates through dictionary representing lines from 
+    #		the input file, determining the congtig we want to keep
+    #           writing update statements for those we don't want to keep
+    # Returns: nothing
+    # Assumes: nothing
+    # Effects: writes to the filesystem
+    # Throws: nothing
+
     geneIdList = geneIdDict.keys()
     geneIdList.sort()
     for geneId in geneIdList:
@@ -163,4 +180,3 @@ def parseRecords():
 init()
 parseRecords()
 sys.exit(0)
-
