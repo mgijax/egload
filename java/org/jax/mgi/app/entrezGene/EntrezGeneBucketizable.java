@@ -29,7 +29,7 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
     protected static String[] svaNames =
         {Constants.GENBANK, Constants.MGIID, Constants.XM, Constants.XR,
 		Constants.XP, Constants.NM, Constants.NR, Constants.NP,
-		Constants.NG};
+		Constants.NG, Constants.NT, Constants.NW};
 
     /**
      * constructor
@@ -123,6 +123,24 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
     }
 
     /**
+     * get the NT sequences from this instance
+     * @return NT sequences
+     */
+    public Set getNTSequences()
+    {
+        return super.svaSet.getSVA(Constants.NT);
+    }
+
+    /**
+     * get the NW sequences from this instance
+     * @return NW sequences
+     */
+    public Set getNWSequences()
+    {
+        return super.svaSet.getSVA(Constants.NW);
+    }
+
+    /**
      * add a GenBank sequence to this instance
      * @param accid the GenBank sequence to add
      */
@@ -202,7 +220,22 @@ public class EntrezGeneBucketizable extends SimpleBucketizable
     {
         super.svaSet.addSVAMember(Constants.NG, accid);
     }
-
+    /**
+     * add an NT sequence to this instance
+     * @param accid the NT sequence to add
+     */
+    public void addNTSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NT, accid);
+    }
+    /**
+     * add an NW sequence to this instance
+     * @param accid the NW sequence to add
+     */
+    public void addNWSequence(SequenceAccession accid)
+    {
+        super.svaSet.addSVAMember(Constants.NW, accid);
+    }
     /**
      * get the String representation of this instance
      * @return String representation

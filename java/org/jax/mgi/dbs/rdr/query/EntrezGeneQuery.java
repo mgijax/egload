@@ -228,6 +228,14 @@ public class EntrezGeneQuery extends ObjectQuery
 		{
 		    egene.addNGSequence(acc);
 		}
+		else if (seqCategory.equals(Constants.NT))
+                {
+                    egene.addNTSequence(acc);
+                }
+		else if (seqCategory.equals(Constants.NW))
+                {
+                    egene.addNWSequence(acc);
+                }
             }
 
         }
@@ -299,6 +307,21 @@ public class EntrezGeneQuery extends ObjectQuery
             else
                 return super.getNGSequences();
         }
+        public Set getNTs()
+        {
+            if (super.getNTSequences() == null)
+                return new HashSet();
+            else
+                return super.getNTSequences();
+        }
+
+        public Set getNWs()
+        {
+            if (super.getNWSequences() == null)
+                return new HashSet();
+            else
+                return super.getNWSequences();
+        }
 
         public Set getXMs()
         {
@@ -339,6 +362,8 @@ public class EntrezGeneQuery extends ObjectQuery
             refseqSeqs.addAll(super.getNRSequences());
             refseqSeqs.addAll(super.getNPSequences());
             refseqSeqs.addAll(super.getNGSequences());
+            refseqSeqs.addAll(super.getNTSequences());
+            refseqSeqs.addAll(super.getNWSequences());
             refseqSeqs.addAll(super.getXMSequences());
             refseqSeqs.addAll(super.getXRSequences());
             refseqSeqs.addAll(super.getXPSequences());

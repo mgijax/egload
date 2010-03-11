@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-#  egload.sh
+#  radarPreprocess.sh
 ###########################################################################
 #
-#  Purpose:  This script controls the execution of the entrezgene load.
+#  Purpose:  This script controls the execution of radar preprocessing tasks
 #
 #  Usage:
 #
-#      egload.sh
+#      radarPreprocess.sh
 #
 #  Env Vars:
 #
@@ -46,7 +46,7 @@
 #  during configuration and initialization.
 #
 cd `dirname $0`/..
-LOG=`pwd`/egload.log
+LOG=`pwd`/preprocess.log
 rm -f ${LOG}
 
 #
@@ -61,30 +61,13 @@ fi
 #
 #  Verify and source the configuration file name.
 #
-CONFIG=`pwd`/egload.config
+CONFIG=egload.config
 if [ ! -r ${CONFIG} ]
 then
     echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
     exit 1
 fi
 . ${CONFIG}
-
-#
-#  Source the common DLA functions script.
-#
-if [ "${DLAJOBSTREAMFUNC}" != "" ]
-then
-    if [ -r ${DLAJOBSTREAMFUNC} ]
-    then
-        . ${DLAJOBSTREAMFUNC}
-    else
-        echo "Cannot source DLA functions script: ${DLAJOBSTREAMFUNC}" | tee -a ${LOG}
-        exit 1
-    fi
-else
-    echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG}
-    exit 1
-fi
 
 #
 # Set and verify the master configuration file name
@@ -97,49 +80,32 @@ then
 fi
 
 #
-#  Perform pre-load tasks.
+#  Run the preprocessor
 #
-preload ${OUTPUTDIR}
-cleanDir ${OUTPUTDIR}
-
-#
-# run Radar Preprocessor
-#
-echo "\n`date`" >> ${LOG_PROC}
-echo "Run the Radar Preprocess application" >> ${LOG_PROC} 
-${EGLOAD}/bin/radarPreprocess.sh 
+echo "\n`date`" 
+${EGLOAD}/bin/radarPreprocess.py
 STAT=$?
-checkStatus ${STAT} "radarPreprocess.sh"
+if [ ${STAT} -ne 0 ]
+then
+    echo "Preprocessor failed.  Return status: ${STAT}"
+    exit 1
+fi
 
 #
-#  Run the load application.
+# run the updates
 #
-echo "\n`date`" >> ${LOG_PROC}
-echo "Run the EntrezGene Load application" >> ${LOG_PROC}
-${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
-        -DCONFIG=${CONFIG_MASTER},${CONFIG} \
-        -DJOBKEY=${JOBKEY} ${DLA_START}
-STAT=$?
-checkStatus ${STAT} ${EGLOAD}
+server=${RADAR_DBSERVER}
+db=${RADAR_DBNAME}
+pwFile=${RADAR_DBPASSWORDFILE}
+user=${RADAR_DBUSER}
+inFile=${UPDATE_FILE}
+outFile=${inFile}.log
 
-#
-# post format reports
-#
-echo "\n`date`" >> ${LOG_PROC}
-echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
-${EGLOAD}/bin/formatreports.sh
-STAT=$?
-checkStatus ${STAT} "formatreports.sh"
-
-#
-# run qc reports
-#
-${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
-STAT=$?
-checkStatus ${STAT} ${APP_QCRPT}
-
-echo "EntrezGene Load application completed successfully" >> ${LOG_PROC}
-
-postload
-
+if [ ! -s ${inFile} ]
+then
+    echo "The update file is empty" 
+else
+    cat ${pwFile} | isql -U ${user} -S ${server} -D ${db} -i ${inFile} -o  ${outFile} -e
+fi
 exit 0
+

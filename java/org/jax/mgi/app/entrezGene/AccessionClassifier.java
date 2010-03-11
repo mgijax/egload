@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
  * is a class that can identify types of accession numbers by their
  * character patterns
  * @has nothing
- * @does identifies accession types (NM, NR, NP, NG, XM, XR, XP, GenBank, MGI)
+ * @does identifies accession types (NM, NR, NP, NG, NT, NW, XM, XR, XP, GenBank, MGI)
  * by applying pattern matching on the accession characters
  * @company Jackson Laboratory
  * @author M Walker
@@ -20,6 +20,8 @@ public class AccessionClassifier {
     protected Pattern npPattern = Pattern.compile("NP_.*");
     protected Pattern nrPattern = Pattern.compile("NR_.*");
     protected Pattern ngPattern = Pattern.compile("NG_.*");
+    protected Pattern ntPattern = Pattern.compile("NT_.*");
+    protected Pattern nwPattern = Pattern.compile("NW_.*");
     protected Pattern xmPattern = Pattern.compile("XM_.*");
     protected Pattern xrPattern = Pattern.compile("XR_.*");
     protected Pattern xpPattern = Pattern.compile("XP_.*");
@@ -45,6 +47,10 @@ public class AccessionClassifier {
             npPattern.matcher(accid.toUpperCase());
         Matcher ngMatcher =
             ngPattern.matcher(accid.toUpperCase());
+        Matcher ntMatcher =
+            ntPattern.matcher(accid.toUpperCase());
+        Matcher nwMatcher =
+            nwPattern.matcher(accid.toUpperCase());
         Matcher xmMatcher =
             xmPattern.matcher(accid.toUpperCase());
         Matcher xpMatcher =
@@ -71,6 +77,10 @@ public class AccessionClassifier {
             return Constants.NP;
         else if (ngMatcher.find())
             return Constants.NG;
+        else if (ntMatcher.find())
+            return Constants.NT;
+        else if (nwMatcher.find())
+            return Constants.NW;
         else if (genbankMatcher.find())
              return Constants.GENBANK;
         else
