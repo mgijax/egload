@@ -1,3 +1,9 @@
+TAG: egload-4-3-3-2
+DATE: 04/27/2010
+STAFF: lec
+CHANGES: TR9777/sql/MGDdelete.sql
+         remove deletes for J:53168 (swissload)
+
 TAG: egload-4-3-3-1
 DATE: 03/11/2010
 STAFF: sc
