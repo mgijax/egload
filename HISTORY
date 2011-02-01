@@ -1,3 +1,10 @@
+TAG: egload-4-4-1-1
+DATE: 02/01/2011
+STAFF: lec
+CHANGES: TR10564/bin/formatreports.sh
+	 create bucket_zero_to_one_mgiid (with mgi ids)
+	 create bucket_zero_to_one_nomgiid (without mgi ids)
+
 TAG: egload-4-3-3-2
 DATE: 04/27/2010
 STAFF: lec

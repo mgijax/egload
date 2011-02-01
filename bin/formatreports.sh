@@ -134,6 +134,13 @@ cat $i >> $i.tmp
 mv $i.tmp $i
 done
 
+#
+# TR10564
+# create 2 new reports
+#
+${FGREP} -e "MGIID=[MGI:" ${ZERO_ONE_OUTFILE_NAME} > ${ZERO_ONE_MGIID_OUTFILE_NAME}
+${FGREP} -e "MGIID=[-]"  ${ZERO_ONE_OUTFILE_NAME} > ${ZERO_ONE_NOMGIID_OUTFILE_NAME}
+
 echo "Entrez Gene Load report formatting completed successfully." >> ${LOG_PROC}
 
 exit 0
