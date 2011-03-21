@@ -115,8 +115,8 @@ ONE_ZERO_SORT="-k1.5n"
 
 ZERO_ONE_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one.txt
 ZERO_ONE_SORT="-k1n"
-ZERO_ONE_MGIID_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one_mgiid.txt
-ZERO_ONE_NOMGIID_OUTFILE_NAME=${RPTDIR}/bucket_zero_to_one_nomgiid.txt
+ZERO_ONE_MGIID_OUTFILE_NAME=bucket_zero_to_one_mgiid.txt
+ZERO_ONE_NOMGIID_OUTFILE_NAME=bucket_zero_to_one_nomgiid.txt
 
 CHR_MIS_OUTFILE_NAME=${RPTDIR}/bucket_mismatched_chr.txt
 CHR_MIS_SORT="-k1.5n"

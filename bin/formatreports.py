@@ -17,6 +17,10 @@
 #
 # History
 #
+# 03/21/2011	lec
+#	- TR10635/ZERO_ONE_MGIID_OUTFILE_NAME, ZERO_ONE_NOMGIID_OUTFILE_NAME
+#	  move the formatting of these files from ".sh" to ".py"
+#
 # 12/19/2006	lec
 #	- this was written in response to 
 #         eliminating the html formatting code in the java frameworks
@@ -40,7 +44,10 @@ anchorEnd = '</A>'
 # output file names defined in the configuration file and used in the loader
 # note that the 1-1 bucket is not translated into html format
 
-egFiles = ['ZERO_ONE_OUTFILE_NAME']
+egFileName = os.environ['ZERO_ONE_OUTFILE_NAME']
+egmgiFileName = os.environ['ZERO_ONE_MGIID_OUTFILE_NAME']
+egnomgiFileName = os.environ['ZERO_ONE_NOMGIID_OUTFILE_NAME']
+
 column8Files = ['ONE_N_OUTFILE_NAME', 'N_ONE_OUTFILE_NAME', 'N_M_OUTFILE_NAME', 'CHR_MIS_OUTFILE_NAME']
 column5Files = ['ONE_ZERO_OUTFILE_NAME']
 column2Files = ['GM_NOTIN_OUTFILE_NAME']
@@ -76,7 +83,7 @@ def init():
 
 def initFiles(value):
     #
-    # open input and html files
+    # open input, html files
     #
 
     # open input (text) file
@@ -178,41 +185,86 @@ def processEG():
     # process EG-oriented reports
     #
 
-    # iterate thru files
-    
-    for b in egFiles:
+    try:
+        inFile = open(egFileName, 'r')
+        head, tail = os.path.split(egFileName)
 
-        value = os.environ[b]
-	inFile, htmlFile = initFiles(value)
+        # initialize output (html) file
 
-        # print html header
+        htmlFile = reportlib.init(tail, \
+				  outputdir = os.environ['RPTDIR'], printHeading = None, isHTML = 1)
+        egmgiFile = reportlib.init(egmgiFileName, fileExt = '.txt', \
+				   outputdir = os.environ['RPTDIR'], printHeading = None)
+        egnomgiFile = reportlib.init(egnomgiFileName, fileExt = '.txt', \
+				   outputdir = os.environ['RPTDIR'], printHeading = None)
 
-        htmlFile.write(tableStart + CRT)
-        htmlFile.write('<TD>Entrez Gene</TD>')
-        htmlFile.write('<TD>Symbol</TD>')
-        htmlFile.write('<TD>Chromosome</TD>')
-        htmlFile.write('<TD>Associated Sequences</TD>' + CRT)
+    except:
 
-        # iterate thru input file
+	print 'Problem with file: %s' % (egFileName)
+	print 'Problem with file: %s' % (egmgiFileName)
+	print 'Problem with file: %s' % (egnomgiFileName)
+        sys.exit(1)
 
-        for line in inFile.readlines():
+    # print html header
 
-	    tokens = string.split(line, TAB)
+    htmlFile.write(tableStart + CRT)
+    htmlFile.write('<TD>Entrez Gene</TD>')
+    htmlFile.write('<TD>Symbol</TD>')
+    htmlFile.write('<TD>Chromosome</TD>')
+    htmlFile.write('<TD>Associated Sequences</TD>' + CRT)
 
-	    egID = tokens[0]
-	    egSymbol = tokens[1]
-            egChromosome = tokens[2];
-            sequences = tokens[3];
+    # iterate thru input file
 
-	    htmlFile.write('<TR><TD>' + externalAnchor(egID, egURL) + '</TD>')
-	    htmlFile.write('<TD>' + egSymbol + '</TD>')
-	    htmlFile.write('<TD>' + egChromosome + '</TD>')
-	    htmlFile.write('<TD>' + idAnchors(sequences) + '</TD></TR>')
-	    htmlFile.write(CRT)
+    for line in inFile.readlines():
 
-        htmlFile.write(tableEnd)
-        inFile.close()
-        reportlib.finish_nonps(htmlFile, isHTML = 1)
+        tokens = string.split(line, TAB)
+
+        if len(tokens) < 3:
+                continue
+
+	egID = tokens[0]
+	egSymbol = tokens[1]
+        egChromosome = tokens[2];
+        sequences = tokens[3];
+
+	htmlFile.write('<TR><TD>' + externalAnchor(egID, egURL) + '</TD>')
+	htmlFile.write('<TD>' + egSymbol + '</TD>')
+	htmlFile.write('<TD>' + egChromosome + '</TD>')
+	htmlFile.write('<TD>' + idAnchors(sequences) + '</TD></TR>')
+	htmlFile.write(CRT)
+
+	# if file does not contains MGIids...
+	if string.find(sequences, 'MGIID=[-]') > 0:
+	    egnomgiFile.write(egID + TAB)
+	    egnomgiFile.write(egSymbol + TAB)
+	    egnomgiFile.write(egChromosome + TAB)
+	    egnomgiFile.write(sequences + CRT)
+
+	# if file does contains MGIids...
+        else:
+	    seqs = string.split(sequences, ',')
+
+	    # only print sequences with MGI ids
+	    for s in seqs:
+	        if string.find(s, 'MGIID=[') >= 0:
+	            s = string.replace(s, 'MGIID=[', '')
+	            s = string.replace(s, ']', '')
+	            s = string.replace(s, '{', '')
+	            s = string.replace(s, '}', '')
+		    s = string.replace(s, ' ', '')
+		    s = string.replace(s, '\n', '')
+	            egmgiFile.write(egID + TAB)
+	            egmgiFile.write(egSymbol + TAB)
+	            egmgiFile.write(egChromosome + TAB)
+	            egmgiFile.write(s + CRT)
+
+    htmlFile.write(tableEnd)
+
+    egmgiFile.close()
+    egnomgiFile.close()
+
+    inFile.close()
+    reportlib.finish_nonps(htmlFile, isHTML = 1)
 
 def processMGI_8columns():
     #
@@ -242,6 +294,9 @@ def processMGI_8columns():
 
 	    tokens = string.split(line, TAB)
 
+	    if len(tokens) < 3:
+		continue
+
 	    mgiID = tokens[0]
 	    mgiSymbol = tokens[1]
             mgiChromosome = tokens[2]
@@ -258,6 +313,7 @@ def processMGI_8columns():
 	    htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
+
         inFile.close()
         reportlib.finish_nonps(htmlFile, isHTML = 1)
 
@@ -288,6 +344,9 @@ def processMGI_5columns():
 
 	    tokens = string.split(line, TAB)
 
+	    if len(tokens) < 3:
+		continue
+
 	    mgiID = tokens[0]
 	    mgiSymbol = tokens[1]
             mgiChromosome = tokens[2]
@@ -302,6 +361,7 @@ def processMGI_5columns():
 	    htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
+
         inFile.close()
         reportlib.finish_nonps(htmlFile, isHTML = 1)
 
@@ -329,6 +389,9 @@ def processMGI_2columns():
 
             tokens = string.split(line, TAB)
 
+	    if len(tokens) < 2:
+		continue
+
             egID = tokens[0]
             mgiID = tokens[1]
 	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
@@ -336,6 +399,7 @@ def processMGI_2columns():
             htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
+
         inFile.close()
         reportlib.finish_nonps(htmlFile, isHTML = 1)
 
@@ -345,8 +409,8 @@ def processMGI_2columns():
 
 init()
 processEG()
-processMGI_8columns()
-processMGI_5columns()
-processMGI_2columns()
+#processMGI_8columns()
+#processMGI_5columns()
+#processMGI_2columns()
 sys.exit(0)
 
