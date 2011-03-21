@@ -1,3 +1,11 @@
+TAG: egload-4-4-1-2
+DATE: 03/21/2011
+STAFF: lec
+CHANGES: TR10635
+	 move bucket_zero_to_one_mgiid (with mgi ids) 
+	 move create bucket_zero_to_one_nomgiid (without mgi ids)
+	 from ".sh" to ".py"
+
 TAG: egload-4-4-1-1
 DATE: 02/01/2011
 STAFF: lec
