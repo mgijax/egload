@@ -17,6 +17,9 @@
 #
 # History
 #
+# 04/09/2012	lec	
+#	- MGI 5.0/mgiAnchor/create_accession_anchor: fix call
+#
 # 03/21/2011	lec
 #	- TR10635/ZERO_ONE_MGIID_OUTFILE_NAME, ZERO_ONE_NOMGIID_OUTFILE_NAME
 #	  move the formatting of these files from ".sh" to ".py"
@@ -116,7 +119,7 @@ def mgiAnchor(id):
     # return anchor for MGI id
     #
 
-    return reportlib.create_accession_anchor(id) + id + anchorEnd
+    return reportlib.create_accession_anchor(id, 'marker') + id + anchorEnd
 
 def idAnchors(s):
     #
@@ -409,8 +412,8 @@ def processMGI_2columns():
 
 init()
 processEG()
-#processMGI_8columns()
-#processMGI_5columns()
-#processMGI_2columns()
+processMGI_8columns()
+processMGI_5columns()
+processMGI_2columns()
 sys.exit(0)
 

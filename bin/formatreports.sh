@@ -117,7 +117,8 @@ fi
 
 # convert text files to html
 
-${EGLOAD}/bin/formatreports.py >> ${LOG_PROC}
+#${EGLOAD}/bin/formatreports.py >> ${LOG_PROC}
+${EGLOAD}/bin/formatreports.py
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then

@@ -1,3 +1,10 @@
+TAG: egload-5-0-0-1
+DATE: 04/09/2012
+STAFF: lec
+CHANGES: 
+1) bin/formatreports.py
+   fix call of mgiAndor->report_db.create_accession_anchor
+
 TAG: egload-4-4-1-2
 DATE: 03/21/2011
 STAFF: lec
