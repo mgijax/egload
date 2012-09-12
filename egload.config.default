@@ -69,7 +69,7 @@ export DLA_LOADER DLA_START DLA_LOAD_STREAM
 export APP_QCRPT
 
 # Full path the the logs, reports, and archive directories
-FILEDIR=/data/loads/entrezgene/egload
+FILEDIR=${DATALOADSOUTPUT}/entrezgene/egload
 LOGDIR=${FILEDIR}/logs
 RPTDIR=${FILEDIR}/reports
 ARCHIVEDIR=${FILEDIR}/archive
