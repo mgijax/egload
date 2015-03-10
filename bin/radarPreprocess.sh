@@ -82,7 +82,8 @@ fi
 #
 #  Run the preprocessor
 #
-echo "\n`date`" 
+echo "" 
+echo "`date`" 
 ${EGLOAD}/bin/radarPreprocess.py
 STAT=$?
 if [ ${STAT} -ne 0 ]

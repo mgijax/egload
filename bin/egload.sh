@@ -105,7 +105,8 @@ cleanDir ${OUTPUTDIR}
 #
 # run Radar Preprocessor
 #
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the Radar Preprocess application" >> ${LOG_PROC} 
 ${EGLOAD}/bin/radarPreprocess.sh 
 STAT=$?
@@ -114,7 +115,8 @@ checkStatus ${STAT} "radarPreprocess.sh"
 #
 #  Run the load application.
 #
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load application" >> ${LOG_PROC}
 ${JAVA} ${JAVARUNTIMEOPTS} -classpath ${CLASSPATH} \
         -DCONFIG=${CONFIG_MASTER},${CONFIG} \
@@ -125,7 +127,8 @@ checkStatus ${STAT} ${EGLOAD}
 #
 # post format reports
 #
-echo "\n`date`" >> ${LOG_PROC}
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
 echo "Run the EntrezGene Load output formatting" >> ${LOG_PROC}
 ${EGLOAD}/bin/formatreports.sh
 STAT=$?

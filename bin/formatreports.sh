@@ -129,7 +129,7 @@ fi
 for i in ${ONE_ONE_OUTFILE_NAME} ${ONE_N_OUTFILE_NAME} ${ONE_ZERO_OUTFILE_NAME} ${ZERO_ONE_OUTFILE_NAME} ${CHR_MIS_OUTFILE_NAME} ${GM_NOTIN_OUTFILE_NAME}
 do
 echo `wc -l $i` > $i.tmp
-echo "\n" >> $i.tmp
+echo "" >> $i.tmp
 cat $i >> $i.tmp
 mv $i.tmp $i
 done
