@@ -77,10 +77,11 @@ public class EntrezGeneQuery extends ObjectQuery
         return "select i.geneID as geneID , x.dbxrefid as mgiID, " +
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
             "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
-            "from DP_EntrezGene_Info i " +
-		"left outer join DP_EntrezGene_Accession a, DP_EntrezGene_DBXRef x " +
-            "where lower(i.geneID) = lower(a.geneID) " +
-            "and i.taxID = 10090 " +
+            "from DP_EntrezGene_DBXRef x, " +
+		"DP_EntrezGene_Info i " +
+		"left outer join DP_EntrezGene_Accession a on " +
+		"lower(i.geneID) = lower(a.geneID) " +
+            "where i.taxID = 10090 " +
 	    "and lower(i.geneID) = lower(x.geneID) " +
 	    "and lower(x.dbXrefID) like 'mgi:%' " +
 	    "union " +
@@ -88,9 +89,9 @@ public class EntrezGeneQuery extends ObjectQuery
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
             "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
             "from DP_EntrezGene_Info i " +
-		"left outer join DP_EntrezGene_Accession a " +
-            "where lower(i.geneID) = lower(a.geneID) " +
-            "and i.taxID = 10090 " +
+		"left outer join DP_EntrezGene_Accession a on " +
+		"lower(i.geneID) = lower(a.geneID) " +
+            "where i.taxID = 10090 " +
 	    "and not exists (select 1 from DP_EntrezGene_DBXRef x " +
 	    "where lower(i.geneID) = lower(x.geneID) " +
 	    "and lower(x.dbXrefID) like 'mgi:%') " +

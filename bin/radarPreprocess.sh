@@ -106,7 +106,7 @@ if [ ! -s ${inFile} ]
 then
     echo "The update file is empty" 
 else
-    psql -h ${server} -d ${db} -U ${user} -f ${inFile} -o  ${outFile} -e
+    psql -h ${server} -d ${db} -U ${user} -f ${inFile} -o  ${outFile}
 fi
 exit 0
 
