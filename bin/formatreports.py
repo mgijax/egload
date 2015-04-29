@@ -56,9 +56,9 @@ column5Files = ['ONE_ZERO_OUTFILE_NAME']
 column2Files = ['GM_NOTIN_OUTFILE_NAME']
 
 # _ActualDB_key for URLs we need to use
-egURL = 57
-genbankURL = 12
-refseqURL = 35
+EG_URL_KEY = 57
+GENBANK_URL_KEY = 12
+REFSEQ_URL_KEY = 35
 
 # tags used in Constants.java for tagging specific ids used in the load
 mgiTag = 'MGIID'
@@ -78,7 +78,7 @@ def init():
 
     urls = {}
     results = db.sql('select _ActualDB_key, url from ACC_ActualDB ' + \
-	'where _ActualDB_key in (%d,%d,%d)' % (egURL, genbankURL, refseqURL), 'auto')
+	'where _ActualDB_key in (%d,%d,%d)' % (EG_URL_KEY, GENBANK_URL_KEY, REFSEQ_URL_KEY), 'auto')
     for r in results:
         key = r['_ActualDB_key']
         value = r['url']
@@ -160,11 +160,11 @@ def idAnchors(s):
 
 	elif tag == genbankTag:
 	    for i in ids:
-	        anchors[i] = externalAnchor(i, genbankURL)
+	        anchors[i] = externalAnchor(i, GENBANK_URL_KEY)
 
 	elif tag in refseqTag:
 	    for i in ids:
-	        anchors[i] = externalAnchor(i, refseqURL)
+	        anchors[i] = externalAnchor(i, REFSEQ_URL_KEY)
 
 	# we're done if there are no more TAGs to process
 
@@ -230,7 +230,7 @@ def processEG():
         egChromosome = tokens[2];
         sequences = tokens[3];
 
-	htmlFile.write('<TR><TD>' + externalAnchor(egID, egURL) + '</TD>')
+	htmlFile.write('<TR><TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
 	htmlFile.write('<TD>' + egSymbol + '</TD>')
 	htmlFile.write('<TD>' + egChromosome + '</TD>')
 	htmlFile.write('<TD>' + idAnchors(sequences) + '</TD></TR>')
@@ -310,7 +310,7 @@ def processMGI_8columns():
 	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
 	    htmlFile.write('<TD>' + mgiSymbol + '</TD>')
 	    htmlFile.write('<TD>' + mgiChromosome + '</TD>')
-	    htmlFile.write('<TD>' + externalAnchor(egID, egURL) + '</TD>')
+	    htmlFile.write('<TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
 	    htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
 	    htmlFile.write('<TD>' + markerType + '</TD></TR>')
 	    htmlFile.write(CRT)
