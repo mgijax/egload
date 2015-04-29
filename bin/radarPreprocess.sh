@@ -106,7 +106,7 @@ if [ ! -s ${inFile} ]
 then
     echo "The update file is empty" 
 else
-    cat ${pwFile} | isql -U ${user} -S ${server} -D ${db} -i ${inFile} -o  ${outFile} -e
+    psql -h ${server} -d ${db} -U ${user} -f ${inFile} -o  ${outFile} -e
 fi
 exit 0
 

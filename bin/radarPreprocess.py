@@ -53,10 +53,10 @@ secondaryAssembly =  "Reference assembly"
 assemblyList = [primaryAssembly, secondaryAssembly]
 
 # sql update template
-UPDATE_TEMPLATE = 'update DP_EntrezGene_Accession ' + \
-	'set genomic = \'-\' ' + \
-	'where geneId = \'%%s\' ' + \
-	'and genomic = \'%%s\'%s' % CRT
+UPDATE_TEMPLATE = '''update DP_EntrezGene_Accession 
+	set genomic = '-' 
+	where geneId = '%%s' 
+	and genomic = '%%s'%s''' % CRT
 
 class SequenceInfo:
     # Concept: Represents the sequence info needed to determine
