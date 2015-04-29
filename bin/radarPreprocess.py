@@ -131,7 +131,7 @@ def writeUpdate(geneId, seqInfoList):
 	seqId = seqInfo.getSeqId()
 	cmd = UPDATE_TEMPLATE % (geneId, seqId)
 	fd.write(cmd)
-	fd.write("go%s" % CRT)
+	fd.write(";%s" % CRT)
 
 def parseRecords():
     # Purpose: iterates through dictionary representing lines from 
