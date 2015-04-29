@@ -75,7 +75,7 @@ public class NCBIGMQuery extends ObjectQuery
 	    "from ACC_Accession a1, ACC_Accession a2, ACC_Accession a3 " +
 	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE +
 	    "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
-	    "and a1.accid = a2.accid " +
+	    "and lower(a1.accid) = lower(a2.accid) " +
 	    "and a1.preferred = 1 " +
 	    "and a2._MGItype_key = " + MGITypeConstants.MARKER +
 	    "and a2._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
@@ -86,14 +86,14 @@ public class NCBIGMQuery extends ObjectQuery
 	    "and a3.prefixPart = 'MGI:' " +
 	    "and a3.preferred = 1 " +
 	    "union " +
-	    "select distinct a1.accid as ncbiGMID, accID=null " +
+	    "select distinct a1.accid as ncbiGMID, null as accID " +
 	    "from ACC_Accession a1 " +
 	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE +
 	    "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
 	    "and a1.preferred = 1 " +
 	    "and not exists (select 1 " +
 	    "from ACC_Accession a2, ACC_Accession a3 " +
-	    "where a1.accid = a2.accid " +
+	    "where lower(a1.accid) = lower(a2.accid) " +
 	    "and a2._MGItype_key = " + MGITypeConstants.MARKER +
 	    "and a2._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE +
 	    "and a2._Object_key = a3._Object_key " +

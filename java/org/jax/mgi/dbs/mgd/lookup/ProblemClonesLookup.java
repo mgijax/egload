@@ -54,6 +54,6 @@ public class ProblemClonesLookup extends MappedStringToBoolean
             "where n._Probe_key = a._Object_key " +
             "and a._LogicalDB_key = 9 " +
             "and a._MGIType_key = 3 " +
-            "and n.note like '%staff have found evidence of artifact%'";
+            "and lower(n.note) like '%staff have found evidence of artifact%'";
     }
 }

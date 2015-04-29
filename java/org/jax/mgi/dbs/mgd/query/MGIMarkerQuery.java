@@ -84,7 +84,7 @@ public class MGIMarkerQuery extends ObjectQuery
 	 * includes interim and official nomenclature only
          */
         String stmt = "select a.accID, m.symbol, m.name, m.chromosome, " +
-            "type = t.name, a._Object_key " +
+            "t.name as type, a._Object_key " +
             "from ACC_Accession a, MRK_Marker m, MRK_Types t " +
             "where m._Organism_key = 1 " +
             "and m._Marker_Status_key in (1, 3) " +
