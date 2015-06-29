@@ -137,7 +137,7 @@ checkStatus ${STAT} "formatreports.sh"
 #
 # run qc reports
 #
-${APP_QCRPT} ${RPTDIR} ${RADAR_DBSERVER} ${RADAR_DBNAME} ${JOBKEY}
+${APP_QCRPT} ${RPTDIR} ${MGD_DBSERVER} ${MGD_DBNAME} ${JOBKEY}
 STAT=$?
 checkStatus ${STAT} ${APP_QCRPT}
 

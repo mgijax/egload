@@ -95,10 +95,10 @@ fi
 #
 # run the updates
 #
-server=${RADAR_DBSERVER}
-db=${RADAR_DBNAME}
-pwFile=${RADAR_DBPASSWORDFILE}
-user=${RADAR_DBUSER}
+server=${MGD_DBSERVER}
+db=${MGD_DBNAME}
+pwFile=${MGD_DBPASSWORDFILE}
+user=${MGD_DBUSER}
 inFile=${UPDATE_FILE}
 outFile=${inFile}.log
 
@@ -106,7 +106,7 @@ if [ ! -s ${inFile} ]
 then
     echo "The update file is empty" 
 else
-    cat ${pwFile} | isql -U ${user} -S ${server} -D ${db} -i ${inFile} -o  ${outFile} -e
+    psql -h ${server} -d ${db} -U ${user} -f ${inFile} -o  ${outFile}
 fi
 exit 0
 

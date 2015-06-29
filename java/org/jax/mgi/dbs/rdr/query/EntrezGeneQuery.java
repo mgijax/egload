@@ -74,24 +74,27 @@ public class EntrezGeneQuery extends ObjectQuery
         /**
          * gets geneids and sequence association data from RADAR for mouse
          */
-        return "select geneID = i.geneID, mgiID = x.dbXrefID, " +
+        return "select i.geneID as geneID , x.dbxrefid as mgiID, " +
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
             "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
-            "from DP_EntrezGene_Accession a, DP_EntrezGene_Info i, DP_EntrezGene_DBXRef x " +
-            "where i.geneID *= a.geneID " +
-            "and i.taxID = 10090 " +
-	    "and i.geneID = x.geneID " +
-	    "and x.dbXrefID like 'MGI:%' " +
+            "from DP_EntrezGene_DBXRef x, " +
+		"DP_EntrezGene_Info i " +
+		"left outer join DP_EntrezGene_Accession a on " +
+		"lower(i.geneID) = lower(a.geneID) " +
+            "where i.taxID = 10090 " +
+	    "and lower(i.geneID) = lower(x.geneID) " +
+	    "and lower(x.dbXrefID) like 'mgi:%' " +
 	    "union " +
-            "select geneID = i.geneID, mgiID = '-', " +
+            "select i.geneID as geneID, '-' as mgiID, " +
             "COALESCE(a.rna, '-'), COALESCE(a.genomic, '-'), " +
             "COALESCE(a.protein, '-'), i.chromosome, i.symbol " +
-            "from DP_EntrezGene_Accession a, DP_EntrezGene_Info i " +
-            "where i.geneID *= a.geneID " +
-            "and i.taxID = 10090 " +
+            "from DP_EntrezGene_Info i " +
+		"left outer join DP_EntrezGene_Accession a on " +
+		"lower(i.geneID) = lower(a.geneID) " +
+            "where i.taxID = 10090 " +
 	    "and not exists (select 1 from DP_EntrezGene_DBXRef x " +
-	    "where i.geneID = x.geneID " +
-	    "and x.dbXrefID like 'MGI:%') " +
+	    "where lower(i.geneID) = lower(x.geneID) " +
+	    "and lower(x.dbXrefID) like 'mgi:%') " +
             "order by geneID";
     }
 

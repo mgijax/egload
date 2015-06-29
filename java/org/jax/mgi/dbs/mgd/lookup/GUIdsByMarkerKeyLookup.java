@@ -71,7 +71,7 @@ public class GUIdsByMarkerKeyLookup extends FullCachedLookup {
 
 	// select marker keys of markers and their guId associations
         String sql =
-            "select _Marker_key = a._Object_key, guId = a.accID " + 
+            "select a._object_key as _Marker_key, a.accid as guId " + 
              "from ACC_Accession a, MRK_Marker m, ACC_AccessionReference r " +
              "where a._MGIType_key = 2 " +
              "and a._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE + " " +

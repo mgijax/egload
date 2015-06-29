@@ -43,7 +43,7 @@ TAB = reportlib.TAB
 geneIdDict = {} # {geneId:[id1, ..., idn], ...}
 
 # the radar database name
-radar = os.environ['RADAR_DBNAME']
+radar = os.environ['MGD_DBNAME']
 sqlFile = os.environ['UPDATE_FILE']
 fd = ''
 
@@ -53,10 +53,10 @@ secondaryAssembly =  "Reference assembly"
 assemblyList = [primaryAssembly, secondaryAssembly]
 
 # sql update template
-template = 'update DP_EntrezGene_Accession ' + \
-	'set genomic = "-" ' + \
-	'where geneId = "%s" ' + \
-	'and genomic = "%s"%s'
+UPDATE_TEMPLATE = '''update DP_EntrezGene_Accession 
+	set genomic = '-' 
+	where geneId = '%%s' 
+	and genomic = '%%s'%s''' % CRT
 
 class SequenceInfo:
     # Concept: Represents the sequence info needed to determine
@@ -93,7 +93,14 @@ def init():
 
     global geneIdDict, assemblyList, fd
     
-    results = db.sql('select distinct geneID, genomic, assembly, substring(genomic, 1, 3) as prefix from %s..DP_EntrezGene_Accession where taxID = 10090 and (substring(genomic, 1, 3) = "NT_" or substring(genomic, 1, 3) = "NW_") order by geneID' % radar, 'auto')
+    results = db.sql('''select distinct geneID, genomic, assembly, 
+		substring(genomic, 1, 3) as prefix 
+		from radar.DP_EntrezGene_Accession 
+		where taxID = 10090 
+		and (substring(genomic, 1, 3) = 'NT_' 
+			or substring(genomic, 1, 3) = 'NW_'
+		) 
+		order by geneID''' , 'auto')
     #print 'results length: %s' % len(results)   
     for r in results:
 	seqId = string.strip(r['genomic'])
@@ -122,9 +129,9 @@ def writeUpdate(geneId, seqInfoList):
 
     for seqInfo in seqInfoList:
 	seqId = seqInfo.getSeqId()
-	cmd = template % (geneId, seqId, CRT)
+	cmd = UPDATE_TEMPLATE % (geneId, seqId)
 	fd.write(cmd)
-	fd.write("go%s" % CRT)
+	fd.write(";%s" % CRT)
 
 def parseRecords():
     # Purpose: iterates through dictionary representing lines from 
