@@ -37,6 +37,9 @@ import string
 import db
 import reportlib
 
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
+
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 

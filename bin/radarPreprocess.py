@@ -24,10 +24,12 @@
 
 import sys 
 import os
-import re
 import string
 import db
 import reportlib
+
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 # Constants
@@ -95,7 +97,7 @@ def init():
     
     results = db.sql('''select distinct geneID, genomic, assembly, 
 		substring(genomic, 1, 3) as prefix 
-		from radar.DP_EntrezGene_Accession 
+		from DP_EntrezGene_Accession 
 		where taxID = 10090 
 		and (substring(genomic, 1, 3) = 'NT_' 
 			or substring(genomic, 1, 3) = 'NW_'
