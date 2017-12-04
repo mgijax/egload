@@ -31,7 +31,7 @@ fi
 #
 ###########################################################################
 
-JAVARUNTIMEOPTS="-Xms1000m -Xmx1000m"
+JAVARUNTIMEOPTS="-Xms2G -Xmx2G"
 
 JAVA_LIB=${MGI_JAVALIB}/lib_java_dla/dla.jar:${MGI_JAVALIB}/lib_java_core/core.jar:${MGI_JAVALIB}/lib_java_dbsmgd/dbsmgd.jar:${MGI_JAVALIB}/lib_java_dbsrdr/dbsrdr.jar
 
