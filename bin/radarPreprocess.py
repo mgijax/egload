@@ -1,6 +1,3 @@
-#!/usr/local/bin/python
-
-#
 # Program:  radarPreprocess.py
 #
 # Description:
@@ -24,7 +21,6 @@
 
 import sys 
 import os
-import string
 import db
 import reportlib
 
@@ -53,9 +49,9 @@ assemblyList = [primaryAssembly, secondaryAssembly]
 
 # sql update template
 UPDATE_TEMPLATE = '''update DP_EntrezGene_Accession 
-	set genomic = '-' 
-	where geneId = '%%s' 
-	and genomic = '%%s'%s''' % CRT
+        set genomic = '-' 
+        where geneId = '%%s' 
+        and genomic = '%%s'%s''' % CRT
 
 class SequenceInfo:
     # Concept: Represents the sequence info needed to determine
@@ -66,22 +62,22 @@ class SequenceInfo:
     # Implementation:
 
     def __init__(self, \
-	seqId, \
-	prefix, \
-	assembly):
-	
-	self.seqId = seqId
-	self.prefix = prefix
-	self.assembly = assembly
+        seqId, \
+        prefix, \
+        assembly):
+        
+        self.seqId = seqId
+        self.prefix = prefix
+        self.assembly = assembly
 
     def getSeqId(self):
-	return self.seqId
+        return self.seqId
    
     def getPrefix(self):
-	return self.prefix
+        return self.prefix
  
     def getAssembly(self):
-	return self.assembly
+        return self.assembly
 
 def init():
     # Purpose: initialize database, dictionaries, file descriptor
@@ -93,29 +89,29 @@ def init():
     global geneIdDict, assemblyList, fd
     
     results = db.sql('''select distinct geneID, genomic, assembly, 
-		substring(genomic, 1, 3) as prefix 
-		from DP_EntrezGene_Accession 
-		where taxID = 10090 
-		and (substring(genomic, 1, 3) = 'NT_' 
-			or substring(genomic, 1, 3) = 'NW_'
-		) 
-		order by geneID''' , 'auto')
+                substring(genomic, 1, 3) as prefix 
+                from DP_EntrezGene_Accession 
+                where taxID = 10090 
+                and (substring(genomic, 1, 3) = 'NT_' 
+                        or substring(genomic, 1, 3) = 'NW_'
+                ) 
+                order by geneID''' , 'auto')
     #print 'results length: %s' % len(results)   
     for r in results:
-	seqId = string.strip(r['genomic'])
-	assembly = string.strip(r['assembly'])
-	geneId = string.strip(r['geneID'])
-	prefix = string.strip(r['prefix'])
-	sequenceInfo = SequenceInfo(seqId, prefix, assembly)
-	if geneIdDict.has_key(geneId):
-	    geneIdDict[geneId].append(sequenceInfo)
-	else:
-	    geneIdDict[geneId] = [sequenceInfo]
+        seqId = str.strip(r['genomic'])
+        assembly = str.strip(r['assembly'])
+        geneId = str.strip(r['geneID'])
+        prefix = str.strip(r['prefix'])
+        sequenceInfo = SequenceInfo(seqId, prefix, assembly)
+        if geneId in geneIdDict:
+            geneIdDict[geneId].append(sequenceInfo)
+        else:
+            geneIdDict[geneId] = [sequenceInfo]
     #print 'geneIdDictLength: %s' % len(geneIdDict)
-    geneIdList = geneIdDict.keys()
+    geneIdList = list(geneIdDict.keys())
     geneIdList.sort()
     for g in geneIdList:
-	seqs = geneIdDict[g]
+        seqs = geneIdDict[g]
 
     fd = open(sqlFile, 'w')
 
@@ -127,10 +123,10 @@ def writeUpdate(geneId, seqInfoList):
     # Throws: nothing
 
     for seqInfo in seqInfoList:
-	seqId = seqInfo.getSeqId()
-	cmd = UPDATE_TEMPLATE % (geneId, seqId)
-	fd.write(cmd)
-	fd.write(";%s" % CRT)
+        seqId = seqInfo.getSeqId()
+        cmd = UPDATE_TEMPLATE % (geneId, seqId)
+        fd.write(cmd)
+        fd.write(";%s" % CRT)
 
 def parseRecords():
     # Purpose: iterates through dictionary representing lines from 
@@ -141,42 +137,42 @@ def parseRecords():
     # Effects: writes to the filesystem
     # Throws: nothing
 
-    geneIdList = geneIdDict.keys()
+    geneIdList = list(geneIdDict.keys())
     geneIdList.sort()
     for geneId in geneIdList:
-	# attributes of the best sequence found so far
-	currentPick = ''	    # SequenceInfo object
-	currentBestPrefix = ''
-	
-	# get the set of  SequenceInfo objects for a geneId
-	seqInfoList = geneIdDict[geneId]
-	#print 'GeneID: %s Contigs: %s' % (geneId, len(seqInfoList))
-	# Iterate through the SequenceInfo objects and determine
-	# the one we want to keep
-	for seqInfo in seqInfoList:
-	    seqId = seqInfo.getSeqId()
-	    prefix = seqInfo.getPrefix()
-	    assembly = seqInfo.getAssembly()
-	    if assembly != secondaryAssembly:
-		if currentPick == '':
-		    # This is the first seqInfo for geneId
-		    currentPick = seqInfo
-		    currentBestPrefix = prefix
-		if currentBestPrefix == 'NT_' :
-		    # any NT means we are done
-		    break
-		else: # currentBestPrefix is 'NW_'
-		    if prefix == 'NT_':
-			# NT_ trumps NW_
-			currentPick = seqInfo
-			currentBestPrefix = prefix
-			break
-	#print 'list size before: %s' % len(seqInfoList)
-	# In this case no contig picked because all on secondaryAssembly
+        # attributes of the best sequence found so far
+        currentPick = ''	    # SequenceInfo object
+        currentBestPrefix = ''
+        
+        # get the set of  SequenceInfo objects for a geneId
+        seqInfoList = geneIdDict[geneId]
+        #print 'GeneID: %s Contigs: %s' % (geneId, len(seqInfoList))
+        # Iterate through the SequenceInfo objects and determine
+        # the one we want to keep
+        for seqInfo in seqInfoList:
+            seqId = seqInfo.getSeqId()
+            prefix = seqInfo.getPrefix()
+            assembly = seqInfo.getAssembly()
+            if assembly != secondaryAssembly:
+                if currentPick == '':
+                    # This is the first seqInfo for geneId
+                    currentPick = seqInfo
+                    currentBestPrefix = prefix
+                if currentBestPrefix == 'NT_' :
+                    # any NT means we are done
+                    break
+                else: # currentBestPrefix is 'NW_'
+                    if prefix == 'NT_':
+                        # NT_ trumps NW_
+                        currentPick = seqInfo
+                        currentBestPrefix = prefix
+                        break
+        #print 'list size before: %s' % len(seqInfoList)
+        # In this case no contig picked because all on secondaryAssembly
         if currentPick != '':
-	    seqInfoList.remove(currentPick)
-	    #print 'list size after: %s' % len(seqInfoList)
-	    #print 'Picking: %s %s %s' % (geneId, currentPick.getSeqId(), currentPick.getAssembly())
+            seqInfoList.remove(currentPick)
+            #print 'list size after: %s' % len(seqInfoList)
+            #print 'Picking: %s %s %s' % (geneId, currentPick.getSeqId(), currentPick.getAssembly())
         writeUpdate(geneId, seqInfoList)
     fd.close()
 #

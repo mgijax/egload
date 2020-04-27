@@ -84,7 +84,7 @@ fi
 #
 echo "" 
 echo "`date`" 
-${EGLOAD}/bin/radarPreprocess.py
+${PYTHON} ${EGLOAD}/bin/radarPreprocess.py
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then

@@ -1,6 +1,3 @@
-#!/usr/local/bin/python
-
-#
 # Program:  formatreports.py
 #
 # Description:
@@ -33,7 +30,6 @@
 import sys 
 import os
 import re
-import string
 import db
 import reportlib
 
@@ -78,7 +74,7 @@ def init():
 
     urls = {}
     results = db.sql('select _ActualDB_key, url from ACC_ActualDB ' + \
-	'where _ActualDB_key in (%d,%d,%d)' % (EG_URL_KEY, GENBANK_URL_KEY, REFSEQ_URL_KEY), 'auto')
+        'where _ActualDB_key in (%d,%d,%d)' % (EG_URL_KEY, GENBANK_URL_KEY, REFSEQ_URL_KEY), 'auto')
     for r in results:
         key = r['_ActualDB_key']
         value = r['url']
@@ -101,8 +97,8 @@ def initFiles(value):
 
     except:
 
-	print 'Cannot open file: %s' % (value)
-	sys.exit(1)
+        print(('Cannot open file: %s' % (value)))
+        sys.exit(1)
 
     return inFile, htmlFile
 
@@ -140,46 +136,46 @@ def idAnchors(s):
 
     while s:
 
-        i1 = string.find(s, '[')
-        i2 = string.find(s, ']')
-        tokens = string.split(s[:i2], '=')
+        i1 = str.find(s, '[')
+        i2 = str.find(s, ']')
+        tokens = str.split(s[:i2], '=')
 
-	# clean up the results of the split
+        # clean up the results of the split
 
-	tag = re.sub('{', '', tokens[0])
-	ids = string.split(re.sub('\[', '', tokens[1]), ', ')
+        tag = re.sub('{', '', tokens[0])
+        ids = str.split(re.sub('\[', '', tokens[1]), ', ')
 
-	# process tags
+        # process tags
 
-	# some MGI ids are '-'...don't create an anchor for these
+        # some MGI ids are '-'...don't create an anchor for these
 
-	if tag == mgiTag:
-	    for i in ids:
-		if i != '-':
-	            anchors[i] = mgiAnchor(i)
+        if tag == mgiTag:
+            for i in ids:
+                if i != '-':
+                    anchors[i] = mgiAnchor(i)
 
-	elif tag == genbankTag:
-	    for i in ids:
-	        anchors[i] = externalAnchor(i, GENBANK_URL_KEY)
+        elif tag == genbankTag:
+            for i in ids:
+                anchors[i] = externalAnchor(i, GENBANK_URL_KEY)
 
-	elif tag in refseqTag:
-	    for i in ids:
-	        anchors[i] = externalAnchor(i, REFSEQ_URL_KEY)
+        elif tag in refseqTag:
+            for i in ids:
+                anchors[i] = externalAnchor(i, REFSEQ_URL_KEY)
 
-	# we're done if there are no more TAGs to process
+        # we're done if there are no more TAGs to process
 
-	if len(s) < i2 + 3:
-	    break
+        if len(s) < i2 + 3:
+            break
 
-	# else, move to the next TAG
+        # else, move to the next TAG
 
         s = s[i2+3:]
 
-    # substitute the ids in the original string with the anchors
+    # substitute the ids in the original str.with the anchors
 
-    for a in anchors.keys():
-	neworiginal = re.sub(a, anchors[a], original)
-	original = neworiginal
+    for a in list(anchors.keys()):
+        neworiginal = re.sub(a, anchors[a], original)
+        original = neworiginal
 
     return original
 
@@ -195,17 +191,17 @@ def processEG():
         # initialize output (html) file
 
         htmlFile = reportlib.init(tail, \
-				  outputdir = os.environ['RPTDIR'], printHeading = None, isHTML = 1)
+                                  outputdir = os.environ['RPTDIR'], printHeading = None, isHTML = 1)
         egmgiFile = reportlib.init(egmgiFileName, fileExt = '.txt', \
-				   outputdir = os.environ['RPTDIR'], printHeading = None)
+                                   outputdir = os.environ['RPTDIR'], printHeading = None)
         egnomgiFile = reportlib.init(egnomgiFileName, fileExt = '.txt', \
-				   outputdir = os.environ['RPTDIR'], printHeading = None)
+                                   outputdir = os.environ['RPTDIR'], printHeading = None)
 
     except:
 
-	print 'Problem with file: %s' % (egFileName)
-	print 'Problem with file: %s' % (egmgiFileName)
-	print 'Problem with file: %s' % (egnomgiFileName)
+        print(('Problem with file: %s' % (egFileName)))
+        print(('Problem with file: %s' % (egmgiFileName)))
+        print(('Problem with file: %s' % (egnomgiFileName)))
         sys.exit(1)
 
     # print html header
@@ -220,46 +216,46 @@ def processEG():
 
     for line in inFile.readlines():
 
-        tokens = string.split(line, TAB)
+        tokens = str.split(line, TAB)
 
         if len(tokens) < 3:
                 continue
 
-	egID = tokens[0]
-	egSymbol = tokens[1]
+        egID = tokens[0]
+        egSymbol = tokens[1]
         egChromosome = tokens[2];
         sequences = tokens[3];
 
-	htmlFile.write('<TR><TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
-	htmlFile.write('<TD>' + egSymbol + '</TD>')
-	htmlFile.write('<TD>' + egChromosome + '</TD>')
-	htmlFile.write('<TD>' + idAnchors(sequences) + '</TD></TR>')
-	htmlFile.write(CRT)
+        htmlFile.write('<TR><TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
+        htmlFile.write('<TD>' + egSymbol + '</TD>')
+        htmlFile.write('<TD>' + egChromosome + '</TD>')
+        htmlFile.write('<TD>' + idAnchors(sequences) + '</TD></TR>')
+        htmlFile.write(CRT)
 
-	# if file does not contains MGIids...
-	if string.find(sequences, 'MGIID=[-]') > 0:
-	    egnomgiFile.write(egID + TAB)
-	    egnomgiFile.write(egSymbol + TAB)
-	    egnomgiFile.write(egChromosome + TAB)
-	    egnomgiFile.write(sequences + CRT)
+        # if file does not contains MGIids...
+        if str.find(sequences, 'MGIID=[-]') > 0:
+            egnomgiFile.write(egID + TAB)
+            egnomgiFile.write(egSymbol + TAB)
+            egnomgiFile.write(egChromosome + TAB)
+            egnomgiFile.write(sequences + CRT)
 
-	# if file does contains MGIids...
+        # if file does contains MGIids...
         else:
-	    seqs = string.split(sequences, ',')
+            seqs = str.split(sequences, ',')
 
-	    # only print sequences with MGI ids
-	    for s in seqs:
-	        if string.find(s, 'MGIID=[') >= 0:
-	            s = string.replace(s, 'MGIID=[', '')
-	            s = string.replace(s, ']', '')
-	            s = string.replace(s, '{', '')
-	            s = string.replace(s, '}', '')
-		    s = string.replace(s, ' ', '')
-		    s = string.replace(s, '\n', '')
-	            egmgiFile.write(egID + TAB)
-	            egmgiFile.write(egSymbol + TAB)
-	            egmgiFile.write(egChromosome + TAB)
-	            egmgiFile.write(s + CRT)
+            # only print sequences with MGI ids
+            for s in seqs:
+                if str.find(s, 'MGIID=[') >= 0:
+                    s = str.replace(s, 'MGIID=[', '')
+                    s = str.replace(s, ']', '')
+                    s = str.replace(s, '{', '')
+                    s = str.replace(s, '}', '')
+                    s = str.replace(s, ' ', '')
+                    s = str.replace(s, '\n', '')
+                    egmgiFile.write(egID + TAB)
+                    egmgiFile.write(egSymbol + TAB)
+                    egmgiFile.write(egChromosome + TAB)
+                    egmgiFile.write(s + CRT)
 
     htmlFile.write(tableEnd)
 
@@ -279,7 +275,7 @@ def processMGI_8columns():
     for b in column8Files:
 
         value = os.environ[b]
-	inFile, htmlFile = initFiles(value)
+        inFile, htmlFile = initFiles(value)
 
         # print html header
 
@@ -289,31 +285,31 @@ def processMGI_8columns():
         htmlFile.write('<TD>Chromosome</TD>')
         htmlFile.write('<TD>Entrez Gene</TD>')
         htmlFile.write('<TD>Associated Sequences</TD>')
-	htmlFile.write('<TD>Marker Type</TD>' + CRT)
+        htmlFile.write('<TD>Marker Type</TD>' + CRT)
 
         # iterate thru input file
 
         for line in inFile.readlines():
 
-	    tokens = string.split(line, TAB)
+            tokens = str.split(line, TAB)
 
-	    if len(tokens) < 3:
-		continue
+            if len(tokens) < 3:
+                continue
 
-	    mgiID = tokens[0]
-	    mgiSymbol = tokens[1]
+            mgiID = tokens[0]
+            mgiSymbol = tokens[1]
             mgiChromosome = tokens[2]
-	    egID = tokens[3]
+            egID = tokens[3]
             sequences = tokens[6]
-	    markerType = tokens[7]
+            markerType = tokens[7]
 
-	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
-	    htmlFile.write('<TD>' + mgiSymbol + '</TD>')
-	    htmlFile.write('<TD>' + mgiChromosome + '</TD>')
-	    htmlFile.write('<TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
-	    htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
-	    htmlFile.write('<TD>' + markerType + '</TD></TR>')
-	    htmlFile.write(CRT)
+            htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
+            htmlFile.write('<TD>' + mgiSymbol + '</TD>')
+            htmlFile.write('<TD>' + mgiChromosome + '</TD>')
+            htmlFile.write('<TD>' + externalAnchor(egID, EG_URL_KEY) + '</TD>')
+            htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
+            htmlFile.write('<TD>' + markerType + '</TD></TR>')
+            htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
 
@@ -330,7 +326,7 @@ def processMGI_5columns():
     for b in column5Files:
 
         value = os.environ[b]
-	inFile, htmlFile = initFiles(value)
+        inFile, htmlFile = initFiles(value)
 
         # print html header
 
@@ -339,29 +335,29 @@ def processMGI_5columns():
         htmlFile.write('<TD>Symbol</TD>')
         htmlFile.write('<TD>Chromosome</TD>')
         htmlFile.write('<TD>Associated Sequences</TD>')
-	htmlFile.write('<TD>Marker Type</TD>' + CRT)
+        htmlFile.write('<TD>Marker Type</TD>' + CRT)
 
         # iterate thru input file
 
         for line in inFile.readlines():
 
-	    tokens = string.split(line, TAB)
+            tokens = str.split(line, TAB)
 
-	    if len(tokens) < 3:
-		continue
+            if len(tokens) < 3:
+                continue
 
-	    mgiID = tokens[0]
-	    mgiSymbol = tokens[1]
+            mgiID = tokens[0]
+            mgiSymbol = tokens[1]
             mgiChromosome = tokens[2]
             sequences = tokens[3]
-	    markerType = tokens[4]
+            markerType = tokens[4]
 
-	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
-	    htmlFile.write('<TD>' + mgiSymbol + '</TD>')
-	    htmlFile.write('<TD>' + mgiChromosome + '</TD>')
-	    htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
-	    htmlFile.write('<TD>' + markerType + '</TD></TR>')
-	    htmlFile.write(CRT)
+            htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
+            htmlFile.write('<TD>' + mgiSymbol + '</TD>')
+            htmlFile.write('<TD>' + mgiChromosome + '</TD>')
+            htmlFile.write('<TD>' + idAnchors(sequences) + '</TD>')
+            htmlFile.write('<TD>' + markerType + '</TD></TR>')
+            htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
 
@@ -383,22 +379,22 @@ def processMGI_2columns():
         # print html header
 
         htmlFile.write(tableStart + CRT)
-	htmlFile.write('<TD>Marker</TD>' + CRT)
+        htmlFile.write('<TD>Marker</TD>' + CRT)
         htmlFile.write('<TD>EG ID</TD>')
 
         # iterate thru input file
 
         for line in inFile.readlines():
 
-            tokens = string.split(line, TAB)
+            tokens = str.split(line, TAB)
 
-	    if len(tokens) < 2:
-		continue
+            if len(tokens) < 2:
+                continue
 
             egID = tokens[0]
             mgiID = tokens[1]
-	    htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
-	    htmlFile.write('<TD>' + egID + '</TD>')
+            htmlFile.write('<TR><TD>' + mgiAnchor(mgiID) + '</TD>')
+            htmlFile.write('<TD>' + egID + '</TD>')
             htmlFile.write(CRT)
 
         htmlFile.write(tableEnd)
@@ -416,4 +412,3 @@ processMGI_8columns()
 processMGI_5columns()
 processMGI_2columns()
 sys.exit(0)
-
