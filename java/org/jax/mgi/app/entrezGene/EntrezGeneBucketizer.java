@@ -7,7 +7,6 @@ import org.jax.mgi.dbs.mgd.lookup.ProblemClonesLookup;
 import org.jax.mgi.dbs.mgd.lookup.EntrezGeneHistory;
 import org.jax.mgi.dbs.mgd.lookup.GUIdsByMarkerKeyLookup;
 import org.jax.mgi.dbs.mgd.lookup.MarkersByGUIdLookup;
-import org.jax.mgi.dbs.rdr.lookup.HomoloGeneLookup;
 import org.jax.mgi.dbs.rdr.query.EntrezGeneQuery.EntrezGene;
 import org.jax.mgi.dbs.mgd.query.MGIMarkerQuery.MGIMarker;
 import org.jax.mgi.dbs.mgd.query.NCBIGMQuery;
@@ -80,9 +79,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
     // A FullCachedLookup for obtaining the set of GU ids for a marker
     private GUIdsByMarkerKeyLookup guIdsByMarkerKeyLookup = null;
 
-    // A FullCachedLookup for obtaining HomoloGene IDs
-    private HomoloGeneLookup homoloGeneLookup = null;
-
     // An FullCachedLookup for obtaining previous associations
     // between EntrezGenes and MGIMarkers
     private EntrezGeneHistory history = null;
@@ -122,8 +118,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
         this.markersByGUIdLookup.initCache();
 	this.guIdsByMarkerKeyLookup = new GUIdsByMarkerKeyLookup();
 	this.guIdsByMarkerKeyLookup.initCache();
-        this.homoloGeneLookup = new HomoloGeneLookup();
-        this.homoloGeneLookup.initCache();
 	this.egIdSet = new HashSet();
     }
 
@@ -536,20 +530,6 @@ public class EntrezGeneBucketizer extends AbstractBucketizer
 	    makeSeqAssociationToMarker (new Integer(
 		LogicalDBConstants.NCBI_GENEMODEL_EVIDENCE), accid, markerKey);
         }
-	/**
-	* associate HomoloGene Group ID to marker
-	*/
-
-	String homolGeneGroupID = 
-	    this.homoloGeneLookup.lookup(entrezGene.getId());
-
-	if (homolGeneGroupID != null)
-	{
-	   AccessionLib.createMarkerAssociation(
-	       new Integer(LogicalDBConstants.HOMOLOGENE),
-	       homolGeneGroupID, markerKey,
-	       new Integer(Constants.EGLOAD_REFSKEY), this.loadStream);
-	}
     }
 
      /**
