@@ -1,3 +1,9 @@
+TAG: egload-6-0-16-2
+DATE: 04/26/2021
+STAFF: dbm
+1) egload.config.default: removed APP_QCRPT
+2) egload.sh: removed call to QC report script
+
 TAG: egload-6-0-16-1
 DATE: 08/21/2020
 STAFF: lec
