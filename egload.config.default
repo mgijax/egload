@@ -61,12 +61,8 @@ DLA_DB_PREFIX=MGD
 DLA_LOAD_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 DLA_QC_STREAM=org.jax.mgi.shr.dbutils.dao.BCP_Stream
 
-# QC report script
-APP_QCRPT=${QCRPTS}/egload/egloadRpt.csh
-
 export EGLOAD_PERFORM_HISTORY JOBSTREAM
 export DLA_LOADER DLA_START DLA_LOAD_STREAM 
-export APP_QCRPT
 
 # Full path the the logs, reports, and archive directories
 FILEDIR=${DATALOADSOUTPUT}/entrezgene/egload
