@@ -134,13 +134,6 @@ ${EGLOAD}/bin/formatreports.sh
 STAT=$?
 checkStatus ${STAT} "formatreports.sh"
 
-#
-# run qc reports
-#
-${APP_QCRPT} ${RPTDIR} ${MGD_DBSERVER} ${MGD_DBNAME} ${JOBKEY}
-STAT=$?
-checkStatus ${STAT} ${APP_QCRPT}
-
 echo "EntrezGene Load application completed successfully" >> ${LOG_PROC}
 
 postload
