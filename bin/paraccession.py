@@ -19,18 +19,17 @@ import db
 
 db.setTrace()
 
-results = db.sql('select max(_Accession_key) + 1 as maxKey from ACC_Accession', 'auto')
-accKey = results[0]['maxKey']
 addAccSQL = ""
 
 # find PARtner markers whose partner does not have an EG id
 results = db.sql('''
-select r.*, a1.*
-from MGI_Relationship r, ACC_Accession a1
+select r.*, a1.*, ar._refs_key
+from MGI_Relationship r, ACC_Accession a1, ACC_AccessionReference ar
 where r._category_key = 1012
 and r._object_key_1 = a1._object_key
 and a1._mgitype_key = 2
 and a1._logicaldb_key = 55
+and a1._accession_key = ar._accession_key
 and not exists 
         (select 1 from ACC_Accession a2 
                 where r._object_key_2 = a2._object_key 
@@ -40,24 +39,11 @@ and not exists
 ''', 'auto')
 
 for r in results:
-
-        if r['prefixpart'] == None:
-                prefixpart = 'null'
-        else:
-                prefixpart = "'" + r['prefixpart'] + "'"
-
-        if r['numericpart'] == None:
-                numericpart = 'null'
-        else:
-                numericpart = r['numericpart']
-
-        addAccSQL += '''insert into acc_accession values(%s,'%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,now(),now());\n''' \
-                % (accKey, r['accid'], prefixpart, numericpart, r['_logicaldb_key'], r['_object_key_2'], 
-                        r['_mgitype_key'], r['private'], r['preferred'], r['_createdby_key'], r['_modifiedby_key'])
-        accKey += 1
+        addAccSQL += '''select count(*) from ACC_insert (%s,%s,'%s',%s,'Marker',%s,%s,%s,1);\n''' \
+                % (r['_createdby_key'], r['_object_key_2'], r['accid'], r['_logicaldb_key'], 
+                        r['_refs_key'], r['preferred'], r['private'])
 
 if addAccSQL != "":
-        print(addAccSQL)
         db.sql(addAccSQL, None)
 
 print('par accessions to process: ' + str(len(results)) + '\n')
