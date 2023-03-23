@@ -40,12 +40,24 @@ and not exists
 ''', 'auto')
 
 for r in results:
-        addAccSQL += '''insert into acc_accession values(%s,'%s',null,%s,%s,%s,%s,%s,%s,%s,%s,now(),now());\n''' \
-                % (accKey, r['accid'], r['accid'], r['_logicaldb_key'], r['_object_key_2'], r['_mgitype_key'], 
-                        r['private'], r['preferred'], r['_createdby_key'], r['_modifiedby_key'])
+
+        if r['prefixpart'] == None:
+                prefixpart = 'null'
+        else:
+                prefixpart = "'" + r['prefixpart'] + "'"
+
+        if r['numericpart'] == None:
+                numericpart = 'null'
+        else:
+                numericpart = r['numericpart']
+
+        addAccSQL += '''insert into acc_accession values(%s,'%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,now(),now());\n''' \
+                % (accKey, r['accid'], prefixpart, numericpart, r['_logicaldb_key'], r['_object_key_2'], 
+                        r['_mgitype_key'], r['private'], r['preferred'], r['_createdby_key'], r['_modifiedby_key'])
         accKey += 1
 
 if addAccSQL != "":
+        print(addAccSQL)
         db.sql(addAccSQL, None)
 
 print('par accessions to process: ' + str(len(results)) + '\n')
