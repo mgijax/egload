@@ -134,6 +134,16 @@ ${EGLOAD}/bin/formatreports.sh
 STAT=$?
 checkStatus ${STAT} "formatreports.sh"
 
+#
+# post paraccession
+#
+echo "" >> ${LOG_PROC}
+echo "`date`" >> ${LOG_PROC}
+echo "Run the paraccession process" >> ${LOG_PROC}
+${EGLOAD}/bin/paraccession.sh
+STAT=$?
+checkStatus ${STAT} "paraccession.sh"
+
 echo "EntrezGene Load application completed successfully" >> ${LOG_PROC}
 
 postload

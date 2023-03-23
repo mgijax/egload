@@ -78,6 +78,7 @@ LOG_PROC=${LOGDIR}/entrezgene.proc.log
 LOG_DIAG=${LOGDIR}/entrezgene.diag.log
 LOG_CUR=${LOGDIR}/entrezgene.cur.log
 LOG_VAL=${LOGDIR}/entrezgene.val.log
+LOG_PARACCESSION=${LOGDIR}/paraccession.diag.log
 
 # Send debug messages to the diagnostic log
 LOG_DEBUG=false
@@ -87,7 +88,7 @@ CACHE_DEBUG=false
 # logger factory class - allows classes to get their own loggers
 LOG_FACTORY=org.jax.mgi.shr.dla.log.DLALoggerFactory
 
-export LOG_PROC LOG_DIAG LOG_CUR LOG_VAL LOG_DEBUG 
+export LOG_PROC LOG_DIAG LOG_CUR LOG_VAL LOG_DEBUG LOG_PARACCESSION
 export CACHE_DEBUG LOG_FACTORY
 
 ###########################################################################
