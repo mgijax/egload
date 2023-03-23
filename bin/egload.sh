@@ -140,7 +140,7 @@ checkStatus ${STAT} "formatreports.sh"
 echo "" >> ${LOG_PROC}
 echo "`date`" >> ${LOG_PROC}
 echo "Run the paraccession process" >> ${LOG_PROC}
-${EGLOAD}/bin/paraccession.sh
+${EGLOAD}/bin/paraccession.sh >> ${LOG_PROC}
 STAT=$?
 checkStatus ${STAT} "paraccession.sh"
 

@@ -4,31 +4,49 @@
 # The purpose of this script is to run the paraccession python script
 #
 
+cd `dirname $0`/..
 
-cd `dirname $0`
-
-COMMON_CONFIG=../egload.config
-
-#
-# Make sure the common configuration file exists and source it.
-#
-if [ -f ${COMMON_CONFIG} ]
-then
-    . ${COMMON_CONFIG}
-else
-    echo "Missing configuration file: ${COMMON_CONFIG}"
-    exit 1
-fi
-
-#
-# Initialize the log file.
-#
 LOG=${LOG_PARACCESSION}
 rm -rf ${LOG}
 >>${LOG}
 
-date >> ${LOG} 2>&1
-${PYTHON} ${EGLOAD}/bin/paraccession.py >> ${LOG} 2>&1
+#
+#  Verify and source the configuration file name.
+#
+CONFIG=`pwd`/egload.config
+if [ ! -r ${CONFIG} ]
+then
+    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
+    exit 1
+fi
+. ${CONFIG}
 
-date |tee -a $LOG
+#
+#  Source the common DLA functions script.
+#
+if [ "${DLAJOBSTREAMFUNC}" != "" ]
+then
+    if [ -r ${DLAJOBSTREAMFUNC} ]
+    then
+        . ${DLAJOBSTREAMFUNC}
+    else
+        echo "Cannot source DLA functions script: ${DLAJOBSTREAMFUNC}" | tee -a ${LOG_PROC}
+        exit 1
+    fi
+else
+    echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG_PROC}
+    exit 1
+fi
+
+${PYTHON} ${EGLOAD}/bin/paraccession.py >> ${LOG} 2>&1
+STAT=$?
+if [ ${STAT} -ne 0 ]
+then
+    echo "EntrezGene Load paraccession failed. Return status: ${STAT}" >> ${LOG}
+    exit 1
+fi
+
+echo "Entrez Gene Load paracession completed successfully." >> ${LOG}
+
+exit 0
 
