@@ -40,8 +40,8 @@ and not exists
 ''', 'auto')
 
 for r in results:
-        addAccSQL += '''insert into acc_accession values(%s,'%s',null,%s,55,%s,2,0,1,1416,1416,now(),now());\n''' \
-                % (accKey, r['accid'], r['accid'], r['_object_key_2'])
+        addAccSQL += '''insert into acc_accession values(%s,'%s',null,%s,55,%s,2,0,1,%s,%s,now(),now());\n''' \
+                % (accKey, r['accid'], r['accid'], r['_object_key_2'], r['_createdby_key'], r['_modifiedby_key'])
         accKey += 1
 
 if addAccSQL != "":
