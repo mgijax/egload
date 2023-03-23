@@ -45,7 +45,8 @@ for r in results:
         accKey += 1
 
 if addAccSQL != "":
-        print(addAccSQL)
         db.sql(addAccSQL, None)
+
+print('par accessions to process: ' + str(len(results)) + '\n')
 db.commit()
 
