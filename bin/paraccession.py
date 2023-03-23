@@ -39,6 +39,7 @@ and not exists
 ''', 'auto')
 
 for r in results:
+        print(r)
         addAccSQL += '''select count(*) from ACC_insert (%s,%s,'%s',%s,'Marker',%s,%s,%s,1);\n''' \
                 % (r['_createdby_key'], r['_object_key_2'], r['accid'], r['_logicaldb_key'], 
                         r['_refs_key'], r['preferred'], r['private'])
