@@ -38,15 +38,18 @@ else
     exit 1
 fi
 
+echo "`date`" >> ${LOG}
+echo "Running Entrez Gene Load paracession..." >> ${LOG}
 ${PYTHON} ${EGLOAD}/bin/paraccession.py >> ${LOG} 2>&1
 STAT=$?
 if [ ${STAT} -ne 0 ]
 then
-    echo "EntrezGene Load paraccession failed. Return status: ${STAT}" >> ${LOG}
+    echo "egload/paraccession failed. Return status: ${STAT}" >> ${LOG}
     exit 1
 fi
 
-echo "Entrez Gene Load paracession completed successfully." >> ${LOG}
+echo "egload/paracession completed successfully." >> ${LOG}
+echo "`date`" >> ${LOG}
 
 exit 0
 
