@@ -19,7 +19,6 @@ fi
 
 LOG=${LOG_PARACCESSION}
 rm -rf ${LOG}
-echo $LOG
 >>${LOG}
 
 #
