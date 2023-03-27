@@ -6,20 +6,21 @@
 
 cd `dirname $0`/..
 
-LOG=${LOG_PARACCESSION}
-rm -rf ${LOG}
->>${LOG}
-
 #
 #  Verify and source the configuration file name.
 #
 CONFIG=`pwd`/egload.config
 if [ ! -r ${CONFIG} ]
 then
-    echo "Cannot read configuration file: ${CONFIG}" | tee -a ${LOG}
+    echo "Cannot read configuration file: ${CONFIG}"
     exit 1
 fi
 . ${CONFIG}
+
+LOG=${LOG_PARACCESSION}
+rm -rf ${LOG}
+echo $LOG
+>>${LOG}
 
 #
 #  Source the common DLA functions script.
@@ -30,11 +31,11 @@ then
     then
         . ${DLAJOBSTREAMFUNC}
     else
-        echo "Cannot source DLA functions script: ${DLAJOBSTREAMFUNC}" | tee -a ${LOG_PROC}
+        echo "Cannot source DLA functions script: ${DLAJOBSTREAMFUNC}" | tee -a ${LOG}
         exit 1
     fi
 else
-    echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG_PROC}
+    echo "Environment variable DLAJOBSTREAMFUNC has not been defined." | tee -a ${LOG}
     exit 1
 fi
 
