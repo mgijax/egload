@@ -97,8 +97,9 @@ then
 fi
 
 echo 'Sanity check the radar.dp_entrezgene tables' | tee -a ${LOG}
-${PG_DBUTILS}/bin/testRadarEntrezGene.csh | tee -a ${LOG}
-if [ $status != 0 ] 
+${PG_DBUTILS}/bin/testRadarEntrezGene.csh
+status=$?
+if [ $status -ne 0 ] 
 then
         echo 'radar.dp_entrezgene tables did not pass sanity check; skipping egload' | tee -a ${LOG}
         exit 0
