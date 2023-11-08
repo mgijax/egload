@@ -1,3 +1,9 @@
+TAG:egload-6-0-22-2
+DATE: 11/08/2023
+STAFF: lec
+wts2-1324/fl2-625/egload pipeline issue/add sanity check
+bin/egload.sh : call ${PG_DBUTILS}/bin/testRadarEntrezGene.csh
+
 TAG:egload-6-0-22-1
 DATE: 05/03/2023
 STAFF: sc
