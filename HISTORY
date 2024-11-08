@@ -1,5 +1,6 @@
+TAG: egload-6-0-24-2
 TAG: egload-6-0-24-1
-DATE: 11/09/2024
+DATE: 11/08/2024
 STAFF: lec
 e4g/Software upgrades analysis: Postgres 17/NCBIGMQuery.java
 # modified:   java/org/jax/mgi/dbs/mgd/query/NCBIGMQuery.java
@@ -10,7 +11,7 @@ DATE: 11/15/2023
 STAFF: sc
 remove JCONNECT from build.xml (old sybase JDBC driver)
 
-TAG: egload-6-0-22-2
+TAGst: egload-6-0-22-2
 DATE: 11/08/2023
 STAFF: lec
 wts2-1324/fl2-625/egload pipeline issue/add sanity check
