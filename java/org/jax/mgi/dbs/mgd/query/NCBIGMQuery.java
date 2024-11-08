@@ -73,7 +73,7 @@ public class NCBIGMQuery extends ObjectQuery
          */
 	return "select  distinct a1.accid as ncbiGMID,  a3.accID " +
 	    "from ACC_Accession a1, ACC_Accession a2, ACC_Accession a3 " +
-	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE +
+	    "where a1._MGIType_key = " + MGITypeConstants.SEQUENCE + " " +
 	    "and a1._LogicalDB_key = " + LogicalDBConstants.NCBI_GENE + " " +
 	    "and lower(a1.accid) = lower(a2.accid) " +
 	    "and a1.preferred = 1 " +
