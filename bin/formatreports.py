@@ -143,7 +143,7 @@ def idAnchors(s):
         # clean up the results of the split
 
         tag = re.sub('{', '', tokens[0])
-        ids = str.split(re.sub('\[', '', tokens[1]), ', ')
+        ids = str.split(re.sub('\\[', '', tokens[1]), ', ')
 
         # process tags
 

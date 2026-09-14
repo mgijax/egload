@@ -1,3 +1,9 @@
+TAG: egload-6-0-29-1
+DATE: 09/14/2026
+STAFF: lec
+fix : bin/formatreports.py ids = str.split(re.sub('\\[', '', tokens[1]), ', ')
+        modified:   bin/formatreports.py
+
 TAG: egload-6-0-24-3
 TAG: egload-6-0-24-2
 TAG: egload-6-0-24-1
